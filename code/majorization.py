@@ -171,13 +171,23 @@ def shannon(v: np.ndarray, axis: int = -1) -> np.ndarray:
 
 
 def renyi(p: np.ndarray, alpha: float, axis: int = -1) -> np.ndarray:
-    """Renyi entropy (bits) of normalized distribution(s) p."""
+    """Renyi entropy (bits) of normalized distribution(s) p; zero entries never contribute."""
     p = np.clip(np.asarray(p, dtype=float), 0, None)
     if np.isclose(alpha, 1.0):
         return shannon(p, axis=axis)
     if np.isinf(alpha):
         return -np.log2(p.max(axis=axis))
-    return np.log2((p**alpha).sum(axis=axis)) / (1 - alpha)
+    terms = np.where(p > 0, p ** alpha, 0.0)  # so that alpha = 0 counts the support
+    return np.log2(terms.sum(axis=axis)) / (1 - alpha)
+
+
+def tsallis(p: np.ndarray, q: float, axis: int = -1) -> np.ndarray:
+    """Tsallis entropy T_q(p) = (1 - sum_i p_i^q) / (q - 1); q -> 1 gives Shannon in nats."""
+    p = np.clip(np.asarray(p, dtype=float), 0, None)
+    if np.isclose(q, 1.0):
+        return shannon(p, axis=axis) * np.log(2)
+    terms = np.where(p > 0, p ** q, 0.0)
+    return (1 - terms.sum(axis=axis)) / (q - 1)
 
 
 def binary_entropy(t: np.ndarray) -> np.ndarray:
@@ -192,7 +202,7 @@ def binary_entropy(t: np.ndarray) -> np.ndarray:
 
 def omega_direct_sum(m: TwoOutcomePOVM, n: TwoOutcomePOVM) -> np.ndarray:
     """
-    Theorem 3: optimal direct-sum bound for two general two-outcome qubit POVMs.
+    Theorem 4: optimal direct-sum bound for two general two-outcome qubit POVMs.
 
         kappa  = max(|mu|+eta, |nu|+zeta)
         Lambda = max_{s,t = +-1} [ s mu + t nu + | s eta a + t zeta b | ]
@@ -220,8 +230,47 @@ def omega_tensor_projective(c: float) -> np.ndarray:
 
 
 def maassen_uffink(c: float) -> float:
-    """Maassen-Uffink bound H(M) + H(N) >= -log2 c."""
+    """Maassen-Uffink bound H(M) + H(N) >= -log2 c (also valid for H_alpha with alpha <= 1)."""
     return -np.log2(c)
+
+
+def renyi_direct_sum_bound(c: float, alpha: float) -> float:
+    """
+    Corollary 1: H_alpha(M) + H_alpha(N) >= H_alpha(sqrt c, 1 - sqrt c).
+
+    Rudnicki, Puchala and Zyczkowski, PRA 89, 052115 (2014).  Proven only for
+    0 < alpha <= 1; for large alpha the inequality fails (Proposition 2).
+    """
+    t = np.sqrt(c)
+    return float(renyi(np.array([t, 1 - t]), alpha))
+
+
+def renyi_tensor_bound(c: float, alpha: float) -> float:
+    """Corollary 2: H_alpha(M) + H_alpha(N) >= H_alpha(w, 1 - w), valid for every alpha."""
+    w = 0.25 * (1 + np.sqrt(c)) ** 2
+    return float(renyi(np.array([w, 1 - w]), alpha))
+
+
+def tsallis_direct_sum_bound(c: float, q: float) -> float:
+    """Corollary 1: T_q(M) + T_q(N) >= T_q(sqrt c, 1 - sqrt c) for every q > 0."""
+    t = np.sqrt(c)
+    return float(tsallis(np.array([t, 1 - t]), q))
+
+
+def bisector_shannon(c: float) -> float:
+    """H(M) + H(N) at the bisector state, 2 h((1 + sqrt c)/2); the exact minimum for c >= c_bar."""
+    return float(2 * binary_entropy((1 + np.sqrt(c)) / 2))
+
+
+def critical_c() -> float:
+    """
+    c_bar below which the bisector state stops being the Shannon minimiser.
+
+    Along the great circle, H(M) + H(N) has a local minimum at the bisector iff
+    sqrt(c) * artanh(sqrt(c)) >= 1 (second-derivative test); c_bar solves the equality.
+    """
+    t = brentq(lambda t: t * np.arctanh(t) - 1, 0.5, 0.99)
+    return t**2
 
 
 # ---------------------------------------------------------------------------
@@ -282,17 +331,29 @@ def great_circle(m: TwoOutcomePOVM, n: TwoOutcomePOVM, num: int = 4001) -> np.nd
 
 def min_entropy_sum(m: TwoOutcomePOVM, n: TwoOutcomePOVM, alpha: float = 1.0,
                     num: int = 4001) -> tuple[float, np.ndarray]:
+    """Exact minimum of H_alpha(M) + H_alpha(N) over all qubit states (see `min_uncertainty`)."""
+    return min_uncertainty(m, n, lambda p, q: float(renyi(p, alpha) + renyi(q, alpha)), num)
+
+
+def min_tsallis_sum(m: TwoOutcomePOVM, n: TwoOutcomePOVM, q_order: float,
+                    num: int = 4001) -> tuple[float, np.ndarray]:
+    """Exact minimum of T_q(M) + T_q(N) over all qubit states (see `min_uncertainty`)."""
+    return min_uncertainty(m, n, lambda p, q: float(tsallis(p, q_order) + tsallis(q, q_order)), num)
+
+
+def min_uncertainty(m: TwoOutcomePOVM, n: TwoOutcomePOVM, func,
+                    num: int = 4001) -> tuple[float, np.ndarray]:
     """
-    Exact minimum of H_alpha(M) + H_alpha(N) over all qubit states.
+    Exact minimum of func(p, q) over all qubit states.
 
     The outcome statistics depend on r only through (x, y) = (a.r, b.r), whose
-    range is an ellipse E.  (i) Shannon entropy is concave in (x, y), so its
-    minimum sits on the extreme points of E, i.e. on the great circle spanned by
-    the two axes (valid for arbitrary two-outcome POVMs).  (ii) For unbiased
-    measurements (mu = nu = 0) scaling r outwards makes both distributions more
-    ordered, so the same holds for every Schur-concave functional, e.g. any
-    Renyi entropy (Lemma 2 of the paper).  A dense 1D grid is refined with a
-    local optimizer.
+    range is an ellipse E.  (i) If func is concave in (x, y), e.g. the Shannon
+    entropy sum, its minimum sits on the extreme points of E, i.e. on the great
+    circle spanned by the two axes (valid for arbitrary two-outcome POVMs).
+    (ii) For unbiased measurements (mu = nu = 0) scaling r outwards makes both
+    distributions more ordered, so the same holds whenever func(p, q) is
+    Schur-concave in p and in q, e.g. any Renyi or Tsallis entropy sum.  A dense
+    1D grid is refined with a local optimizer.
     """
     e1 = m.axis
     e2 = n.axis - (n.axis @ e1) * e1
@@ -300,7 +361,7 @@ def min_entropy_sum(m: TwoOutcomePOVM, n: TwoOutcomePOVM, alpha: float = 1.0,
 
     def f(phi):
         r = np.cos(phi) * e1 + np.sin(phi) * e2
-        return float(renyi(m.probs(r), alpha) + renyi(n.probs(r), alpha))
+        return func(m.probs(r), n.probs(r))
 
     phis = np.linspace(0, 2 * np.pi, num, endpoint=False)
     vals = np.array([f(ph) for ph in phis])
@@ -329,9 +390,10 @@ def omega_direct_sum_operators(*povms: list[np.ndarray]) -> np.ndarray:
 
     The sum of any fixed subset of outcome probabilities equals tr(rho F) with F
     the sum of the corresponding effects, whose maximum over states is
-    lambda_max(F).  Hence S_k = max_{|J| = k} lambda_max(sum_{j in J} F_j), and
-    omega is read off the least concave majorant of (k, S_k).  Exponential in
-    the total number of outcomes, which is harmless for the cases studied here.
+    lambda_max(F).  Hence S_k = max_{|J| = k} lambda_max(sum_{j in J} F_j)
+    [Baek, Nha and Son, Entropy 21, 270 (2019)], and omega is read off the least
+    concave majorant of (k, S_k).  Exponential in the total number of outcomes,
+    which is harmless for the cases studied here.
     """
     from itertools import combinations
 

@@ -157,7 +157,43 @@ def fig_lorenz():
 
 
 # ---------------------------------------------------------------------------
-# Fig. 4 - unsharp measurements: bound vs exact as a function of sharpness
+# Fig. 4 - the whole Renyi family at fixed Bloch angle
+# ---------------------------------------------------------------------------
+def fig_renyi_family():
+    alphas = np.logspace(-1, np.log10(50), 141)
+    valid = alphas <= 1
+    fig, axes = plt.subplots(2, 1, figsize=(COL, 4.3), sharex=True)
+    for ax, deg in zip(axes, (60, 85)):
+        M, N = pair(np.radians(deg))
+        c = mj.overlap_cmax(M, N)
+        exact = np.array([mj.min_entropy_sum(M, N, alpha=a, num=1201)[0] for a in alphas])
+        dsum = np.array([mj.renyi_direct_sum_bound(c, a) for a in alphas])
+        tens = np.array([mj.renyi_tensor_bound(c, a) for a in alphas])
+        ax.plot(alphas, exact, color=INK, lw=1.8, label="exact minimum")
+        ax.plot(alphas[valid], dsum[valid], color=C1,
+                label=r"direct sum $H_\alpha(\sqrt{c},1-\sqrt{c})$, $\alpha\leq1$")
+        ax.plot(alphas[~valid], dsum[~valid], color=C1, lw=0.9, ls=(0, (4, 2)),
+                label=r"same expression, $\alpha>1$ (not a bound)")
+        ax.plot(alphas, tens, color=C3, ls=(0, (1.2, 1.2)), label=r"tensor product $H_\alpha(\omega_\otimes)$")
+        ax.plot(alphas[valid], np.full(valid.sum(), mj.maassen_uffink(c)), color=C2, ls="--",
+                label=r"Maassen–Uffink, $\alpha\leq1$")
+        ax.axvline(1, color=INK2, lw=0.6, ls=":")
+        ax.text(0.97, 0.93, rf"$\theta={deg}^\circ$", transform=ax.transAxes, ha="right", va="top",
+                fontsize=8, color=INK2)
+        ax.set_ylabel(r"bound on $H_\alpha(M)+H_\alpha(N)$", fontsize=8)
+        ax.set_ylim(0, 1.08)
+    axes[-1].set_xscale("log")
+    axes[-1].set_xlim(alphas[0], alphas[-1])
+    axes[-1].set_xticks([0.1, 0.5, 1, 2, 5, 10, 50])
+    axes[-1].set_xticklabels(["0.1", "0.5", "1", "2", "5", "10", "50"])
+    axes[-1].set_xlabel(r"Rényi order $\alpha$")
+    axes[1].legend(loc="lower left", fontsize=6.8, handlelength=2.4)
+    fig.savefig(OUT / "renyi_family.pdf")
+    plt.close(fig)
+
+
+# ---------------------------------------------------------------------------
+# Fig. 5 - unsharp measurements: bound vs exact as a function of sharpness
 # ---------------------------------------------------------------------------
 def fig_povm():
     etas = np.linspace(0.02, 1.0, 50)
@@ -184,5 +220,6 @@ if __name__ == "__main__":
     fig_achievable_set()
     fig_entropic_bounds()
     fig_lorenz()
+    fig_renyi_family()
     fig_povm()
     print("figures written to", OUT)
