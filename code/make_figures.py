@@ -23,23 +23,37 @@ OUT.mkdir(parents=True, exist_ok=True)
 C1, C2, C3, C4 = "#2a78d6", "#eb6834", "#1baf7a", "#eda100"
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 
+# Journal style: all text typeset by LaTeX (Computer Modern, as in the paper),
+# closed axes boxes, and ticks pointing inwards on all four sides of every panel.
 mpl.rcParams.update({
+    "text.usetex": True,
+    "text.latex.preamble": r"\usepackage{amsmath}\usepackage{amssymb}",
     "font.family": "serif",
-    "mathtext.fontset": "cm",
+    "font.serif": ["Computer Modern Roman"],
     "font.size": 9,
     "axes.labelsize": 9,
     "legend.fontsize": 7.5,
     "xtick.labelsize": 8,
     "ytick.labelsize": 8,
-    "axes.edgecolor": INK2,
+    "text.color": INK,
+    "axes.edgecolor": INK,
     "axes.labelcolor": INK,
-    "xtick.color": INK2,
-    "ytick.color": INK2,
-    "axes.grid": True,
-    "grid.color": GRID,
-    "grid.linewidth": 0.6,
-    "axes.spines.top": False,
-    "axes.spines.right": False,
+    "axes.linewidth": 0.8,
+    "axes.grid": False,
+    "axes.spines.top": True,
+    "axes.spines.right": True,
+    "xtick.color": INK,
+    "ytick.color": INK,
+    "xtick.direction": "in",
+    "ytick.direction": "in",
+    "xtick.top": True,
+    "ytick.right": True,
+    "xtick.major.size": 3.5,
+    "ytick.major.size": 3.5,
+    "xtick.minor.size": 2.0,
+    "ytick.minor.size": 2.0,
+    "xtick.major.width": 0.8,
+    "ytick.major.width": 0.8,
     "lines.linewidth": 1.5,
     "legend.frameon": False,
     "savefig.bbox": "tight",
@@ -102,7 +116,7 @@ def fig_entropic_bounds():
     ax.plot(deg, exact, color=INK, lw=1.8, label="exact minimum")
     ax.plot(deg, bplus, color=C1, label=r"$H(\omega_\oplus)$ (direct sum)")
     ax.plot(deg, btimes, color=C3, ls=(0, (1.2, 1.2)), label=r"$H(\omega_\otimes)$ (tensor)")
-    ax.plot(deg, mu, color=C2, ls="--", label=r"Maassen–Uffink $-\log_2 c$")
+    ax.plot(deg, mu, color=C2, ls="--", label=r"Maassen--Uffink $-\log_2 c$")
 
     t1 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_direct_sum_projective(c)))
     th1 = np.degrees(2 * np.arccos(t1))
@@ -142,7 +156,7 @@ def fig_lorenz():
     bis = mj.direct_sum(M.probs(mj.unit(M.axis + N.axis)), N.probs(mj.unit(M.axis + N.axis)))
     ax.plot(k, L(eig), color=C2, ls="--", marker="s", ms=4, label=r"eigenstate $\hat r=\hat m$")
     ax.plot(k, L(bis), color=C3, ls="-.", marker="^", ms=4.5, label=r"bisector $\hat r\propto\hat m+\hat n$")
-    ax.plot(k, L(w), color=C1, lw=1.8, marker="o", ms=4.5, label=r"$\omega_\oplus$ (Theorem 1)", zorder=4)
+    ax.plot(k, L(w), color=C1, lw=1.8, marker="o", ms=4.5, label=r"optimal bound $\omega_\oplus$", zorder=4)
     ax.plot([], [], color=GRID, lw=2, label="random states")
 
     ax.set_xlabel(r"$k$")
@@ -163,7 +177,7 @@ def fig_renyi_family():
     alphas = np.logspace(-1, np.log10(50), 141)
     valid = alphas <= 1
     fig, axes = plt.subplots(2, 1, figsize=(COL, 4.3), sharex=True)
-    for ax, deg in zip(axes, (60, 85)):
+    for ax, deg, tag in zip(axes, (60, 85), ("(a)", "(b)")):
         M, N = pair(np.radians(deg))
         c = mj.overlap_cmax(M, N)
         exact = np.array([mj.min_entropy_sum(M, N, alpha=a, num=1201)[0] for a in alphas])
@@ -176,9 +190,9 @@ def fig_renyi_family():
                 label=r"same expression, $\alpha>1$ (not a bound)")
         ax.plot(alphas, tens, color=C3, ls=(0, (1.2, 1.2)), label=r"tensor product $H_\alpha(\omega_\otimes)$")
         ax.plot(alphas[valid], np.full(valid.sum(), mj.maassen_uffink(c)), color=C2, ls="--",
-                label=r"Maassen–Uffink, $\alpha\leq1$")
+                label=r"Maassen--Uffink, $\alpha\leq1$")
         ax.axvline(1, color=INK2, lw=0.6, ls=":")
-        ax.text(0.97, 0.93, rf"$\theta={deg}^\circ$", transform=ax.transAxes, ha="right", va="top",
+        ax.text(0.97, 0.93, rf"{tag}\quad$\theta={deg}^\circ$", transform=ax.transAxes, ha="right", va="top",
                 fontsize=8, color=INK2)
         ax.set_ylabel(r"bound on $H_\alpha(M)+H_\alpha(N)$", fontsize=8)
         ax.set_ylim(0, 1.08)
@@ -186,7 +200,7 @@ def fig_renyi_family():
     axes[-1].set_xlim(alphas[0], alphas[-1])
     axes[-1].set_xticks([0.1, 0.5, 1, 2, 5, 10, 50])
     axes[-1].set_xticklabels(["0.1", "0.5", "1", "2", "5", "10", "50"])
-    axes[-1].set_xlabel(r"Rényi order $\alpha$")
+    axes[-1].set_xlabel(r"R\'enyi order $\alpha$")
     axes[1].legend(loc="lower left", fontsize=6.8, handlelength=2.4)
     fig.savefig(OUT / "renyi_family.pdf")
     plt.close(fig)
@@ -210,7 +224,7 @@ def fig_povm():
     ax.set_xlabel(r"sharpness $\eta=\zeta$ (unbiased, $\mu=\nu=0$)")
     ax.set_ylabel(r"$H(M)+H(N)$ (bits)")
     ax.set_xlim(0, 1)
-    ax.set_ylim(0.4, 2.02)
+    ax.set_ylim(0.3, 2.1)
     ax.legend(loc="lower left", ncol=1)
     fig.savefig(OUT / "povm.pdf")
     plt.close(fig)
