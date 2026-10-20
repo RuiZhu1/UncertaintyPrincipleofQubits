@@ -2,6 +2,7 @@
 
 \usepackage{amsmath,amssymb,amsthm,bm}
 \usepackage{mathtools}
+\usepackage{dsfont}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
@@ -40,37 +41,50 @@
 
 \author{Rui Zhu}
 \email{rui.zhu@gtiit.edu.cn}
-\affiliation{Guangdong Technion -- Israel Institute of Technology, Shantou, Guangdong 515063, China}
-% \todo{add co-authors / supervisors once agreed}
+\affiliation{Department of Physics, Guangdong Technion-Israel Institute of Technology, Shantou 515063, China}
+\affiliation{Technion--Israel Institute of Technology, Haifa 32000, Israel}
+\affiliation{Guangdong Provincial Key Laboratory of Materials and Technologies for Energy Conversion, Guangdong Technion-Israel Institute of Technology, Shantou 515063, China}
+
+\author{Gilad Gour}
+% TODO: ask Gilad for his affiliation(s) and e-mail address
+\affiliation{\todo{affiliation(s) to be provided by Gilad}}
+
+\author{Marcelo F. Ciappina}
+\email{marcelo.ciappina@gtiit.edu.cn}
+\affiliation{Department of Physics, Guangdong Technion-Israel Institute of Technology, Shantou 515063, China}
+\affiliation{Technion--Israel Institute of Technology, Haifa 32000, Israel}
+\affiliation{Guangdong Provincial Key Laboratory of Materials and Technologies for Energy Conversion, Guangdong Technion-Israel Institute of Technology, Shantou 515063, China}
 
 \date{\today}
 
 \begin{abstract}
-Majorization uncertainty relations bound the outcome statistics of all quantum
-states by a single state-independent probability vector, and thereby bound
-every Schur-concave uncertainty measure at once.
-We give a self-contained treatment of the simplest non-trivial setting, a pair
-of binary (two-outcome) measurements, and compare the majorization approach
-systematically with entropy-specific uncertainty relations.
-For projective qubit measurements with maximal overlap $c$, the direct-sum and
-tensor-product bounds of the general theory reduce to
-$\omplus=(1,\sqc,1-\sqc,0)$ and $\omtimes=(w,1-w,0,0)$ with $w=(1+\sqc)^2/4$.
-Using the elliptical geometry of the achievable expectation values, we show
-that these vectors are the least upper bounds of the achievable statistics in
-the majorization lattice, that neither is attained unless the measurements
-commute, and that their partial sums are saturated by two distinct families of
-states.
-Consequently, for non-commuting measurements every bound they imply for a
-strictly Schur-concave measure---Shannon, R\'enyi of order $0<\alpha<\infty$,
-Tsallis of order $q>0$---is strict; only the bounds of order $0$ and $\infty$
-are attained.
-We map out, across the R\'enyi family, when the direct-sum or the
-tensor-product form is preferable and how both compare with the
-Maassen--Uffink relation and with the exact optimum.
-Finally, we give the optimal direct-sum bound for arbitrary unsharp and biased
-two-outcome qubit POVMs, discuss its relation to joint measurability, and use
-Jordan's lemma to extend the projective results to binary projective
-measurements in any finite dimension.
+Uncertainty relations quantify the impossibility of preparing a quantum system
+so that two incompatible measurements both have predictable outcomes.
+Majorization provides a particularly economical formulation: a single
+probability vector, independent of the state, bounds the outcome statistics of
+all states and thereby every reasonable measure of uncertainty at once,
+including the Shannon, R\'enyi and Tsallis entropies.
+Here we work out this approach completely in the simplest non-trivial setting,
+a pair of two-outcome measurements, and compare it systematically with
+uncertainty relations tailored to specific entropies.
+Using the elliptical geometry of the expectation values that qubit states can
+reach, we show that the known majorization bounds, of both direct-sum and
+tensor-product type, cannot be improved, yet no state attains them unless the
+measurements commute.
+Consequently, for non-commuting measurements the entropic bounds they imply are
+never tight for the Shannon entropy, the Tsallis entropies and the R\'enyi
+entropies of finite non-zero order; they become exact only at the two extremes
+of the R\'enyi family.
+We chart where each type of bound is preferable and how both compare with the
+Maassen--Uffink relation and with the exact optimum: the majorization bounds
+outperform Maassen--Uffink unless the measurements are close to mutually
+unbiased, and the direct-sum bound becomes tight to leading order as the
+measurements approach compatibility.
+Finally, we obtain the optimal bound for arbitrary noisy and biased two-outcome
+qubit measurements, show that the corresponding preparation uncertainty
+persists even when the two measurements are jointly measurable, and extend the
+results for projective measurements to binary measurements in any finite
+dimension.
 \end{abstract}
 
 \maketitle
@@ -80,81 +94,109 @@ measurements in any finite dimension.
 \label{sec:intro}
 % ===========================================================================
 
-The uncertainty principle~\cite{Heisenberg1927,Robertson1929} expresses the
-impossibility of preparing a quantum state that yields sharp outcomes for two
-incompatible measurements.
-Its information-theoretic formulation replaces variances by entropies of the
-outcome distributions $p$ and $q$ of two measurements $M$ and $N$~\cite{Deutsch1983,Kraus1987,MaassenUffink1988}.
-The best known example is the Maassen--Uffink (MU) relation~\cite{MaassenUffink1988}
-\begin{equation}
-  H(p)+H(q)\;\geq\;-\log_2 c,\qquad c=\max_{i,j}|\langle m_i|n_j\rangle|^2 ,
-  \label{eq:MU}
-\end{equation}
-which has become a workhorse of quantum cryptography and quantum information
-theory~\cite{WehnerWinter2010,Coles2017} and has been improved in various
-regimes~\cite{deVicente2008,ColesPiani2014}.
+The uncertainty principle is one of the defining features of quantum
+mechanics~\cite{Heisenberg1927,Robertson1929,BuschHeinonenLahti2007}: there are
+pairs of measurements whose outcomes cannot both be predicted with certainty,
+however carefully the system is prepared.
+First formulated for the position and momentum of a particle, it has since
+become a quantitative tool of quantum information science.
+It underlies the security of quantum key
+distribution~\cite{BB84,Berta2010,TomamichelRenner2011}, provides
+experimentally accessible criteria for
+entanglement~\cite{HofmannTakeuchi2003,Guhne2004,Berta2010}, and is closely
+related to, though distinct from, the incompatibility of quantum
+measurements~\cite{HMZ2016,Guhne2023}.
+These applications call for formulations that apply to measurements with a
+finite number of outcomes and whose bounds do not depend on the state of the
+system.
 
-A scalar inequality such as~\eqref{eq:MU} constrains one particular functional
-of the pair $(p,q)$; a different uncertainty measure requires a different
-relation.
-Majorization~\cite{MarshallOlkin2011} provides a structural alternative.
-One seeks a single state-independent probability vector $\omega$ such that
-\begin{equation}
-  p(\rho)\oplus q(\rho)\;\maj\;\omega
-  \quad\text{or}\quad
-  p(\rho)\otimes q(\rho)\;\maj\;\omega
-  \qquad\forall\rho ,
-  \label{eq:maj-UR}
-\end{equation}
-so that every Schur-concave function $\Phi$---Shannon, R\'enyi or Tsallis entropies,
-among many others---inherits the bound $\Phi(p\oplus q)\ge\Phi(\omega)$
-automatically.
+Robertson's variance-based relation~\cite{Robertson1929} does not meet these
+requirements: its lower bound depends on the state, it can vanish even for
+incompatible observables, and variances are not natural when the outcomes are
+mere labels~\cite{Deutsch1983}.
+Entropies of the outcome distributions provide a
+remedy~\cite{BBM1975,Deutsch1983,Kraus1987}.
+The best known entropic uncertainty relation, due to Maassen and
+Uffink~\cite{MaassenUffink1988}, bounds the sum of the Shannon entropies of the
+outcomes of two measurements by a quantity that depends only on the largest
+overlap between their eigenvectors.
+Entropic uncertainty relations have since grown into a broad field with
+applications throughout quantum information
+theory~\cite{WehnerWinter2010,Coles2017}; they have been refined in various
+regimes~\cite{deVicente2008,ColesPiani2014} and tested in
+experiments~\cite{Prevedel2011,LiXu2011}.
+
+Each such relation, however, constrains a single measure of uncertainty, while
+different tasks call for different measures: the Shannon entropy quantifies
+average information, the min-entropy governs guessing
+probabilities~\cite{KRS2009}, and the R\'enyi and Tsallis families interpolate
+between these and other extremes.
+Majorization~\cite{MarshallOlkin2011}, the order that captures when one
+probability distribution is more disordered than another, makes it possible to
+treat all of them at once.
+It is a central tool of quantum information theory, where it governs, for
+instance, the transformations of entangled states~\cite{Nielsen1999} and,
+more generally, quantum resource
+theories~\cite{Gour2015,ChitambarGour2019}.
+In the context of uncertainty, the idea is to find a single probability vector,
+independent of the state, that majorizes the outcome statistics of every state;
+every uncertainty measure that respects majorization---the Shannon, R\'enyi
+and Tsallis entropies among many others---then obeys a bound determined by this
+one vector.
 This programme was initiated by Partovi~\cite{Partovi2011} and developed into
-universal uncertainty relations of tensor-product form by Friedland, Gheorghiu
-and Gour~\cite{FGG2013} and by Pucha{\l}a, Rudnicki and
-{\.Z}yczkowski~\cite{PRZ2013}; the direct-sum form, which yields stronger
-entropic bounds, was introduced in Ref.~\cite{RPZ2014}.
-It has since been extended to POVMs and quantum
-operations~\cite{RasteginZyczkowski2016,Baek2019} and sharpened
-further~\cite{Li2016,Yuan2023}, in particular by exploiting the lattice
-structure of majorization~\cite{Yuan2023}.
+universal uncertainty relations by Friedland, Gheorghiu and Gour~\cite{FGG2013}
+and by Pucha{\l}a, Rudnicki and {\.Z}yczkowski~\cite{PRZ2013}; Rudnicki
+\emph{et al.} subsequently introduced a direct-sum formulation that yields
+stronger entropic bounds~\cite{RPZ2014}.
+Majorization uncertainty relations have since been extended to generalized
+measurements and quantum operations~\cite{RasteginZyczkowski2016,Baek2019},
+sharpened further~\cite{Li2016,Yuan2023}, in particular by exploiting the
+lattice structure of majorization, and verified experimentally~\cite{Yuan2023}.
 
-For a qubit, entropy-specific relations can be pushed further: the optimal
-Shannon relation for two projective measurements is
+The price of this universality is less clear.
+For a qubit measured in two bases---the setting of the BB84
+protocol~\cite{BB84} and of many experiments---entropy-specific relations can
+be optimized exactly: the optimal Shannon relation is
 known~\cite{SanchezRuiz1998,Ghirardi2003}, and so are optimal relations for
 R\'enyi entropies~\cite{BosykPortesiPlastino2012,ZozorBosykPortesi2013}.
 This raises a natural question: in the simplest setting, where both approaches
 can be carried out completely, what exactly does majorization gain, and what
 does it cost?
 
-In this paper we answer this question for binary (two-outcome) measurements.
-Several ingredients are known. For two qubit bases, the vectors $\omplus$ and
-$\omtimes$ of Sec.~\ref{sec:projective} are the $d=2$ instances of the bounds of
-Refs.~\cite{RPZ2014} and~\cite{PRZ2013,FGG2013}, and for unbiased unsharp qubit
-observables the direct-sum bound was evaluated in Ref.~\cite{Baek2019}.
-Building on these results, we give a unified and self-contained treatment of the
-binary case:
-\begin{enumerate}
-  \item[(i)] From the elliptical geometry of the achievable expectation values
-    (Lemma~\ref{lem:ellipse}) we derive both bounds, prove that they are the
-    least upper bounds of the achievable statistics in the majorization
-    lattice, show that neither is attained unless the measurements commute, and
-    identify the two families of states that saturate their partial sums
-    (Sec.~\ref{sec:projective}).
-  \item[(ii)] We characterize when the resulting entropic bounds are tight: for
-    non-commuting measurements every bound for a strictly Schur-concave
-    measure is strict, and only the bounds of order $0$ and $\infty$ are
-    attained (Theorem~\ref{thm:tight}).
-  \item[(iii)] We compare the direct-sum and tensor-product forms with each
-    other, with MU and with the exact optimum across the whole R\'enyi family
-    (Sec.~\ref{sec:entropic}).
-  \item[(iv)] We obtain the optimal direct-sum bound for arbitrary unsharp and
-    biased two-outcome qubit POVMs and discuss its relation to joint
-    measurability (Sec.~\ref{sec:povm}), and we extend the projective results
-    to binary projective measurements in any finite dimension
-    (Sec.~\ref{sec:dimd}).
-\end{enumerate}
-All statements are checked numerically with the accompanying code
+In this paper we answer this question for pairs of binary (two-outcome)
+measurements.
+For two qubit bases, the relevant majorization bounds are special cases of the
+general constructions of Refs.~\cite{PRZ2013,FGG2013,RPZ2014}, and for unbiased
+unsharp qubit observables the direct-sum bound was evaluated in
+Ref.~\cite{Baek2019}.
+Building on these results, we give a unified and self-contained treatment of
+the binary case.
+We show that the expectation values that qubit states can reach fill an
+ellipse, and use this geometry to derive both bounds, to prove that they cannot
+be improved, and to identify the states that come closest to them.
+No single state attains these bounds unless the measurements commute.
+Consequently, for non-commuting measurements the entropic bounds they imply are
+strict for the Shannon entropy, for the Tsallis entropies and for all R\'enyi
+entropies except those of order zero and infinity.
+We then compare the two types of majorization bound with each other, with the
+Maassen--Uffink relation and with the exact optimum across the whole R\'enyi
+family.
+Finally, we derive the optimal bound for arbitrary noisy and biased
+two-outcome qubit measurements, discuss its relation to joint measurability,
+and extend the results for projective measurements to binary measurements in
+any finite dimension.
+
+The paper is organized as follows.
+Section~\ref{sec:prelim} introduces majorization, the uncertainty measures and
+the measurements we consider, and Sec.~\ref{sec:geometry} describes the
+geometry of the achievable statistics.
+Section~\ref{sec:projective} derives the optimal bounds for projective qubit
+measurements, and Sec.~\ref{sec:entropic} discusses their entropic consequences
+and compares them with entropy-specific relations.
+Sections~\ref{sec:povm} and~\ref{sec:dimd} treat general two-outcome qubit
+POVMs and binary projective measurements in arbitrary dimension, respectively,
+and Sec.~\ref{sec:discussion} concludes.
+All results are verified numerically with the accompanying code
 (Appendix~\ref{app:numerics}).
 
 % ===========================================================================
@@ -188,6 +230,29 @@ logarithm of the number of non-zero entries.
 All of them are Schur-concave; $H_\alpha$ is strictly Schur-concave for
 $0<\alpha<\infty$ and $T_q$ for $q>0$, whereas $H_0$ and $H_\infty$ are not.
 
+Let $p(\rho)$ and $q(\rho)$ denote the outcome distributions of two
+measurements $M$ and $N$ on a state $\rho$. For measurements in orthonormal
+bases $\{\ket{m_i}\}$ and $\{\ket{n_j}\}$, the Maassen--Uffink (MU)
+relation~\cite{MaassenUffink1988} reads
+\begin{equation}
+  H(p)+H(q)\;\geq\;-\log_2 c,\qquad c=\max_{i,j}|\langle m_i|n_j\rangle|^2 .
+  \label{eq:MU}
+\end{equation}
+It constrains one particular functional of the pair $(p,q)$; a different
+uncertainty measure requires a different relation. A majorization uncertainty
+relation~\cite{Partovi2011,FGG2013,PRZ2013,RPZ2014} instead consists of a
+single state-independent vector $\omega$ such that
+\begin{equation}
+  p(\rho)\oplus q(\rho)\;\maj\;\omega
+  \quad\text{or}\quad
+  p(\rho)\otimes q(\rho)\;\maj\;\omega
+  \qquad\forall\rho .
+  \label{eq:maj-UR}
+\end{equation}
+We call these the direct-sum and the tensor-product form, respectively. Every
+Schur-concave function $\Phi$ then inherits the bound
+$\Phi(p\oplus q)\ge\Phi(\omega)$ or $\Phi(p\otimes q)\ge\Phi(\omega)$.
+
 Restricted to non-increasing vectors of fixed total, $\maj$ is a partial order,
 and in fact a complete lattice~\cite{CicaleseVaccaro2002,Bosyk2019}.
 
@@ -211,9 +276,9 @@ probability that any state can concentrate on $k$ outcomes.
 
 \subsection{Two-outcome qubit measurements}
 
-A qubit state is $\rho=\tfrac12(\mathbb{1}+\vecr\cdot\vsigma)$ with $|\vecr|\le1$.
+A qubit state is $\rho=\tfrac12(\mathds{1}+\vecr\cdot\vsigma)$ with $|\vecr|\le1$.
 A projective two-outcome measurement is $M=\{P_\pm\}$ with
-$P_\pm=\tfrac12(\mathbb{1}\pm\mhat\cdot\vsigma)$, $|\mhat|=1$, and similarly
+$P_\pm=\tfrac12(\mathds{1}\pm\mhat\cdot\vsigma)$, $|\mhat|=1$, and similarly
 $N=\{Q_\pm\}$ with axis $\nhat$.
 The outcome distributions are
 \begin{equation}
@@ -233,13 +298,13 @@ Relabelling the outcomes of $N$ maps $\nhat\mapsto-\nhat$ and does not affect an
 majorization statement, so we may and shall assume $\mhat\cdot\nhat=\cos\theta\ge0$.
 Note that $\tfrac12\le c\le1$ and $\sqc\ge1/\sqrt2>1-\sqc$.
 
-A general two-outcome POVM $\{E_0,E_1=\mathbb{1}-E_0\}$ can always be written as
+A general two-outcome POVM $\{E_0,E_1=\mathds{1}-E_0\}$ can always be written as
 \begin{equation}
-  E_0=\tfrac12\bigl[(1+\mu)\mathbb{1}+\eta\,\hat a\cdot\vsigma\bigr],
+  E_0=\tfrac12\bigl[(1+\mu)\mathds{1}+\eta\,\hat a\cdot\vsigma\bigr],
   \qquad \eta\ge0,\;|\mu|+\eta\le1 ,
   \label{eq:povm}
 \end{equation}
-the constraint being equivalent to $0\le E_0\le\mathbb{1}$.
+the constraint being equivalent to $0\le E_0\le\mathds{1}$.
 Here $\eta$ is the sharpness and $\mu$ the bias; rank-one projective
 measurements correspond to $\eta=1$, $\mu=0$.
 
@@ -593,7 +658,7 @@ Theorem~\ref{thm:tight} requires.
   \centering
   \includegraphics[width=\columnwidth]{renyi_family.pdf}
   \caption{Bounds on $H_\alpha(M)+H_\alpha(N)$ across the R\'enyi family for
-  $\theta=60^\circ$ (top) and $\theta=85^\circ$ (bottom). Black: exact minimum.
+  (a)~$\theta=60^\circ$ and (b)~$\theta=85^\circ$. Black: exact minimum.
   Blue: direct-sum bound $H_\alpha(\sqc,1-\sqc)$ of Corollary~\ref{cor:direct},
   valid for $\alpha\le1$; its thin dashed continuation for $\alpha>1$ is not a
   bound and eventually exceeds the exact minimum. Green (dotted):
@@ -711,7 +776,7 @@ The qubit analysis already contains the general binary projective case.
 
 \begin{theorem}
 \label{thm:dimd}
-Let $M=\{P,\mathbb{1}-P\}$ and $N=\{Q,\mathbb{1}-Q\}$ be projective measurements on
+Let $M=\{P,\mathds{1}-P\}$ and $N=\{Q,\mathds{1}-Q\}$ be projective measurements on
 $\mathbb{C}^d$ and $c=\max_{i,j}\|P_iQ_j\|_\infty^2$. Then
 Theorems~\ref{thm:direct} and~\ref{thm:tensor} hold verbatim, and $\omplus$ is
 attained if and only if $c=1$.
@@ -790,8 +855,14 @@ structure of the bound becomes genuinely relevant.
 to yield relations such as $H_\infty(p)+H_{1/2}(q)\ge-\log_2c$.
 
 \begin{acknowledgments}
-The author thanks Marcelo Ciappina and Gilad Gour for guidance and discussions.
-% \todo{funding information}
+R.~Z.\ and M.~F.~C.\ acknowledge support by the Quantum Science and
+Technology-National Science and Technology Major Project (Grant
+No.~2025ZD0301000), the National Key Research and Development Program of China
+(Grant No.~2023YFA1407100), the Guangdong Province Science, Technology Major
+Project (Future functional materials under extreme conditions --
+2021B0301030005) and the National Natural Science Foundation of China (Grant
+No.~12574092).
+% TODO: add G.~G.'s funding acknowledgement (ask Gilad)
 \end{acknowledgments}
 
 \appendix
