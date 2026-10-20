@@ -5,13 +5,15 @@ exploratory research project *Uncertainty principles from majorization and
 entropy in the binary case* (tentative title in the GTIIT graduate application
 form).
 
-- **Author:** Rui Zhu (GTIIT)
+- **Paper authors:** Rui Zhu, Gilad Gour and Marcelo F. Ciappina, in that order
 - **Supervisors:** Dr. Marcelo Ciappina and Dr. Gilad Gour
 - **Deliverable:** a clear, thesis-level treatment of majorization and entropic
   uncertainty relations for two-outcome (binary) measurements, as set out in
   the research plan
-- **Status:** second draft (manuscript plus fully verified numerics). Not yet
-  submitted. The venue is still to be decided with the supervisors.
+- **Status:** third draft (October 2026). The abstract, introduction, author list,
+  acknowledgements and figure style were revised after Marcelo's comments. Not yet
+  submitted. The target is submission before the end of 2026, and the venue is
+  still to be decided with the supervisors.
 
 The applicant's letter of intent is in
 [`GTIIT_Letter_of_Intent_Research_Statement.pdf`](GTIIT_Letter_of_Intent_Research_Statement.pdf).
@@ -144,6 +146,11 @@ cd code
 python make_figures.py      # writes ../paper/figures/*.pdf
 ```
 
+All figure text is typeset by LaTeX (Matplotlib `text.usetex`), so regenerating
+the figures needs a working `latex` with the `type1cm` package (both are in TeX
+Live). The figures use journal style: Computer Modern fonts, closed axes boxes
+and inward ticks on all four sides.
+
 | Figure | Content |
 |---|---|
 | `achievable_set.pdf` | Ellipse of achievable $(\langle\hat m\cdot\vec\sigma\rangle,\langle\hat n\cdot\vec\sigma\rangle)$ and the saturating states |
@@ -188,7 +195,11 @@ measurements.
 
 ## Open items before submission
 
-- Decide the author list with the supervisors (there is a TODO in `paper/main.tex`).
+- Get Gilad's affiliation(s), e-mail address and funding acknowledgement. There
+  are TODOs for these in `paper/main.tex`.
+- Choose the journal. If it is a physics journal, we may need to restructure the
+  paper: replace the Theorem/Lemma/Definition environments with prose and move
+  the proofs to appendices.
 - Proofread the bibliography formatting. The entries were checked against the
   original sources or their publishers' pages.
 
