@@ -10,10 +10,12 @@ form).
 - **Deliverable:** a clear, thesis-level treatment of majorization and entropic
   uncertainty relations for two-outcome (binary) measurements, as set out in
   the research plan
-- **Status:** third draft (October 2026). The abstract, introduction, author list,
-  acknowledgements and figure style were revised after Marcelo's comments. Not yet
-  submitted. The target is submission before the end of 2026, and the venue is
-  still to be decided with the supervisors.
+- **Status:** close-to-final draft (October 2026). After Marcelo's latest
+  comments the paper has a new abstract, defines POVMs in the introduction,
+  explains the $81.3^\circ$ crossover with Maassen–Uffink in the Discussion, no
+  longer refers to the code in the appendix, and has a data availability
+  statement. Not yet submitted. The target is submission before the end of 2026,
+  and the venue is still to be decided with the supervisors.
 
 The applicant's letter of intent is in
 [`GTIIT_Letter_of_Intent_Research_Statement.pdf`](GTIIT_Letter_of_Intent_Research_Statement.pdf).
