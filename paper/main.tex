@@ -58,33 +58,21 @@
 \date{\today}
 
 \begin{abstract}
-Uncertainty relations quantify the impossibility of preparing a quantum system
-so that two incompatible measurements both have predictable outcomes.
-Majorization provides a particularly economical formulation: a single
-probability vector, independent of the state, bounds the outcome statistics of
-all states and thereby every reasonable measure of uncertainty at once,
-including the Shannon, R\'enyi and Tsallis entropies.
-Here we work out this approach completely in the simplest non-trivial setting,
-a pair of two-outcome measurements, and compare it systematically with
-uncertainty relations tailored to specific entropies.
-Using the elliptical geometry of the expectation values that qubit states can
-reach, we show that the known majorization bounds, of both direct-sum and
-tensor-product type, cannot be improved, yet no state attains them unless the
-measurements commute.
-Consequently, for non-commuting measurements the entropic bounds they imply are
-never tight for the Shannon entropy, the Tsallis entropies and the R\'enyi
-entropies of finite non-zero order; they become exact only at the two extremes
-of the R\'enyi family.
-We chart where each type of bound is preferable and how both compare with the
-Maassen--Uffink relation and with the exact optimum: the majorization bounds
-outperform Maassen--Uffink unless the measurements are close to mutually
-unbiased, and the direct-sum bound becomes tight to leading order as the
-measurements approach compatibility.
-Finally, we obtain the optimal bound for arbitrary noisy and biased two-outcome
-qubit measurements, show that the corresponding preparation uncertainty
-persists even when the two measurements are jointly measurable, and extend the
-results for projective measurements to binary measurements in any finite
-dimension.
+Making one quantum measurement more predictable can force another to become
+less so.
+Majorization expresses this trade-off with a single list of probabilities that
+covers every state and every sensible measure of uncertainty at once.
+We study the simplest case: two measurements with two possible results each.
+We show that the existing majorization limits cannot be improved, yet no state
+reaches them unless the measurements are compatible.
+So for incompatible measurements, the resulting limits are never exact, except
+in two extreme cases.
+They outperform the standard Maassen--Uffink relation unless the measurements
+are nearly opposite, and become almost exact as the measurements grow
+compatible.
+We also find the best limit for noisy measurements, show that uncertainty
+persists even when both can be measured together, and extend the results to
+systems of any size.
 \end{abstract}
 
 \maketitle
@@ -194,10 +182,10 @@ Section~\ref{sec:projective} derives the optimal bounds for projective qubit
 measurements, and Sec.~\ref{sec:entropic} discusses their entropic consequences
 and compares them with entropy-specific relations.
 Sections~\ref{sec:povm} and~\ref{sec:dimd} treat general two-outcome qubit
-POVMs and binary projective measurements in arbitrary dimension, respectively,
-and Sec.~\ref{sec:discussion} concludes.
-All results are verified numerically with the accompanying code
-(Appendix~\ref{app:numerics}).
+measurements, described by positive operator-valued measures (POVMs), and
+binary projective measurements in arbitrary dimension, respectively, and
+Sec.~\ref{sec:discussion} concludes.
+All results are verified numerically (Appendix~\ref{app:numerics}).
 
 % ===========================================================================
 \section{Preliminaries}
@@ -613,7 +601,7 @@ For mutually unbiased measurements ($\theta=90^\circ$, $c=\frac12$) MU is tight
 (1 bit), while $h(1/\sqrt2)\approx0.872$ and $h(w)\approx0.844$. As the
 measurements become more compatible, however, the majorization bounds take
 over: $h(\sqc)>-\log_2c$ for $\sqc>t^\ast\approx0.7585$, i.e., for Bloch angles
-$\theta<81.3^\circ$ (the tensor bound overtakes MU at $\theta<79.3^\circ$), in
+$\theta<\theta^\ast\approx81.3^\circ$ (the tensor bound overtakes MU at $\theta<79.3^\circ$), in
 agreement with Ref.~\cite{Baek2019}.
 
 As $c\to1$ the advantage over MU becomes unbounded, and the direct-sum bound
@@ -741,6 +729,15 @@ mixed with the uniform vector. For unequal sharpness or nonzero bias, $\omplus$
 is not of this form, and the relevant geometric quantities are the lengths
 $|\eta\hat a\pm\zeta\hat b|$ rather than the overlap $c$.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{povm.pdf}
+  \caption{Unsharp measurements ($\mu=\nu=0$, $\eta=\zeta$): exact minimum of
+  $H(M)+H(N)$ (solid) and the bound from Theorem~\ref{thm:povm} (dashed) for
+  Bloch angles $90^\circ$ and $45^\circ$.}
+  \label{fig:povm}
+\end{figure}
+
 \emph{Uncertainty versus incompatibility.}---For unbiased POVMs the vectors
 $\eta\hat a\pm\zeta\hat b$ that determine $\Lambda$ also decide joint
 measurability: the pair is jointly measurable if and only if
@@ -757,15 +754,6 @@ As a corollary, $H(p)+H(q)\ge-\sum_k\omega_k\log_2\omega_k$ for all
 two-outcome qubit POVMs. Figure~\ref{fig:povm} shows that this bound tracks
 the exact minimum over the whole range of sharpness, becoming exact in the
 trivial limit $\eta\to0$.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\columnwidth]{povm.pdf}
-  \caption{Unsharp measurements ($\mu=\nu=0$, $\eta=\zeta$): exact minimum of
-  $H(M)+H(N)$ (solid) and the bound from Theorem~\ref{thm:povm} (dashed) for
-  Bloch angles $90^\circ$ and $45^\circ$.}
-  \label{fig:povm}
-\end{figure}
 
 % ===========================================================================
 \section{Binary projective measurements in dimension \texorpdfstring{$d$}{d}}
@@ -832,11 +820,22 @@ costs. Because the supremum is not the statistics of any state when the
 measurements do not commute, the induced bound is strict for every strictly
 Schur-concave measure, and it becomes exact only at the extreme orders
 $\alpha=0$ and $\alpha=\infty$. Against a generic scalar relation such as MU,
-on the other hand, the majorization bounds are strong: the direct-sum Shannon
-bound beats MU for Bloch angles below $81.3^\circ$ and is asymptotically tight
-in ratio as the measurements approach compatibility, precisely where MU is
-weakest. Among the two forms, the direct sum is preferable for $\alpha\le1$,
-while only the tensor product survives for large $\alpha$.
+on the other hand, the majorization bounds are strong. For two projective qubit
+measurements, both Shannon bounds depend only on the Bloch angle $\theta$
+between the two measurement axes: the direct-sum bound is $h(\sqc)$ and MU
+gives $-\log_2c$, with $c=\cos^2\frac\theta2$. The two curves cross exactly
+once, at $\theta^\ast\approx81.3^\circ$ ($c\approx0.575$), the root of
+$h(\cos\frac\theta2)=-2\log_2\cos\frac\theta2$ (Sec.~\ref{sec:entropic} and
+Fig.~\ref{fig:entropic}). Nothing singles out this angle geometrically; it is
+simply where the two bounds exchange roles. For $\theta<\theta^\ast$, that is,
+unless the measurements are close to mutually unbiased, the direct-sum Shannon
+bound is the stronger of the two, and it becomes asymptotically tight in ratio
+as the measurements approach compatibility, precisely where MU is weakest.
+Only in the narrow window $\theta^\ast<\theta\le90^\circ$ next to mutually
+unbiased measurements ($\theta=90^\circ$), for which MU is tight, does MU give
+the better bound; for the tensor-product bound the crossover lies at
+$79.3^\circ$. Among the two forms, the direct sum is preferable for
+$\alpha\le1$, while only the tensor product survives for large $\alpha$.
 
 Several questions remain open.
 (i) \emph{Tensor bounds for POVMs.} The AM--GM step of Theorem~\ref{thm:tensor}
@@ -868,36 +867,38 @@ No.~12574092).
 \appendix
 
 % ===========================================================================
-\section{Numerical methods and code}
+\section{Numerical methods}
 \label{app:numerics}
 % ===========================================================================
 
-All results were checked with the accompanying Python code (\texttt{code/}):
-\begin{itemize}
-  \item \texttt{majorization.py}: POVM parametrization, Lorenz curves, the lattice
-    supremum via least concave majorants~\cite{CicaleseVaccaro2002}, the
-    analytic bounds of Theorems~\ref{thm:direct}, \ref{thm:tensor}
-    and~\ref{thm:povm} and Corollaries~\ref{cor:direct}--\ref{cor:tensor}, the
-    eigenvalue characterization $S_k=\max_{|J|=k}\lambda_{\max}(\sum_{j\in J}F_j)$,
-    and exact minima of R\'enyi and Tsallis entropy sums.
-  \item \texttt{verify\_bounds.py}: compares the closed forms with (a) lattice
-    suprema over $1.8\times10^5$ grid states (maximal deviation $<10^{-4}$), and
-    (b) the eigenvalue characterization for 200 random qubit POVM pairs and for
-    150 random pairs of projectors of rank $d/2$ in dimensions $d=2,4,6$, all
-    with $c<1$ (deviation $<10^{-14}$). Pairs with a common eigenvector, which
-    always occur for odd $d$ or unequal ranks, have $c=1$ and are checked
-    separately. The script also checks Propositions~\ref{prop:attain}
-    and~\ref{prop:compare}, Corollaries~\ref{cor:direct}--\ref{cor:tensor},
-    Theorem~\ref{thm:tight}, the critical angle $\bar\theta$, and the jointly
-    measurable example of Sec.~\ref{sec:povm}.
-  \item \texttt{make\_figures.py}: generates Figs.~\ref{fig:ellipse}--\ref{fig:povm}.
-\end{itemize}
+All results were checked numerically. We evaluated Lorenz curves, the lattice
+supremum via least concave majorants~\cite{CicaleseVaccaro2002}, the analytic
+bounds of Theorems~\ref{thm:direct}, \ref{thm:tensor} and~\ref{thm:povm} and
+Corollaries~\ref{cor:direct}--\ref{cor:tensor}, the eigenvalue characterization
+$S_k=\max_{|J|=k}\lambda_{\max}(\sum_{j\in J}F_j)$, and exact minima of R\'enyi
+and Tsallis entropy sums.
+
+The closed forms were compared with (a) lattice suprema over $1.8\times10^5$
+grid states (maximal deviation $<10^{-4}$), and (b) the eigenvalue
+characterization for 200 random qubit POVM pairs and for 150 random pairs of
+projectors of rank $d/2$ in dimensions $d=2,4,6$, all with $c<1$ (deviation
+$<10^{-14}$). Pairs with a common eigenvector, which always occur for odd $d$
+or unequal ranks, have $c=1$ and were checked separately. We also checked
+Propositions~\ref{prop:attain} and~\ref{prop:compare},
+Corollaries~\ref{cor:direct}--\ref{cor:tensor}, Theorem~\ref{thm:tight}, the
+critical angle $\bar\theta$, and the jointly measurable example of
+Sec.~\ref{sec:povm}.
+
 The exact entropy minima are obtained by a dense grid over the great circle in
 $\mathrm{span}\{\mhat,\nhat\}$ refined by Nelder--Mead. This reduction is justified
 by Lemma~\ref{lem:ellipse}: the Shannon entropy is concave in $(x,y)$ and is
 therefore minimized on the boundary of $\mathcal{E}_\theta$. For unbiased
 measurements, moving $\vecr$ outwards makes both $p$ and $q$ more ordered, so the
 same holds for every R\'enyi and Tsallis entropy.
+
+\section*{Data Availability Statement}
+The data that support the findings of this study are available from the
+corresponding author upon reasonable request.
 
 \bibliography{references}
 
