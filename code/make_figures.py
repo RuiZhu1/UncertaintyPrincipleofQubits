@@ -187,7 +187,7 @@ def fig_renyi_family():
         ax.plot(alphas[valid], dsum[valid], color=C1,
                 label=r"direct sum $H_\alpha(\sqrt{c},1-\sqrt{c})$, $\alpha\leq1$")
         ax.plot(alphas[~valid], dsum[~valid], color=C1, lw=0.9, ls=(0, (4, 2)),
-                label=r"same expression, $\alpha>1$ (not a bound)")
+                label=r"same expression, $\alpha>1$ (not guaranteed)")
         ax.plot(alphas, tens, color=C3, ls=(0, (1.2, 1.2)), label=r"tensor product $H_\alpha(\omega_\otimes)$")
         ax.plot(alphas[valid], np.full(valid.sum(), mj.maassen_uffink(c)), color=C2, ls="--",
                 label=r"Maassen--Uffink, $\alpha\leq1$")
