@@ -976,10 +976,40 @@ $\{A,B\}=2(\mhat_b\cdot\nhat_b)\mathds{1}$ and
 $c_b=\frac12(1+|\mhat_b\cdot\nhat_b|)$, while $\{A,B\}=\pm2$ on a
 one-dimensional block. For qubits this is the relation between the overlap and
 the effective anticommutator of Ref.~\cite{KTW2014}.
-For arbitrary POVMs in any dimension, the eigenvalue formula for $S_k$ quoted in
-Sec.~\ref{sec:povm}, together with Lemma~\ref{lem:sup}, gives an exact
-numerical procedure, which we use to verify Theorems~\ref{thm:povm}
-and~\ref{thm:dimd} independently (Appendix~\ref{app:numerics}).
+
+The argument for the direct sum uses only the eigenvalue formula, so it carries
+over to binary POVMs in any dimension.
+
+\begin{corollary}
+\label{cor:binary-povm}
+Let $M=\{E_1,E_2\}$ and $N=\{F_1,F_2\}$ be two-outcome POVMs on $\mathbb{C}^d$, let
+$S_1$ be the largest eigenvalue of the four effects, and let
+$S_2=\max\{1,\max_{i,j}\lambda_{\max}(E_i+F_j)\}$. Then
+\begin{equation}
+  p(\rho)\oplus q(\rho)\;\maj\;\bigl(S_1,\;S_2-S_1,\;1+S_1-S_2,\;1-S_1\bigr)
+  \qquad\forall\rho,
+  \label{eq:om-binary}
+\end{equation}
+and this vector is the optimal majorization bound.
+\end{corollary}
+
+\begin{proof}
+By the eigenvalue formula, $S_1$ and $S_2$ are the maximal partial sums, and
+$S_3=1+S_1$, since any three effects include $E_1+E_2=\mathds{1}$ or
+$F_1+F_2=\mathds{1}$. The increments are non-increasing iff
+$S_1+\frac12\le S_2\le2S_1$. The upper inequality holds because $\lambda_{\max}$ is
+subadditive and $S_1\ge\frac12$. For the lower one, a top eigenvector of the
+effect that gives $S_1$ is a state at which the other measurement has an
+outcome of probability at least $\frac12$. Lemma~\ref{lem:sup} completes the
+proof.
+\end{proof}
+
+Theorem~\ref{thm:povm} is the qubit case, with $S_1=\frac12(1+\kappa)$ and
+$S_2=1+\frac12\Lambda$, and Theorem~\ref{thm:dimd} the projective case, with
+$S_1=1$ and $S_2=1+\sqc$. For arbitrary POVMs in any dimension, the eigenvalue
+formula together with Lemma~\ref{lem:sup} gives an exact numerical procedure,
+which we use to verify Theorems~\ref{thm:povm} and~\ref{thm:dimd} and
+Corollary~\ref{cor:binary-povm} independently (Appendix~\ref{app:numerics}).
 
 % ===========================================================================
 \section{Discussion}
@@ -987,12 +1017,15 @@ and~\ref{thm:dimd} independently (Appendix~\ref{app:numerics}).
 % ===========================================================================
 
 For binary measurements the majorization approach to uncertainty can be
-carried out completely. The achievable statistics form an affine image of an
-ellipse, and a single four-component vector, determined by the overlap $c$ (or,
-for POVMs, by $\kappa$ and $\Lambda$), is their least upper bound in the
-majorization lattice, for the direct sum as well as for the tensor product.
-This is the unified perspective that majorization offers: one vector controls
-every Schur-concave uncertainty measure at once.
+carried out in closed form. For a qubit the achievable statistics form an
+affine image of an ellipse, and a single four-component vector, determined by
+the overlap $c$, is their least upper bound in the majorization lattice, for the
+direct sum as well as for the tensor product. For POVMs the direct-sum bound is
+determined by $\kappa$ and $\Lambda$, and in any dimension by the largest
+eigenvalues of the effects and of their pairwise sums
+(Corollary~\ref{cor:binary-povm}). This is the unified perspective that
+majorization offers: one vector controls every Schur-concave uncertainty
+measure at once.
 
 The comparison with entropy-specific relations shows what this unification
 costs. Because the supremum is not the statistics of any state when the
@@ -1013,7 +1046,7 @@ as the measurements approach compatibility, precisely where MU is weakest.
 Only in the narrow window $\theta^\ast<\theta\le90^\circ$ next to mutually
 unbiased measurements ($\theta=90^\circ$), for which MU is tight, does MU give
 the better bound; for the tensor-product bound the crossover lies at
-$79.3^\circ$. Among the two forms, the direct sum is preferable for
+$79.3^\circ$. Of the two forms, the direct sum is preferable for
 $\alpha\le1$, while only the tensor product survives for large $\alpha$.
 
 \emph{Relation to quantum optics.}---These results contrast instructively with
@@ -1022,23 +1055,24 @@ minimum-uncertainty states: for their principal quadratures they saturate both
 the Heisenberg relation and the entropic relation of Bia{\l}ynicki-Birula and
 Mycielski~\cite{BBM1975}; moreover, all pure Gaussian states are equivalent
 under continuous majorization in phase space and are conjectured to majorize
-every Wigner-positive state~\cite{VanHerstraeten2023}. For incompatible binary
-measurements no such state exists (Proposition~\ref{prop:attain}), and the
-optimal state depends on the uncertainty measure. The ellipse
-$\mathcal{E}_\theta$ resembles the covariance ellipse of a squeezed vacuum: it
-is a disk for mutually unbiased measurements and flattens as they become
-compatible, although it describes the pair of measurements rather than a single
-state. Its boundary, traced by the pure states in the plane of the two axes,
-plays the role of the family of squeezed states, trading predictability of $N$
-for that of $M$. The balanced bisector state, the analogue of a coherent state,
-minimizes the Shannon sum up to $\bar\theta\approx67^\circ$; for larger angles
-the minimizer moves towards an eigenstate of either measurement, the analogue
-of an infinitely squeezed state, and the range in which the balanced state is
-optimal shrinks for smaller R\'enyi orders and grows for larger ones
-(Sec.~\ref{sec:entropic} and Ref.~\cite{ZozorBosykPortesi2013}). A single qubit
-cannot be squeezed in the usual sense~\cite{KitagawaUeda1993}, as all its pure
-states are spin coherent states;
-the essential difference is algebraic. For quadratures the commutator is a
+every Wigner-positive state~\cite{VanHerstraeten2023}. For non-commuting binary
+measurements no such state exists (Propositions~\ref{prop:attain}
+and~\ref{prop:povm-attain}), and the optimal state depends on the uncertainty
+measure. The boundary of $\mathcal{E}_\theta$, traced by the pure states in the
+plane of the two axes, plays the role of the family of squeezed states, trading
+predictability of $N$ for that of $M$. The balanced bisector state, the analogue
+of a coherent state, minimizes the Shannon sum up to $\bar\theta\approx67^\circ$;
+for larger angles the minimizer moves towards an eigenstate of either
+measurement, the analogue of an infinitely squeezed state, and the range in
+which the balanced state is optimal shrinks for smaller R\'enyi orders and grows
+for larger ones (Sec.~\ref{sec:entropic} and Ref.~\cite{ZozorBosykPortesi2013}).
+The ellipse itself resembles the covariance ellipse of a squeezed vacuum only
+loosely: it describes the pair of measurements rather than a single state, and
+although it is a disk for mutually unbiased measurements and flattens as they
+become compatible, its area $\pi\sin\theta$ shrinks instead of being conserved.
+A single qubit cannot be squeezed in the usual sense~\cite{KitagawaUeda1993}, as
+all its pure states are spin coherent states; the essential difference is
+algebraic. For quadratures the commutator is a
 $c$-number, which makes the Heisenberg bound state independent. For binary
 observables it is the anticommutator that is, blockwise, a $c$-number
 [Eq.~\eqref{eq:cov}], and it fixes $c=\frac12+\frac14\|\{A,B\}\|$
@@ -1048,7 +1082,11 @@ contrast, vanishes for every state whose Bloch vector lies in the plane of the
 two axes, which contains all optimal states. Commutator-based relations are
 therefore uninformative here, and state-independent descriptions are needed:
 tight variance relations~\cite{Abbott2016} or, for all Schur-concave measures
-at once, majorization.
+at once, majorization. The information missing from the Robertson bound is
+carried by the anticommutator term of the Robertson--Schr\"odinger relation,
+$\det\Gamma\ge\langle(\mhat\times\nhat)\cdot\vsigma\rangle^2$ with $\Gamma$ from
+Eq.~\eqref{eq:cov}, which every pure state saturates; in the plane of the axes
+it reduces to $\det\Gamma=0$, the boundary of $\mathcal{E}_\theta$.
 
 The results apply directly to photonic qubits. Restricted to single photons,
 the Stokes operators of polarization are the Pauli matrices, and two linear
@@ -1058,33 +1096,45 @@ with MU and the angle $\bar\theta$ correspond to $\vartheta\approx40.7^\circ$ an
 $\vartheta\approx33.5^\circ$, respectively. The optimal direct-sum bound has been
 tested in this setting with coherent light, the polarization state being
 reconstructed from measured Stokes parameters~\cite{Wang2020}. For many photons
-the Stokes
-operators form a collective spin that can be squeezed (polarization
-squeezing~\cite{Korolkova2002,Bowen2002}); the single-photon case is the limit
-in which only the redistribution of uncertainty along the boundary of
-$\mathcal{E}_\theta$ remains. Imperfect detectors lead to the unsharp and
-biased measurements of Theorem~\ref{thm:povm}, with the bias set by the
-mismatch of detection efficiencies (Sec.~\ref{sec:povm}).
+the Stokes operators form a collective spin that can be squeezed (polarization
+squeezing~\cite{Korolkova2002,Bowen2002}); for a single photon, which cannot be
+squeezed, only the trade-off along the boundary of $\mathcal{E}_\theta$
+remains. Imperfect detectors lead to the unsharp and biased measurements of
+Theorem~\ref{thm:povm}, with the bias set by the mismatch of detection
+efficiencies (Sec.~\ref{sec:povm}); by Proposition~\ref{prop:povm-attain}(iii),
+such biases can create a trade-off even between two measurements in the same
+polarization basis.
 
 Several questions remain open.
-(i) \emph{Tensor bounds for POVMs.} The AM--GM step of Theorem~\ref{thm:tensor}
-is no longer tight for biased or unequally sharp measurements; the optimal
-$\omtimes$ then requires maximizing products of affine functions over
-$\mathcal{E}_\theta$, and the least concave majorant in Lemma~\ref{lem:sup} may
-become non-trivial.
-(ii) \emph{Binary POVMs in dimension $d$.} Jordan's lemma does not apply to
-pairs of effects directly. A Naimark dilation~\cite{Peres1993} turns them into
-projectors, but only product inputs are allowed, so Theorem~\ref{thm:dimd} does
-not apply as it stands.
-(iii) \emph{More measurements.} For three or more binary measurements the
-partial sums involve signed sums of several Bloch vectors, and the lattice
-structure of the bound becomes genuinely relevant.
+(i) \emph{Tensor bounds for POVMs.} The optimal $\omtimes$ requires maximizing
+sums of products of affine functions over $\mathcal{E}_\theta$, and we have not
+found it for any noisy measurements. For unbiased measurements of equal
+sharpness the AM--GM step of Theorem~\ref{thm:tensor} still gives $S_1$, but
+already $S_3$ has no simple form: numerically, for orthogonal axes and
+$\eta=\zeta=0.8$ it is attained neither by an eigenstate nor by a bisector
+state. For biased or unequally sharp measurements the AM--GM step itself is no
+longer tight, and the least concave majorant in Lemma~\ref{lem:sup} may become
+non-trivial.
+(ii) \emph{Binary POVMs in dimension $d$.} Corollary~\ref{cor:binary-povm} gives
+the optimal direct-sum bound in terms of $\lambda_{\max}(E_i+F_j)$. A closed form
+for this eigenvalue, analogous to $1+\|P_iQ_j\|$ for projectors, the conditions
+under which the bound is attained, and the tensor-product bound remain open.
+(iii) \emph{More measurements.} For qubit bases the eigenvalue formula gives
+$S_k=\frac k2+\frac12\max_J\bigl|\sum_{j\in J}\vec n_j\bigr|$, where $J$ runs
+over sets of $k$ outcomes and $\vec n_j$ is the Bloch vector of the projector
+of outcome $j$, and Li and Qiao obtained the optimal bound for $\sigma_x$,
+$\sigma_y$ and $\sigma_z$~\cite{LiQiao2019}. For random triples of bases we
+found the increments of $S_k$ always ordered, so that no flattening was needed;
+whether this holds in general, and what replaces it for POVMs and for the
+tensor product, is open.
 (iv) \emph{Mixed orders.} For qubits, conditional majorization bounds yield
 optimal relations for any pair of orders~\cite{XiaoFangGour2019}. Whether
 state-independent relations of the form~\eqref{eq:maj-UR} can reproduce
 mixed-order relations such as $H_\infty(p)+H_{1/2}(q)\ge-\log_2c$ remains
 open.
-(v) \emph{Binary measurements on light modes.} In infinite dimension
+(v) \emph{Binary measurements on light modes.} Which experimentally accessible
+binary measurements on a light mode have $c<1$, and what do the bounds of
+Sec.~\ref{sec:dimd} imply for them? In infinite dimension
 $c=\sup_{i,j}\|P_iQ_j\|^2$ can equal $1$ without a common eigenvector. For
 photon-number parity and displaced parity, whose expectation values sample the
 Wigner function~\cite{Royer1977}, increasingly squeezed vacua, which contain
@@ -1095,10 +1145,11 @@ displacement followed by on/off detection with no-click probability
 $\pi Q(\nu)=\bra{\nu}\rho\ket{\nu}$ (the Husimi function), also have $c=1$,
 because all states orthogonal to both coherent states are common eigenvectors.
 Individual partial sums remain informative, however:
-$\pi[Q(\nu_1)+Q(\nu_2)]\le1+e^{-|\nu_1-\nu_2|^2/2}$, with equality for an
-equal-weight superposition of $\ket{\nu_1}$ and $\ket{\nu_2}$, an optical cat
-state~\cite{Ourjoumtsev2007,Lewenstein2021}, which thus plays the role of the
-bisector state. Non-trivial relations require $\|\{A,B\}\|<2$, as for
+$\pi[Q(\nu_1)+Q(\nu_2)]\le1+e^{-|\nu_1-\nu_2|^2/2}$, with equality for the
+superposition $\ket{\nu_1}+e^{-i\varphi}\ket{\nu_2}$ with
+$\varphi=\arg\langle\nu_1|\nu_2\rangle$, an optical cat
+state~\cite{Ourjoumtsev2007,Lewenstein2021} (the even cat state for
+$\nu_2=-\nu_1$), which thus plays the role of the bisector state. Non-trivial relations require $\|\{A,B\}\|<2$, as for
 the pseudospin operators of Ref.~\cite{Chen2002}, of which the squeezed vacuum
 is an eigenstate, or for polarization measurements on single photons.
 
@@ -1134,17 +1185,20 @@ projectors of rank $d/2$ in dimensions $d=2,4,6$, all with $c<1$ (deviation
 $<10^{-14}$). Pairs with a common eigenvector, which always occur for odd $d$
 or unequal ranks, have $c=1$ and were checked separately; the anticommutator
 form of $c$ was checked for 300 random pairs of projectors of arbitrary rank in
-dimensions $d\le8$, and the tensor-product part of Theorem~\ref{thm:dimd} for 50
-random pairs in $d=4,6$. We also checked
+dimensions $d\le8$, the tensor-product part of Theorem~\ref{thm:dimd} for 50
+random pairs in $d=4,6$, and Corollary~\ref{cor:binary-povm} for 300 random
+pairs of binary POVMs in $d=2,\dots,6$. We also checked
 Propositions~\ref{prop:attain}--\ref{prop:povm-attain},
 Corollaries~\ref{cor:direct}--\ref{cor:tensor},
 Theorem~\ref{thm:tight}, the critical angle $\bar\theta$, the motion of the
 Shannon minimizer beyond $\bar\theta$, the range of R\'enyi orders in which the
 bisector or the eigenstates are optimal, the other values quoted in
 Sec.~\ref{sec:entropic}, the covariance form of Lemma~\ref{lem:ellipse}, and the
-jointly measurable example and the detector model of Sec.~\ref{sec:povm}. The
-statements about light modes in Sec.~\ref{sec:discussion} were checked in a
-Fock space of dimension 600.
+jointly measurable example and the detector model of Sec.~\ref{sec:povm}, the
+Robertson--Schr\"odinger statement of Sec.~\ref{sec:discussion}, and the
+numerical statements in open questions (i) and (iii), the latter for 300 random
+triples of qubit bases. The statements about light modes in
+Sec.~\ref{sec:discussion} were checked in a Fock space of dimension 600.
 
 The exact entropy minima are obtained by a dense grid over the great circle in
 $\mathrm{span}\{\mhat,\nhat\}$ refined by Nelder--Mead. For R\'enyi and Tsallis
