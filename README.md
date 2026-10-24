@@ -29,8 +29,12 @@ form).
   review of Sec. V, Corollaries 1–2 cite their sources, the mixed-order
   discussion and open question (iv) credit Xiao–Fang–Gour (2019), Fig. 4 no
   longer calls the $\alpha>1$ continuation "not a bound", and
-  `verify_bounds.py` checks every number quoted in Sec. V C. Not yet
-  submitted. The target is submission
+  `verify_bounds.py` checks every number quoted in Sec. V C. After the review
+  of Secs. VI–VII, the new Proposition 3 settles attainment for POVMs (never
+  for non-commuting effects; with bias, not always for commuting ones),
+  Theorem 5 also covers the tensor-product bound and derives the direct sum
+  from the eigenvalue formula, and Fig. 5 has a panel for biased measurements.
+  Not yet submitted. The target is submission
   before the end of 2026, and the venue is still to be decided with the
   supervisors.
 
@@ -71,8 +75,9 @@ the (acute) Bloch angle between the two measurement axes.
 | Proposition 2 | For $\alpha\le1$ the direct sum beats the tensor product; the direct-sum form fails at $\alpha=\infty$. | (i) is RPZ 2014, App. B; (ii) is new |
 | **Theorem 3** | For $c<1$, every bound for a strictly Schur-concave measure (Shannon, Rényi $0<\alpha<\infty$, Tsallis $\gamma>0$) is strict. Only orders $0$ and $\infty$ are tight. | new |
 | Sec. V C | Comparison across the Rényi family with MU and the exact optimum. The exact Shannon minimum is $2h((1+\sqrt c)/2)$ for $\theta\le\bar\theta$, where $\sqrt{\bar c}\,\mathrm{artanh}\sqrt{\bar c}=1$, i.e. $\bar\theta\approx67.07^\circ$. Beyond $\bar\theta$ the minimiser moves continuously to an eigenstate, reached at $90^\circ$. The bisector is optimal up to $43^\circ$ ($\alpha=3/4$) and $80^\circ$ ($\alpha=1.2$), at all angles iff $\alpha\ge\alpha^\dagger\approx1.43$, and at no angle for $\alpha\le1/2$. | Exact qubit minimum: Ghirardi et al., PLA 317, 32 (2003). Crossover with MU at $81.3^\circ$: consistent with Baek et al. (2019). Earlier majorization bounds vs MU and the optimum: KTW 2014. $\alpha$-dependence of the minimiser, including $\alpha^\dagger$: Zozor–Bosyk–Portesi, J. Phys. A 46, 465301 (2013), Cor. 1–2 (reproduced numerically here). New: the comparison of the majorization bounds across $\alpha$ (Fig. 4). Mixed orders via conditional majorization: Xiao–Fang–Gour, arXiv:1908.07694 (2019). |
-| Theorem 4 | Closed-form optimal direct-sum bound for arbitrary unsharp **and biased** two-outcome qubit POVMs. Remark: preparation uncertainty persists for jointly measurable pairs. | Unbiased case: Baek–Nha–Son, Entropy 21, 270 (2019). New: bias, ordering (optimality), joint-measurability remark. |
-| Theorem 5 | Theorems 1–2 hold for binary projective measurements on $\mathbb C^d$ with $c=\max\lVert P_iQ_j\rVert^2$, and $\omega_\oplus$ is attained iff $c=1$ (Jordan's lemma). Equivalently $c=\tfrac12+\tfrac14\lVert\{A,B\}\rVert$ with $A=2P-1$, $B=2Q-1$. | technique standard (e.g. Kaniewski–Tomamichel–Wehner 2014, who also give the qubit form of the anticommutator relation) |
+| Theorem 4 | Closed-form optimal direct-sum bound $\omega_\oplus(M,N)$ for arbitrary unsharp **and biased** two-outcome qubit POVMs. Remark: preparation uncertainty persists for jointly measurable pairs. | Unbiased case: Baek–Nha–Son, Entropy 21, 270 (2019). New: bias, ordering (optimality), joint-measurability remark. |
+| Proposition 3 | $\omega_\oplus(M,N)$ is never attained if the effects do not commute, is attained for commuting unbiased effects, and can be missed by commuting biased effects (a classical trade-off). | new |
+| Theorem 5 | Theorems 1–2 hold for binary projective measurements on $\mathbb C^d$ with $c=\max\lVert P_iQ_j\rVert^2$, and $\omega_\oplus$ and $\omega_\otimes$ are attained iff $c=1$. Equivalently $c=\tfrac12+\tfrac14\lVert\{A,B\}\rVert$ with $A=2P-1$, $B=2Q-1$. | The direct sum follows from the eigenvalue formula of Baek et al. (2019) and $\lambda_{\max}(P+Q)=1+\lVert PQ\rVert$; Jordan's lemma, the standard tool (e.g. Kaniewski–Tomamichel–Wehner 2014, who also give the qubit form of the anticommutator relation), gives the tensor product. |
 | Sec. VIII | Relation to quantum optics: no minimum-uncertainty state, unlike coherent and squeezed states; the boundary of $\mathcal E_\theta$ as the analogue of the squeezed-state family; commutator vs. anticommutator; single-photon polarization ($c=\cos^2\vartheta$, Malus's law); bias from detector efficiency mismatch. Open question (v): parity, displaced parity and coherent-state tests have $c=1$, and the cat state plays the role of the bisector state. | Discussion. Phase-space majorization of Gaussian states: Van Herstraeten–Jabbour–Cerf, Quantum 7, 1021 (2023). |
 
 ## Repository layout
@@ -102,7 +107,7 @@ the (acute) Bloch angle between the two measurement axes.
 | `least_concave_majorant`, `lattice_supremum` | Supremum of a set of vectors in the majorization lattice |
 | `omega_direct_sum_projective`, `omega_tensor_projective`, `omega_direct_sum` | Closed-form bounds (Theorems 1, 2 and 4) |
 | `renyi_direct_sum_bound`, `renyi_tensor_bound`, `tsallis_direct_sum_bound` | Entropic bounds (Corollaries 1–2) |
-| `omega_direct_sum_operators` | Exact optimal direct-sum bound for **any** POVMs in **any** dimension, computed as $S_k=\max_{\lvert J\rvert=k}\lambda_{\max}(\sum_{j\in J}F_j)$ |
+| `omega_direct_sum_operators` | Exact optimal direct-sum bound for **any** POVMs in **any** dimension, computed as $S_k=\max_{\lvert J\rvert=k}\lambda_{\max}(\sum_{j\in J}K_j)$ |
 | `min_entropy_sum`, `min_tsallis_sum`, `min_uncertainty` | Exact minima of Rényi and Tsallis entropy sums over all qubit states |
 | `bisector_shannon`, `critical_c` | Exact Shannon minimum $2h((1+\sqrt c)/2)$ and the critical overlap $\bar c$ |
 | `maassen_uffink`, `crossover_sqrt_c` | Comparison with the Maassen–Uffink bound |
@@ -144,6 +149,7 @@ It takes about 40 seconds.
 [PASS] Thm 5: omega_plus in d = 2, 4, 6 with c = max||P_i Q_j||^2 (all 150 instances have c < 1)  (max deviation 3.8e-15, c in [0.505, 0.999])
 [PASS] Thm 5, degenerate case: common eigenvector => c = 1 and omega_plus = (1, 1, 0, 0)  (max deviation 2.7e-15)
 [PASS] Thm 5 remark: c = 1/2 + ||{A, B}||/4 with A = 2P - 1, B = 2Q - 1 (d = 2..8, all ranks)  (max deviation 1.3e-15)
+[PASS] Thm 5, tensor product: S_1 = w is attained at a top eigenvector of P_i + Q_j (d = 4, 6) and never exceeded by random states  (max deviation 2.4e-15, largest p_i q_j - w over random states -2.0e-02)
 [PASS] Prop 1(i): no state attains omega_plus for non-commuting M, N  (min sup-distance 0.016)
 [PASS] Prop 1(ii): no state attains omega_times for non-commuting M, N  (min sup-distance 0.021)
 [PASS] Cor. 1-2: Shannon bounds are valid; H_inf bound -2 log2((1+sqrt c)/2) is tight
@@ -159,6 +165,7 @@ It takes about 40 seconds.
 [PASS] Thm 3: all bounds strict for 0 < alpha < inf and gamma > 0; tight at alpha = 0 and inf  (smallest gap 9.0e-04, largest deviation at alpha in {0, inf}: 3.1e-16)
 [PASS] Thm 4: H(M)+H(N) >= H(omega_plus) for random unsharp/biased POVMs
 [PASS] Sec. VI: jointly measurable pair still has S_2 < 1 + eta and an unattained bound  (Busch sum 1.980 <= 2, S_2 = 1.495 < 1.7, min sup-distance 0.022)
+[PASS] Prop 3: omega_plus(M, N) is never attained for non-commuting effects, is attained for commuting unbiased ones, and is missed by a commuting biased pair  (biased example: min sup-distance 0.025)
 [PASS] Sec. VI: efficiencies (eta_H, eta_V) give mu = (eta_H - eta_V)/2, eta = (eta_H + eta_V)/2; a single detector gives |mu| + eta = 1
 [PASS] Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; Sec. VIII: the Robertson bound vanishes in the plane of the axes  (max |<[A, B]>| over in-plane states 0.0e+00)
 [PASS] Sec. VIII (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity  (<D Pi D^+> = 0.135, 0.763, 0.964 for r = 0, 1, 2)
@@ -190,7 +197,7 @@ and inward ticks on all four sides.
 | `lorenz.pdf` | Lorenz curves: $\omega_\oplus$ as the upper envelope of all states |
 | `entropic_bounds.pdf` | $h(\sqrt c)$, $h(w)$, Maassen–Uffink and the exact minimum as functions of $\theta$ |
 | `renyi_family.pdf` | Direct-sum, tensor-product and Maassen–Uffink bounds against the exact minimum across Rényi orders $\alpha$ |
-| `povm.pdf` | Bound compared with the exact minimum for unsharp measurements |
+| `povm.pdf` | Bound compared with the exact minimum for unsharp (a) and biased (b) measurements |
 
 ### Compile the paper
 
