@@ -230,6 +230,97 @@ check("Sec. V C: bisector optimal up to ~43 deg (alpha = 3/4) and ~80 deg (alpha
       "at all angles for alpha >= alpha_dagger only, at no angle for alpha <= 1/2", ok,
       f"alpha_dagger = {alpha_dag:.4f}")
 
+# Global minimum along the great circle. Parametrising by the angle (sin^2(phi/2) rather than
+# (1 - cos phi)/2) keeps full precision at the eigenstates, where the Renyi sum has a cusp for
+# alpha <= 1/2.
+PHI = np.linspace(0, 2 * np.pi, 8000, endpoint=False)
+
+
+def circle_min(theta: float, a: float) -> tuple[float, float]:
+    """Minimum of H_a(p) + H_a(q) over the great circle, and the angle from m where it occurs."""
+    def dist(phi):
+        return np.stack([np.cos(phi / 2) ** 2, np.sin(phi / 2) ** 2], axis=-1)
+    vals = mj.renyi(dist(PHI), a) + mj.renyi(dist(PHI - theta), a)
+    k = int(np.argmin(vals))
+    return float(vals[k]), float(PHI[k])
+
+
+def angle_mod_pi(a: float, b: float) -> float:
+    """Angle between the states at a and b (r and -r give the same entropies)."""
+    d = abs(a - b) % np.pi
+    return min(d, np.pi - d)
+
+
+def alpha_star(deg: float) -> float:
+    """Smallest Renyi order at which the bisector state is the global minimum."""
+    theta = np.radians(deg)
+    c = np.cos(theta / 2) ** 2
+    lo, hi = 0.4, 2.0
+    for _ in range(30):
+        mid = (lo + hi) / 2
+        if circle_min(theta, mid)[0] >= bisector_renyi(c, mid) - 1e-9:
+            hi = mid
+        else:
+            lo = mid
+    return hi
+
+
+ok = all(circle_min(np.radians(deg), a)[0]
+         >= float(mj.renyi(np.array([np.cos(np.radians(deg) / 2) ** 2,
+                                     np.sin(np.radians(deg) / 2) ** 2]), a)) - 1e-12
+         for a in (0.1, 0.3, 0.5) for deg in (5, 20, 40, 60, 75, 85, 89))
+for deg, a in ((60, 0.75), (85, 1.2)):  # 1/2 < alpha < alpha*: neither eigenstate nor bisector
+    theta = np.radians(deg)
+    phi = circle_min(theta, a)[1]
+    ok &= min(angle_mod_pi(phi, 0), angle_mod_pi(phi, theta),
+              angle_mod_pi(phi, theta / 2)) > np.radians(1)
+degs = (5, 20, 40, 60, np.degrees(theta_bar), 75, 85, 90)
+stars = [alpha_star(d) for d in degs]
+ok &= (bool(np.all(np.diff(stars) > 0)) and stars[0] < 0.55
+       and abs(stars[4] - 1) < 1e-2 and abs(stars[-1] - alpha_dag) < 1e-2)
+check("Sec. V C: eigenstates are the global minimum for alpha <= 1/2, intermediate states for "
+      "1/2 < alpha < alpha*(c), and alpha* rises from ~1/2 (c -> 1) to alpha_dagger (90 deg)", ok,
+      "alpha* at 5, 20, 40, 60, theta_bar, 75, 85, 90 deg: " + ", ".join(f"{s:.3f}" for s in stars))
+
+# Fig. 4: crossings with MU at 85 deg, the max-entropy ratios and where H_alpha(sqrt c, 1 - sqrt c)
+# stops being a bound
+c60, c85 = np.cos(np.radians(60) / 2) ** 2, np.cos(np.radians(85) / 2) ** 2
+mu85 = mj.maassen_uffink(c85)
+a_dsum = brentq(lambda a: mj.renyi_direct_sum_bound(c85, a) - mu85, 0.2, 1.0)
+a_tens = brentq(lambda a: mj.renyi_tensor_bound(c85, a) - mu85, 0.2, 1.0)
+beats60 = all(min(mj.renyi_direct_sum_bound(c60, a), mj.renyi_tensor_bound(c60, a))
+              > mj.maassen_uffink(c60) for a in np.linspace(0.01, 1, 100))
+ratios, fails = [], []
+for deg, c in ((60, c60), (85, c85)):
+    theta = np.radians(deg)
+    ratios.append(mj.renyi_direct_sum_bound(c, 0.5) / circle_min(theta, 0.5)[0])
+    fails.append(brentq(lambda a: mj.renyi_direct_sum_bound(c, a) - circle_min(theta, a)[0],
+                        1.5, 3.5))
+check("Fig. 4: at 85 deg the bounds beat MU for alpha < 0.69 (direct) and 0.58 (tensor), at 60 deg "
+      "for all alpha <= 1; max-entropy ratios 83%, 91%; direct-sum form fails above 2.1, 2.5",
+      round(a_dsum, 2) == 0.69 and round(a_tens, 2) == 0.58 and beats60
+      and [round(r, 2) for r in ratios] == [0.83, 0.91] and [round(f, 1) for f in fails] == [2.1, 2.5],
+      f"crossings {a_dsum:.4f}, {a_tens:.4f}; ratios {ratios[0]:.4f}, {ratios[1]:.4f}; "
+      f"failure orders {fails[0]:.3f}, {fails[1]:.3f}")
+
+# Mutually unbiased values and the c -> 1 asymptotics (exact minimum = bisector for small theta)
+r_exact, r_mu, r_eig = [], [], []
+for theta in (0.1, 0.003):
+    c = np.cos(theta / 2) ** 2
+    h_ds = float(mj.binary_entropy(np.sqrt(c)))
+    exact = mj.bisector_shannon(c)
+    r_exact.append(exact / h_ds)
+    r_mu.append(h_ds / mj.maassen_uffink(c))
+    r_eig.append(float(mj.binary_entropy(c)) / exact)
+ok = (round(float(mj.binary_entropy(1 / np.sqrt(2))), 3) == 0.872
+      and round(float(mj.binary_entropy(mj.omega_tensor_projective(0.5)[0])), 3) == 0.844
+      and [round(r_exact[0], 2), round(r_exact[1], 3)] == [1.09, 1.047]
+      and [round(r, 1) for r in r_mu] == [3.8, 7.3] and r_eig[0] < r_eig[1] < 2)
+check("Sec. V C: MUB values 0.872, 0.844; at theta = 0.1, 0.003 exact/h(sqrt c) = 1.09, 1.047 and "
+      "h(sqrt c)/MU = 3.8, 7.3; eigenstates/exact rises towards 2", ok,
+      f"exact/h {r_exact[0]:.4f}, {r_exact[1]:.4f}; h/MU {r_mu[0]:.3f}, {r_mu[1]:.3f}; "
+      f"eigen/exact {r_eig[0]:.3f}, {r_eig[1]:.3f}")
+
 # --- 6. Renyi and Tsallis families (Corollaries 1-2, Proposition 2) ----------
 ok_valid = ok_order = True
 for deg in (10, 30, 45, 60, 75, 85, 90):
