@@ -86,6 +86,9 @@ The uncertainty principle is one of the defining features of quantum
 mechanics~\cite{Heisenberg1927,Robertson1929,BuschHeinonenLahti2007}: there are
 pairs of measurements whose outcomes cannot both be predicted with certainty,
 however carefully the system is prepared.
+This preparation uncertainty is distinct from measurement uncertainty, which
+limits how accurately incompatible observables can be measured
+jointly~\cite{BuschLahtiWerner2014}; we are concerned with the former.
 First formulated for the position and momentum of a particle, it has since
 become a quantitative tool of quantum information science.
 It underlies the security of quantum key
@@ -103,7 +106,7 @@ requirements: its lower bound depends on the state, it can vanish even for
 incompatible observables, and variances are not natural when the outcomes are
 mere labels~\cite{Deutsch1983}.
 Entropies of the outcome distributions provide a
-remedy~\cite{BBM1975,Deutsch1983,Kraus1987}.
+remedy~\cite{Hirschman1957,Beckner1975,BBM1975,Deutsch1983,Kraus1987}.
 The best known entropic uncertainty relation, due to Maassen and
 Uffink~\cite{MaassenUffink1988}, bounds the sum of the Shannon entropies of the
 outcomes of two measurements by a quantity that depends only on the largest
@@ -117,8 +120,9 @@ experiments~\cite{Prevedel2011,LiXu2011}.
 Each such relation, however, constrains a single measure of uncertainty, while
 different tasks call for different measures: the Shannon entropy quantifies
 average information, the min-entropy governs guessing
-probabilities~\cite{KRS2009}, and the R\'enyi and Tsallis families interpolate
-between these and other extremes.
+probabilities~\cite{KRS2009}, the R\'enyi family interpolates between these
+and other extremes, and the Tsallis family generalizes the Shannon entropy in a
+different way.
 Majorization~\cite{MarshallOlkin2011}, the order that captures when one
 probability distribution is more disordered than another, makes it possible to
 treat all of them at once.
@@ -128,52 +132,72 @@ more generally, quantum resource
 theories~\cite{Gour2015,ChitambarGour2019}.
 In the context of uncertainty, the idea is to find a single probability vector,
 independent of the state, that majorizes the outcome statistics of every state;
-every uncertainty measure that respects majorization---the Shannon, R\'enyi
-and Tsallis entropies among many others---then obeys a bound determined by this
-one vector.
-This programme was initiated by Partovi~\cite{Partovi2011} and developed into
+every uncertainty measure that respects majorization then obeys a bound
+determined by this one vector. Depending on whether the two outcome
+distributions are combined by a direct sum or by a tensor product, such measures
+include the Shannon and Tsallis entropies or the Shannon and all R\'enyi
+entropies, among many others.
+This program was initiated by Partovi~\cite{Partovi2011} and developed into
 universal uncertainty relations by Friedland, Gheorghiu and Gour~\cite{FGG2013}
 and by Pucha{\l}a, Rudnicki and {\.Z}yczkowski~\cite{PRZ2013}; Rudnicki
 \emph{et al.} subsequently introduced a direct-sum formulation that yields
 stronger entropic bounds~\cite{RPZ2014}.
 Majorization uncertainty relations have since been extended to generalized
 measurements and quantum operations~\cite{RasteginZyczkowski2016,Baek2019},
-sharpened further~\cite{Li2016,Yuan2023}, in particular by exploiting the
-lattice structure of majorization, and verified experimentally~\cite{Yuan2023}.
+sharpened further~\cite{Li2016,LiQiao2019,XiaoFangGour2019,Yuan2023}, in
+particular by exploiting the lattice structure of majorization, and verified
+experimentally~\cite{Wang2020,Yuan2023}.
 
-The price of this universality is less clear.
-For a qubit measured in two bases---the setting of the BB84
-protocol~\cite{BB84} and of many experiments---entropy-specific relations can
-be optimized exactly: the optimal Shannon relation is
-known~\cite{SanchezRuiz1998,Ghirardi2003}, and so are optimal relations for
-R\'enyi entropies~\cite{BosykPortesiPlastino2012,ZozorBosykPortesi2013}.
-This raises a natural question: in the simplest setting, where both approaches
-can be carried out completely, what exactly does majorization gain, and what
-does it cost?
+The price of this universality is only partly understood.
+For a qubit measured in two bases---the setting of many experiments and, for
+mutually unbiased bases, of the BB84 protocol~\cite{BB84}---entropy-specific
+relations can be optimized: the optimal Shannon relation is
+known~\cite{SanchezRuiz1998,Ghirardi2003}, in closed form over part of the
+range and through a one-parameter minimization otherwise, and so are optimal
+relations for R\'enyi
+entropies~\cite{BosykPortesiPlastino2012,ZozorBosykPortesi2013}.
+Earlier majorization bounds have been compared with the Maassen--Uffink
+relation and with the optimal Shannon bound~\cite{KTW2014,Baek2019}, and the
+optimal direct-sum bound for two qubit bases has been identified in the
+majorization lattice~\cite{LiQiao2019}.
+What is missing is a complete account of when such bounds are tight, why, and
+how this depends on the uncertainty measure. In the simplest setting, where
+both approaches can be carried out completely, what exactly does majorization
+gain, and what does it cost?
 
 In this paper we answer this question for pairs of binary (two-outcome)
-measurements.
-For two qubit bases, the relevant majorization bounds are special cases of the
-general constructions of Refs.~\cite{PRZ2013,FGG2013,RPZ2014}, and for unbiased
-unsharp qubit observables the direct-sum bound was evaluated in
+measurements, and the answer is simple to state.
+Unless the measurements commute, no state attains the optimal majorization
+bound, so every bound it implies for a strictly Schur-concave measure of
+uncertainty, such as the Shannon entropy, is strict; only the R\'enyi entropies
+of order zero and infinity are bounded tightly.
+Even so, the direct-sum Shannon bound outperforms the Maassen--Uffink relation
+unless the measurement axes on the Bloch sphere are within about nine degrees of
+orthogonal, i.e., unless the measurements are nearly mutually
+unbiased~\cite{Baek2019}, and its ratio to the exact minimum tends to one as the
+measurements approach compatibility, where the Maassen--Uffink relation is
+weakest.
+
+Several ingredients of this analysis are known.
+For two qubit bases the relevant majorization bounds are special cases of the
+general constructions of Refs.~\cite{PRZ2013,FGG2013,RPZ2014}; the optimality of
+the direct-sum bound and the states that saturate its partial sums were found
+in Ref.~\cite{LiQiao2019}; the expectation values that qubit states can reach
+are known to fill an ellipse~\cite{LiQiao2015,KTW2014,Abbott2016}; and for
+unbiased unsharp qubit observables the direct-sum bound was evaluated in
 Ref.~\cite{Baek2019}.
-Building on these results, we give a unified and self-contained treatment of
-the binary case.
-The expectation values that qubit states can reach are known to fill an
-ellipse~\cite{LiQiao2015,Abbott2016}; we use this geometry to derive both
-bounds, to prove that they cannot be improved, and to identify the states that
-come closest to them.
-No single state attains these bounds unless the measurements commute.
-Consequently, for non-commuting measurements the entropic bounds they imply are
-strict for the Shannon entropy, for the Tsallis entropies and for all R\'enyi
-entropies except those of order zero and infinity.
-We then compare the two types of majorization bound with each other, with the
-Maassen--Uffink relation and with the exact optimum across the whole R\'enyi
-family.
-Finally, we derive the optimal bound for arbitrary noisy and biased
-two-outcome qubit measurements, discuss its relation to joint measurability,
-and extend the results for projective measurements to binary measurements in
-any finite dimension.
+We give a unified and self-contained treatment that derives both bounds, their
+optimality and the states that saturate each of their partial sums from this
+ellipse.
+What is new is the non-attainment result and its consequence, the strictness of
+all induced bounds except those of R\'enyi order zero and infinity; the
+comparison of both types of majorization bound with the Maassen--Uffink
+relation and with the exact optimum across the whole R\'enyi family, including
+the failure of the direct-sum form at large orders; the optimal direct-sum bound
+for arbitrary noisy and biased two-outcome qubit measurements, together with its
+relation to joint measurability; and the extension of the results for
+projective measurements to binary projective measurements in any finite
+dimension.
 
 The paper is organized as follows.
 Section~\ref{sec:prelim} introduces majorization, the uncertainty measures and
@@ -187,7 +211,8 @@ measurements, described by positive operator-valued measures (POVMs), and
 binary projective measurements in arbitrary dimension, respectively.
 Section~\ref{sec:discussion} discusses the results, including their relation
 to quantum optics, and concludes.
-All results are verified numerically (Appendix~\ref{app:numerics}).
+All analytical results were also checked numerically
+(Appendix~\ref{app:numerics}).
 
 % ===========================================================================
 \section{Preliminaries}
@@ -196,8 +221,10 @@ All results are verified numerically (Appendix~\ref{app:numerics}).
 
 \subsection{Majorization and uncertainty measures}
 
-For $x\in\mathbb{R}^d$ let $x^\downarrow$ denote its entries in non-increasing
-order and $L_k(x)=\sum_{i=1}^k x^\downarrow_i$ its Lorenz partial sums.
+For $x\in\mathbb{R}^n$ let $x^\downarrow$ denote its entries in non-increasing
+order and $L_k(x)=\sum_{i=1}^k x^\downarrow_i$ its Lorenz partial sums, with
+$L_0(x)=0$; the Lorenz curve of $x$ is the piecewise-linear interpolation of the
+points $(k,L_k(x))$, $k=0,\dots,n$.
 For $x,y$ with equal total, $x$ is \emph{majorized} by $y$, written $x\maj y$,
 if $L_k(x)\le L_k(y)$ for all $k$~\cite{MarshallOlkin2011}.
 A function $\Phi$ is Schur-concave if $x\maj y$ implies $\Phi(x)\ge\Phi(y)$,
@@ -210,15 +237,18 @@ The uncertainty measures used below are the R\'enyi~\cite{Renyi1961} and
 Tsallis~\cite{Tsallis1988} entropies
 \begin{equation}
   H_\alpha(p)=\frac{\log_2\sum_ip_i^\alpha}{1-\alpha},\qquad
-  T_q(p)=\frac{1-\sum_ip_i^q}{q-1},
+  T_\gamma(p)=\frac{1-\sum_ip_i^\gamma}{\gamma-1},
   \label{eq:entropies}
 \end{equation}
-with the Shannon entropy $H=H_1$ as the common limit ($T_q\to H\ln2$ as
-$q\to1$). The orders $\alpha=\infty$ and $\alpha=\frac12$ give the min-entropy
-$H_\infty(p)=-\log_2\max_ip_i$ and the max-entropy $H_{1/2}$, and $H_0$ is the
-logarithm of the number of non-zero entries.
+with $\alpha\in[0,\infty]$ and $\gamma>0$; the cases $\alpha\in\{0,1,\infty\}$ and
+$\gamma=1$ are defined by continuity, with the Shannon entropy $H=H_1$ as the
+common limit ($T_\gamma\to H\ln2$ as $\gamma\to1$). The orders $\alpha=\infty$ and
+$\alpha=\frac12$ give the min-entropy $H_\infty(p)=-\log_2\max_ip_i$ and the
+max-entropy $H_{1/2}$~\cite{KRS2009}, and $H_0$ is the logarithm of the number of
+non-zero entries.
 All of them are Schur-concave; $H_\alpha$ is strictly Schur-concave for
-$0<\alpha<\infty$ and $T_q$ for $q>0$, whereas $H_0$ and $H_\infty$ are not.
+$0<\alpha<\infty$ and $T_\gamma$ for all $\gamma>0$, whereas $H_0$ and $H_\infty$
+are not.
 
 Let $p(\rho)$ and $q(\rho)$ denote the outcome distributions of two
 measurements $M$ and $N$ on a state $\rho$. For measurements in orthonormal
@@ -242,49 +272,64 @@ single state-independent vector $\omega$ such that
 We call these the direct-sum and the tensor-product form, respectively. Every
 Schur-concave function $\Phi$ then inherits the bound
 $\Phi(p\oplus q)\ge\Phi(\omega)$ or $\Phi(p\otimes q)\ge\Phi(\omega)$.
+Sums of Shannon or Tsallis entropies are Schur-concave functions of $p\oplus q$,
+since, the totals of $p$ and $q$ being fixed, they are sums of a concave
+function over all entries; sums of Shannon or R\'enyi entropies are
+Schur-concave functions of $p\otimes q$, since
+$H_\alpha(p\otimes q)=H_\alpha(p)+H_\alpha(q)$. The direct-sum form also yields
+bounds for R\'enyi entropies of order $\alpha\le1$, by a separate argument
+(Corollary~\ref{cor:direct}), but not for all orders
+(Proposition~\ref{prop:compare}).
 
-Restricted to non-increasing vectors of fixed total, $\maj$ is a partial order,
-and in fact a complete lattice~\cite{CicaleseVaccaro2002,Bosyk2019}.
+Restricted to non-negative, non-increasing vectors of fixed length and fixed
+total, $\maj$ is a partial order, and in fact a complete
+lattice~\cite{CicaleseVaccaro2002,Bosyk2019}.
 
 \begin{definition}
-Let $A$ be a set of vectors with common total. A vector $\omega$ is an
-\emph{optimal majorization bound} for $A$ if $a\maj\omega$ for all $a\in A$, and
-$\omega\maj\omega'$ for every other $\omega'$ with this property; i.e.,
-$\omega=\sup A$ in the majorization lattice.
+Let $\mathcal{A}$ be a set of non-negative vectors of common length and total.
+A vector $\omega$ is an
+\emph{optimal majorization bound} for $\mathcal{A}$ if $a\maj\omega$ for all
+$a\in\mathcal{A}$, and $\omega\maj\omega'$ for every $\omega'$ with this
+property; i.e., $\omega=\sup\mathcal{A}$ in the majorization lattice.
 \end{definition}
 
 \begin{lemma}[\cite{CicaleseVaccaro2002,Bosyk2019}]
 \label{lem:sup}
-Let $S_k=\sup_{a\in A}L_k(a)$. Then $\sup A$ is the vector whose Lorenz curve is
-the least concave majorant of $k\mapsto S_k$ (with $S_0=0$). In particular, if
-$\omega_k=S_k-S_{k-1}$ is already non-increasing, then $\omega=\sup A$.
+Let $S_k=\sup_{a\in\mathcal{A}}L_k(a)$. Then $\sup\mathcal{A}$ is the vector whose
+Lorenz curve is the least concave majorant of $k\mapsto S_k$ (with $S_0=0$). In
+particular, if $\omega_k=S_k-S_{k-1}$ is already non-increasing, then
+$\omega=\sup\mathcal{A}$.
 \end{lemma}
 
 In all cases treated below the second, simpler statement applies.
-The quantities $S_k$ have a transparent meaning: $S_k$ is the largest total
-probability that any state can concentrate on $k$ outcomes.
+The quantities $S_k$ have a transparent meaning: $S_k$ is the largest value that
+any state can give to a sum of $k$ entries, i.e., to the summed probabilities of
+$k$ outcomes.
 
 \subsection{Two-outcome qubit measurements}
 
 A qubit state is $\rho=\tfrac12(\mathds{1}+\vecr\cdot\vsigma)$ with $|\vecr|\le1$.
 A projective two-outcome measurement is $M=\{P_\pm\}$ with
-$P_\pm=\tfrac12(\mathds{1}\pm\mhat\cdot\vsigma)$, $|\mhat|=1$, and similarly
-$N=\{Q_\pm\}$ with axis $\nhat$.
+$P_\pm=\tfrac12(\mathds{1}\pm\mhat\cdot\vsigma)=\ket{m_\pm}\!\bra{m_\pm}$,
+$|\mhat|=1$, and similarly $N=\{Q_\pm\}$ with axis $\nhat$ and eigenvectors
+$\ket{n_\pm}$.
 The outcome distributions are
 \begin{equation}
-  p=\Bigl(\tfrac{1+x}{2},\tfrac{1-x}{2}\Bigr),\;
-  q=\Bigl(\tfrac{1+y}{2},\tfrac{1-y}{2}\Bigr),\quad
-  x=\mhat\cdot\vecr,\; y=\nhat\cdot\vecr .
+  p=\Bigl(\tfrac{1+x}{2},\tfrac{1-x}{2}\Bigr),\qquad
+  q=\Bigl(\tfrac{1+y}{2},\tfrac{1-y}{2}\Bigr),
   \label{eq:pq}
 \end{equation}
+where $x=\mhat\cdot\vecr$ and $y=\nhat\cdot\vecr$.
 The overlaps are $|\langle m_\pm|n_\pm\rangle|^2=\tfrac12(1+\mhat\cdot\nhat)$ and
 $|\langle m_\pm|n_\mp\rangle|^2=\tfrac12(1-\mhat\cdot\nhat)$, hence
 \begin{equation}
   c=\tfrac12\bigl(1+|\mhat\cdot\nhat|\bigr)=\cos^2\tfrac{\theta}{2},
-  \qquad \cos\theta=|\mhat\cdot\nhat|,\;\theta\in[0,\tfrac{\pi}{2}] .
+  \qquad \cos\theta=|\mhat\cdot\nhat|,
   \label{eq:c}
 \end{equation}
-Relabelling the outcomes of $N$ maps $\nhat\mapsto-\nhat$ and does not affect any
+where $\theta\in[0,\frac{\pi}{2}]$ is the (acute) Bloch angle between the two
+measurement axes.
+Relabeling the outcomes of $N$ maps $\nhat\mapsto-\nhat$ and does not affect any
 majorization statement, so we may and shall assume $\mhat\cdot\nhat=\cos\theta\ge0$.
 Note that $\tfrac12\le c\le1$ and $\sqc\ge1/\sqrt2>1-\sqc$.
 
@@ -294,7 +339,7 @@ A general two-outcome POVM $\{E_0,E_1=\mathds{1}-E_0\}$ can always be written as
   \qquad \eta\ge0,\;|\mu|+\eta\le1 ,
   \label{eq:povm}
 \end{equation}
-the constraint being equivalent to $0\le E_0\le\mathds{1}$.
+with $|\hat a|=1$, the constraint being equivalent to $0\le E_0\le\mathds{1}$.
 Here $\eta$ is the sharpness and $\mu$ the bias; rank-one projective
 measurements correspond to $\eta=1$, $\mu=0$.
 
@@ -386,9 +431,10 @@ and $\omplus$ is the optimal majorization bound for $\Ach(M,N)$.
 
 The majorization relation~\eqref{eq:omplus} is the qubit case of the direct-sum
 relation $p\oplus q\maj\{1\}\oplus W$ of Rudnicki \emph{et al.}~\cite{RPZ2014}:
-for $d=2$ their vector $W=(s_1,s_2-s_1)$ has $s_1=\sqc$ and $s_2=1$. We give a
-short proof based on Lemma~\ref{lem:ellipse}, which also yields optimality and
-the maximizing states.
+for $d=2$ their vector $W=(s_1,s_2-s_1)$ has $s_1=\sqc$ and $s_2=1$. Its
+optimality, and the states that saturate its partial sums, were obtained by Li
+and Qiao in the majorization lattice~\cite{LiQiao2019}. We give a short proof
+based on Lemma~\ref{lem:ellipse}.
 
 \begin{proof}
 We compute $S_k=\max_\rho L_k(p\oplus q)$ for $k=1,\dots,4$.
@@ -444,7 +490,8 @@ certainty about $M$.
   \caption{Lorenz curves of $p\oplus q$ for $\theta=60^\circ$. Grey: 150 random
   states. The optimal bound $\omplus$ (blue) is the upper envelope; it touches
   the eigenstate curve at $k=1,3$ and the bisector-state curve at $k=2$, but no
-  single state reaches it.}
+  single state reaches it. A similar plot for $\theta=90^\circ$ is Fig.~1(a) of
+  Ref.~\cite{LiQiao2019}.}
   \label{fig:lorenz}
 \end{figure}
 
@@ -494,7 +541,7 @@ In particular,
 \begin{align}
   H(p)+H(q)&\;\ge\;h(\sqc) ,
   \label{eq:Hdirect}\\
-  T_q(p)+T_q(q)&\;\ge\;\frac{1-c^{q/2}-(1-\sqc)^q}{q-1}\qquad(q>0),
+  T_\gamma(p)+T_\gamma(q)&\;\ge\;\frac{1-c^{\gamma/2}-(1-\sqc)^\gamma}{\gamma-1}\qquad(\gamma>0),
   \label{eq:Tdirect}
 \end{align}
 and, for $0<\alpha\le1$,
@@ -508,16 +555,16 @@ where $H_\alpha(\sqc,1-\sqc)=\log_2\bigl[c^{\alpha/2}+(1-\sqc)^\alpha\bigr]/(1-\
 \begin{proof}
 The first statement is Karamata's inequality applied to Theorem~\ref{thm:direct}.
 Eqs.~\eqref{eq:Hdirect} and~\eqref{eq:Tdirect} follow with $\phi(t)=-t\log_2t$
-and $\phi_q(t)=(t-t^q)/(q-1)$, since $\sum_ip_i=\sum_jq_j=1$ gives
-$T_q(p)+T_q(q)=\sum_k\phi_q\bigl((p\oplus q)_k\bigr)$.
+and $\phi_\gamma(t)=(t-t^\gamma)/(\gamma-1)$, since $\sum_ip_i=\sum_jq_j=1$ gives
+$T_\gamma(p)+T_\gamma(q)=\sum_k\phi_\gamma\bigl((p\oplus q)_k\bigr)$.
 Eq.~\eqref{eq:Rdirect} is the qubit case of Theorem~2 of Ref.~\cite{RPZ2014};
-we recall the short argument. For $\alpha<1$ write $\sum_ip_i^\alpha=1+A$ and
-$\sum_jq_j^\alpha=1+B$ with $A,B\ge0$. Then
+we recall the short argument. For $\alpha<1$ write $\sum_ip_i^\alpha=1+X$ and
+$\sum_jq_j^\alpha=1+Y$ with $X,Y\ge0$. Then
 \begin{align*}
-  H_\alpha(p)+H_\alpha(q)&=\frac{\log_2[(1+A)(1+B)]}{1-\alpha}\\
-  &\ge\frac{\log_2(1+A+B)}{1-\alpha},
+  H_\alpha(p)+H_\alpha(q)&=\frac{\log_2[(1+X)(1+Y)]}{1-\alpha}\\
+  &\ge\frac{\log_2(1+X+Y)}{1-\alpha},
 \end{align*}
-and $1+A+B=\sum_k(p\oplus q)_k^\alpha-1\ge\sum_k(\omplus)_k^\alpha-1=c^{\alpha/2}+(1-\sqc)^\alpha$
+and $1+X+Y=\sum_k(p\oplus q)_k^\alpha-1\ge\sum_k(\omplus)_k^\alpha-1=c^{\alpha/2}+(1-\sqc)^\alpha$
 by Schur-concavity of $v\mapsto\sum_kv_k^\alpha$.
 \end{proof}
 
@@ -534,7 +581,8 @@ state); since $H\ge H_\infty$, it contains Deutsch's Shannon
 bound~\cite{Deutsch1983}, which has the same right-hand side.
 \end{corollary}
 
-The two forms are natural for different families: Tsallis entropies are
+As noted in Sec.~\ref{sec:prelim}, the two forms are natural for different
+families: Tsallis entropies are
 additive over direct sums, as used in the proof of Corollary~\ref{cor:direct},
 whereas R\'enyi entropies are additive over tensor products,
 $H_\alpha(p\otimes q)=H_\alpha(p)+H_\alpha(q)$. Where both forms apply, the
@@ -614,18 +662,20 @@ bifurcate and the minimum has to be computed numerically~\cite{Ghirardi2003}.
 As $\theta$ grows they move continuously towards the eigenstates of $M$ and
 $N$, which they reach at $\theta=\pi/2$, where MU is tight.
 
-The range in which the bisector is optimal depends on the uncertainty measure.
-For R\'enyi entropies it widens with the order. Numerically, the bisector is
-optimal up to $43^\circ$ for $\alpha=3/4$, up to $80^\circ$ for $\alpha=1.2$, and
-at all angles for $\alpha\ge\alpha_c\approx1.43$, in line with the tightness of
-the min-entropy bound; here $\alpha_c$ solves
-$2H_\alpha\bigl(\frac{2+\sqrt2}{4},\frac{2-\sqrt2}{4}\bigr)=1$, i.e., it is the
-order at which bisector and eigenstates perform equally well for mutually
-unbiased measurements. For $\alpha\le\frac12$, conversely, the eigenstates
-outperform the bisector at all angles. For the max-entropy they give
-$\log_2(1+\sin\theta)$ against $2\log_2(1+\sin\frac\theta2)$, and for
-$\alpha<\frac12$ the two values scale as $(\theta^2/4)^\alpha$ and
-$2(\theta^2/16)^\alpha$ as $\theta\to0$.
+The range in which the bisector is optimal depends on the uncertainty measure,
+as Zozor \emph{et al.} showed for R\'enyi entropies~\cite{ZozorBosykPortesi2013}.
+The eigenstates are optimal for $\alpha\le\frac12$, the bisector for
+$\alpha\ge\alpha^\star(c)$, and intermediate states in between, where
+$\alpha^\star$ decreases from $\alpha^\dagger\approx1.43$ for mutually unbiased
+measurements to $\frac12$ as $c\to1$. In terms of the Bloch angle, the bisector
+is optimal up to $43^\circ$ for $\alpha=3/4$, up to $\bar\theta\approx67^\circ$
+for the Shannon entropy and up to $80^\circ$ for $\alpha=1.2$, and at all angles
+for $\alpha\ge\alpha^\dagger$, in line with the tightness of the min-entropy
+bound. Here $\alpha^\dagger$ solves
+$2H_\alpha\bigl(\frac{2+\sqrt2}{4},\frac{2-\sqrt2}{4}\bigr)=1$, the condition for
+bisector and eigenstates to perform equally well when the measurements are
+mutually unbiased. For the max-entropy, for instance, the eigenstates give
+$\log_2(1+\sin\theta)$ and the bisector $2\log_2(1+\sin\frac\theta2)$.
 
 For mutually unbiased measurements ($\theta=90^\circ$, $c=\frac12$) MU is tight
 (1 bit), while $h(1/\sqrt2)\approx0.872$ and $h(w)\approx0.844$. As the
@@ -905,8 +955,9 @@ minimizes the Shannon sum up to $\bar\theta\approx67^\circ$; for larger angles
 the minimizer moves towards an eigenstate of either measurement, the analogue
 of an infinitely squeezed state, and the range in which the balanced state is
 optimal shrinks for smaller R\'enyi orders and grows for larger ones
-(Sec.~\ref{sec:entropic}). A single qubit cannot be squeezed in the usual
-sense~\cite{KitagawaUeda1993}, as all its pure states are spin coherent states;
+(Sec.~\ref{sec:entropic} and Ref.~\cite{ZozorBosykPortesi2013}). A single qubit
+cannot be squeezed in the usual sense~\cite{KitagawaUeda1993}, as all its pure
+states are spin coherent states;
 the essential difference is algebraic. For quadratures the commutator is a
 $c$-number, which makes the Heisenberg bound state independent. For binary
 observables it is the anticommutator that is, blockwise, a $c$-number
@@ -924,7 +975,10 @@ the Stokes operators of polarization are the Pauli matrices, and two linear
 polarization analyzers at a relative angle $\vartheta$ correspond to
 $\theta=2\vartheta$, so that $c=\cos^2\vartheta$ is Malus's law; the crossover
 with MU and the angle $\bar\theta$ correspond to $\vartheta\approx40.7^\circ$ and
-$\vartheta\approx33.5^\circ$, respectively. For many photons the Stokes
+$\vartheta\approx33.5^\circ$, respectively. The optimal direct-sum bound has been
+tested in this setting with coherent light, the polarization state being
+reconstructed from measured Stokes parameters~\cite{Wang2020}. For many photons
+the Stokes
 operators form a collective spin that can be squeezed (polarization
 squeezing~\cite{Korolkova2002,Bowen2002}); the single-photon case is the limit
 in which only the redistribution of uncertainty along the boundary of
