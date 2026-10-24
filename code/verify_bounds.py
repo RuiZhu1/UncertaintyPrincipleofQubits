@@ -144,7 +144,15 @@ c = mj.overlap_cmax(M, N)
 w = mj.omega_direct_sum_projective(c)
 vecs = mj.direct_sum(M.probs(STATES), N.probs(STATES))
 gap = np.min(np.max(np.abs(mj.sort_desc(vecs) - w), axis=1))
-check("Prop 1: no state attains omega_plus for non-commuting M, N", gap > 1e-2,
+check("Prop 1(i): no state attains omega_plus for non-commuting M, N", gap > 1e-2,
+      f"min sup-distance {gap:.3f}")
+gap = np.inf
+for theta in (np.pi / 3, np.pi / 2):  # at 90 deg S_1 = w has extra maximisers
+    M, N = pair(theta)
+    w = mj.omega_tensor_projective(mj.overlap_cmax(M, N))
+    vecs = mj.tensor(M.probs(STATES), N.probs(STATES))
+    gap = min(gap, np.min(np.max(np.abs(mj.sort_desc(vecs) - w), axis=1)))
+check("Prop 1(ii): no state attains omega_times for non-commuting M, N", gap > 1e-2,
       f"min sup-distance {gap:.3f}")
 
 # --- 5. Shannon: validity, exact minimum, critical angle --------------------
