@@ -657,9 +657,9 @@ state gives $\max_ip_i\max_jq_j=w$.
 
 The proof of (i) uses only that the achievable statistics form a compact set
 whose least upper bound is not attained. It therefore applies whenever the
-optimal bound is not attained, for instance to unbiased noisy measurements of
-equal sharpness (Sec.~\ref{sec:povm}) and to the direct-sum bound for binary
-projective measurements in any dimension (Sec.~\ref{sec:dimd}).
+optimal bound is not attained: to every pair of qubit POVMs whose effects do not
+commute (Proposition~\ref{prop:povm-attain}) and to both bounds for binary
+projective measurements in any dimension with $c<1$ (Theorem~\ref{thm:dimd}).
 
 Theorem~\ref{thm:tight} makes precise in what sense the majorization bounds are
 optimal. As majorization bounds they cannot be improved
@@ -778,8 +778,8 @@ the full uncertainty region of any pair $(H_\alpha,H_\beta)$~\cite{XiaoFangGour2
 % ===========================================================================
 
 For POVMs, the partial sums of the direct-sum relation are largest eigenvalues
-of sums of effects, $S_k=\max_{|J|=k}\lambda_{\max}\bigl(\sum_{j\in J}F_j\bigr)$,
-where the $F_j$ run over the effects of both
+of sums of effects, $S_k=\max_{|J|=k}\lambda_{\max}\bigl(\sum_{j\in J}K_j\bigr)$,
+where the $K_j$ run over the effects of both
 measurements~\cite{Baek2019} (see also
 Refs.~\cite{RPZ2014,RasteginZyczkowski2016,Bosyk2014}); Baek \emph{et al.}
 evaluated them for unbiased unsharp qubit observables~\cite{Baek2019}. For
@@ -798,9 +798,9 @@ Define
   \kappa&=\max\{|\mu|+\eta,\;|\nu|+\zeta\},\\
   \Lambda&=\max_{s,t=\pm1}\bigl[s\mu+t\nu+|s\eta\,\hat a+t\zeta\,\hat b|\bigr].
 \end{align}
-Then $p(\rho)\oplus q(\rho)\maj\omplus$ for all $\rho$, where
+Then $p(\rho)\oplus q(\rho)\maj\omplus(M,N)$ for all $\rho$, where
 \begin{equation}
-  \omplus=\tfrac12\bigl(1+\kappa,\;1+\Lambda-\kappa,\;1+\kappa-\Lambda,\;1-\kappa\bigr)
+  \omplus(M,N)=\tfrac12\bigl(1+\kappa,\;1+\Lambda-\kappa,\;1+\kappa-\Lambda,\;1-\kappa\bigr)
   \label{eq:om-povm}
 \end{equation}
 is the optimal majorization bound.
@@ -817,7 +817,8 @@ Eq.~\eqref{eq:support},
   \max_\rho\bigl[1+\tfrac12\bigl(s(\mu+\eta\,\hat a\cdot\vecr)+t(\nu+\zeta\,\hat b\cdot\vecr)\bigr)\bigr]\\
   =1+\tfrac12\bigl[s\mu+t\nu+|s\eta\hat a+t\zeta\hat b|\bigr].
 \end{multline}
-Choosing $s=\operatorname{sgn}\mu$, $t=\operatorname{sgn}\nu$ shows $\Lambda\ge0$,
+Choosing $s=\operatorname{sgn}\mu$ and $t=\operatorname{sgn}\nu$ (either sign if
+zero) shows $\Lambda\ge0$,
 so $S_2=1+\frac12\Lambda$. The increments of $(S_k)$ are the entries of
 Eq.~\eqref{eq:om-povm}. They are non-increasing iff $\kappa\le\Lambda\le2\kappa$.
 The upper inequality follows from the triangle inequality,
@@ -832,12 +833,48 @@ Eq.~\eqref{eq:om-povm} reduces to Eq.~\eqref{eq:omplus}. For unbiased
 measurements ($\mu=\nu=0$),
 $\Lambda=(\eta^2+\zeta^2+2\eta\zeta|\hat a\cdot\hat b|)^{1/2}$, in agreement with
 Ref.~\cite{Baek2019}. If moreover $\eta=\zeta$, then
-$\omplus=\eta\,(1,\sqc,1-\sqc,0)+\frac{1-\eta}{2}(1,1,1,1)$: such measurements
-are noisy versions of sharp ones~\cite{Busch1986,Baek2019}, and the achievable
-statistics, their supremum and the saturating states are those of the sharp case
-mixed with the uniform vector. For unequal sharpness or nonzero bias, $\omplus$
-is not of this form, and the relevant geometric quantities are the lengths
-$|\eta\hat a\pm\zeta\hat b|$ rather than the overlap $c$.
+$\omplus(M,N)=\eta\,\omplus+\frac{1-\eta}{2}(1,1,1,1)$, where $\omplus$ is the
+vector~\eqref{eq:omplus} of the sharp measurements along $\hat a$ and $\hat b$:
+such measurements are noisy versions of sharp ones~\cite{Busch1986,Baek2019}, and
+the achievable statistics, their supremum and the saturating states are those of
+the sharp case mixed with the uniform vector. For unequal sharpness or nonzero
+bias, $\omplus(M,N)$ is not of this form, and the relevant geometric quantities
+are the lengths $|\eta\hat a\pm\zeta\hat b|$ rather than the overlap $c$.
+
+As for projective measurements, the bound is not attained when the effects do
+not commute; with bias, it may not be attained even when they do.
+
+\begin{proposition}
+\label{prop:povm-attain}
+Let $M$ and $N$ be as in Theorem~\ref{thm:povm}.
+(i) If $E_0$ and $F_0$ do not commute, i.e., $\eta\zeta\,\hat a\times\hat b\neq0$,
+no state attains $\omplus(M,N)$.
+(ii) If $\mu=\nu=0$ and $E_0$ and $F_0$ commute, a state attains $\omplus(M,N)$.
+(iii) With bias, commuting effects need not attain it: for $\hat b=\hat a$,
+$(\mu,\eta)=(0.3,0.6)$ and $(\nu,\zeta)=(-0.8,0.15)$, $S_1$ is attained only at
+$\vecr=-\hat a$ and $S_2$ only at $\vecr=\hat a$.
+\end{proposition}
+
+\begin{proof}
+(i) Suppose a state attains $S_1=\frac12(1+\kappa)$ through an outcome of $M$,
+so that $\kappa=|\mu|+\eta$; the case of $N$ is symmetric. Since $\eta>0$, this
+forces $\vecr=s_0\hat a$ with $s_0\mu=|\mu|$. There the two largest entries of
+$p\oplus q$ sum to
+$1+\frac12\max_t\bigl[|\mu|+\eta+t\nu+ts_0\zeta\,\hat a\cdot\hat b\bigr]$,
+whereas the term $s=s_0$ of $\Lambda$ gives
+$S_2\ge1+\frac12\bigl[|\mu|+t\nu+|\eta\hat a+ts_0\zeta\hat b|\bigr]$ for each
+$t$. By Cauchy--Schwarz,
+$|\eta\hat a+ts_0\zeta\hat b|>\eta+ts_0\zeta\,\hat a\cdot\hat b$ unless
+$\zeta\hat b\parallel\hat a$, so no state attains both $S_1$ and $S_2$.
+(ii) If one measurement is trivial, say $\eta=0$, then $\Lambda=\kappa=\zeta$,
+and $\vecr=\hat b$ gives $(p\oplus q)^\downarrow=\frac12(1+\zeta,1,1,1-\zeta)
+=\omplus(M,N)$. Otherwise, up to relabeling the outcomes of $N$, $\hat b=\hat a$,
+so that $\Lambda=\eta+\zeta$ and $\kappa=\max\{\eta,\zeta\}$, and $\vecr=\hat a$
+gives $(p\oplus q)^\downarrow=\frac12(1+\kappa,1+\Lambda-\kappa,1+\kappa-\Lambda,
+1-\kappa)$.
+(iii) Here $\kappa=0.95$ is reached only by the second outcome of $N$ at
+$\vecr=-\hat a$, and $\Lambda=1.55$ only by $(s,t)=(1,-1)$ at $\vecr=\hat a$.
+\end{proof}
 
 Bias and unequal sharpness arise naturally in photon counting. If the two
 outputs of a polarizing beam splitter are monitored by detectors of
@@ -852,9 +889,11 @@ second outcome, gives $\mu=\eta_d-1$ and $\eta=\eta_d$, so that $|\mu|+\eta=1$.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{povm.pdf}
-  \caption{Unsharp measurements ($\mu=\nu=0$, $\eta=\zeta$): exact minimum of
-  $H(M)+H(N)$ (solid) and the bound from Theorem~\ref{thm:povm} (dashed) for
-  Bloch angles $90^\circ$ and $45^\circ$.}
+  \caption{Exact minimum of $H(M)+H(N)$ (solid) and the bound from
+  Theorem~\ref{thm:povm} (dashed) for Bloch angles $90^\circ$ and $45^\circ$.
+  (a)~Unbiased measurements of equal sharpness ($\mu=\nu=0$, $\eta=\zeta$).
+  (b)~$M$ with sharpness $\eta=\frac12$ and bias $\mu$; $N$ unbiased with
+  $\zeta=\frac12$.}
   \label{fig:povm}
 \end{figure}
 
@@ -865,15 +904,22 @@ $|\eta\hat a+\zeta\hat b|+|\eta\hat a-\zeta\hat b|\le2$~\cite{Busch1986,HMZ2016}
 The two notions are nevertheless distinct. For orthogonal axes and
 $\eta=\zeta\le1/\sqrt2$ the measurements are jointly measurable, yet
 $S_2=1+\eta/\sqrt2$ stays below the value $1+\eta$ that would be reached if both
-outcome distributions could be sharpened at once, and $\omplus$ is not attained,
-being a noisy version of the sharp bound (Proposition~\ref{prop:attain}).
-Majorization uncertainty relations therefore quantify preparation uncertainty,
-which persists in the absence of measurement incompatibility.
+outcome distributions could be sharpened at once, and $\omplus(M,N)$ is not
+attained (Proposition~\ref{prop:povm-attain}). Attainment requires commuting
+effects, whether or not the pair is jointly measurable, and with bias even
+commuting effects need not attain the bound: in the example of
+Proposition~\ref{prop:povm-attain}(iii) the two readouts of the same axis favor
+opposite ends of it, a trade-off of classical origin. Majorization uncertainty
+relations therefore quantify preparation uncertainty, which persists in the
+absence of measurement incompatibility.
 
-As a corollary, $H(p)+H(q)\ge-\sum_k\omega_k\log_2\omega_k$ for all
-two-outcome qubit POVMs. Figure~\ref{fig:povm} shows that this bound tracks
-the exact minimum over the whole range of sharpness, becoming exact in the
-trivial limit $\eta\to0$.
+As a corollary, $H(p)+H(q)\ge-\sum_k\omega_k\log_2\omega_k$ with
+$\omega=\omplus(M,N)$ for all two-outcome qubit POVMs; by
+Proposition~\ref{prop:povm-attain} and Theorem~\ref{thm:tight} this bound is
+strict whenever $E_0$ and $F_0$ do not commute. Figure~\ref{fig:povm} shows that
+it tracks the exact minimum as a function of sharpness, becoming exact in the
+trivial limit $\eta\to0$, and of bias, where the gap grows with the bias at
+$45^\circ$ but not at $90^\circ$.
 
 % ===========================================================================
 \section{Binary projective measurements in dimension \texorpdfstring{$d$}{d}}
@@ -885,39 +931,45 @@ The qubit analysis already contains the general binary projective case.
 \begin{theorem}
 \label{thm:dimd}
 Let $M=\{P,\mathds{1}-P\}$ and $N=\{Q,\mathds{1}-Q\}$ be projective measurements on
-$\mathbb{C}^d$ and $c=\max_{i,j}\|P_iQ_j\|_\infty^2$. Then
-Theorems~\ref{thm:direct} and~\ref{thm:tensor} hold verbatim, and $\omplus$ is
-attained if and only if $c=1$.
+$\mathbb{C}^d$, write $P_1=P$, $P_2=\mathds{1}-P$, $Q_1=Q$, $Q_2=\mathds{1}-Q$, and
+let $c=\max_{i,j}\|P_iQ_j\|^2$, where $\|\cdot\|$ is the operator norm. Then
+Theorems~\ref{thm:direct} and~\ref{thm:tensor} hold verbatim, and $\omplus$ and
+$\omtimes$ are attained if and only if $c=1$.
 \end{theorem}
 
 \begin{proof}
-By Jordan's lemma~\cite{Halmos1969}, which is also the standard tool for
-entropic uncertainty relations of binary measurements~\cite{KTW2014},
-$\mathbb{C}^d$ decomposes into mutually orthogonal subspaces $\mathcal{H}_b$ of
-dimension one or two, each invariant under $P$ and $Q$. On a two-dimensional
-block, $P$ and $Q$ act as rank-one projectors, i.e., as a pair of qubit
-measurements with overlap $c_b$; on a one-dimensional block they have a common
-eigenvector, and we set $c_b=1$. Since $P$ and $Q$ are block diagonal,
-$p(\rho)\oplus q(\rho)=\sum_b\lambda_b\,p_b\oplus q_b$ with
-$\lambda_b=\tr(\rho\Pi_b)$ and $p_b,q_b$ the statistics of the normalized block
-state $\Pi_b\rho\Pi_b/\lambda_b$. Each $p_b\oplus q_b\maj\omplus(c_b)\maj\omplus(c)$,
-because $\omplus$ increases in the majorization order with $c$ and
-$c=\max_bc_b$. Since $\{v:v\maj\omega\}$ is convex, $p\oplus q\maj\omplus(c)$;
-optimality follows by embedding the maximizing qubit states of a block with
-$c_b=c$. For the tensor product, $p_iq_j\le(\frac{p_i+q_j}{2})^2$ with
-$p_i+q_j\le\lambda_{\max}(P_i+Q_j)=1+\|P_iQ_j\|\le1+\sqc$; $S_1=w$ is attained in
-a block with $c_b=c$, and $S_2=1$ by any state in the range of $P$. Finally, if
-$c<1$, a state with $L_1(p\oplus q)=1$ lies in the range of some $P_i$ (or
+By the eigenvalue formula of Sec.~\ref{sec:povm}, $S_k$ for the direct sum is
+the largest eigenvalue of a sum of $k$ of the four projectors. Hence $S_1=1$,
+$S_3=2$, since any three of them include $P_1+P_2=\mathds{1}$ or
+$Q_1+Q_2=\mathds{1}$, and $S_2=\max_{i,j}\lambda_{\max}(P_i+Q_j)=1+\sqc$, since
+$\lambda_{\max}(P+Q)=1+\|PQ\|$ for any two projectors~\cite{Halmos1969}. The
+increments give $\omplus$, which is ordered, so Lemma~\ref{lem:sup} yields
+Theorem~\ref{thm:direct}. For the tensor product,
+$p_iq_j\le\bigl(\frac{p_i+q_j}{2}\bigr)^2\le w$, with equality at a top
+eigenvector of $P_i+Q_j$ with $\|P_iQ_j\|^2=c$. Indeed, by Jordan's
+lemma~\cite{Halmos1969}, which is also the standard tool for entropic
+uncertainty relations of binary measurements~\cite{KTW2014}, $\mathbb{C}^d$
+decomposes into mutually orthogonal subspaces of dimension one or two that are
+invariant under $P$ and $Q$; on a two-dimensional subspace with overlap $c$, the
+bisector state of the qubit measurements that $P$ and $Q$ induce there gives
+$p_i=q_j=(1+\sqc)/2$, and for $c=1$ a common eigenvector gives $p_i=q_j=1$.
+Hence $S_1=w$, while a state in the range of $P$ gives $S_2=S_3=S_4=1$, and
+Theorem~\ref{thm:tensor} follows.
+
+If $c<1$, a state with $L_1(p\oplus q)=1$ lies in the range of some $P_i$ (or
 $Q_j$); then $q_j=\tr(\rho P_iQ_jP_i)\le\|P_iQ_j\|^2\le c$ for all $j$, so
-$L_2(p\oplus q)\le1+c<1+\sqc$ and $\omplus$ is not attained. If $c=1$, the
-ranges of some $P_i$ and $Q_j$ intersect and a common eigenvector attains
-$\omplus=(1,1,0,0)$.
+$L_2(p\oplus q)\le1+c<1+\sqc$ and $\omplus$ is not attained. Likewise,
+$L_2(p\otimes q)=1$ requires two vanishing entries of $p\otimes q$, hence such
+a state, at which $L_1(p\otimes q)\le c<w$, so $\omtimes$ is not attained
+either. If $c=1$, the ranges of some $P_i$ and $Q_j$ intersect, and a common
+eigenvector attains $\omplus=(1,1,0,0)$ and $\omtimes=(1,0,0,0)$.
 \end{proof}
 
 In particular, all bounds of Sec.~\ref{sec:entropic} hold for binary projective
-measurements in any dimension with $c=\max_{i,j}\|P_iQ_j\|^2$, and the
-min-entropy bound remains tight.
-Equivalently, $c=\frac12+\frac14\|\{A,B\}\|_\infty$ with $A=2P-\mathds{1}$ and
+measurements in any dimension with $c=\max_{i,j}\|P_iQ_j\|^2$, the min-entropy
+bound remains tight, and for $c<1$ the bounds for strictly Schur-concave
+measures are strict (Theorem~\ref{thm:tight}).
+Equivalently, $c=\frac12+\frac14\|\{A,B\}\|$ with $A=2P-\mathds{1}$ and
 $B=2Q-\mathds{1}$. Indeed, on a two-dimensional block, where $P$ and $Q$ act as
 qubit projectors with axes $\mhat_b$ and $\nhat_b$,
 $\{A,B\}=2(\mhat_b\cdot\nhat_b)\mathds{1}$ and
@@ -989,7 +1041,7 @@ states are spin coherent states;
 the essential difference is algebraic. For quadratures the commutator is a
 $c$-number, which makes the Heisenberg bound state independent. For binary
 observables it is the anticommutator that is, blockwise, a $c$-number
-[Eq.~\eqref{eq:cov}], and it fixes $c=\frac12+\frac14\|\{A,B\}\|_\infty$
+[Eq.~\eqref{eq:cov}], and it fixes $c=\frac12+\frac14\|\{A,B\}\|$
 (Sec.~\ref{sec:dimd}). The Robertson bound
 $\Delta A\,\Delta B\ge|\langle(\mhat\times\nhat)\cdot\vsigma\rangle|$, by
 contrast, vanishes for every state whose Bloch vector lies in the plane of the
@@ -1046,7 +1098,7 @@ Individual partial sums remain informative, however:
 $\pi[Q(\nu_1)+Q(\nu_2)]\le1+e^{-|\nu_1-\nu_2|^2/2}$, with equality for an
 equal-weight superposition of $\ket{\nu_1}$ and $\ket{\nu_2}$, an optical cat
 state~\cite{Ourjoumtsev2007,Lewenstein2021}, which thus plays the role of the
-bisector state. Non-trivial relations require $\|\{A,B\}\|_\infty<2$, as for
+bisector state. Non-trivial relations require $\|\{A,B\}\|<2$, as for
 the pseudospin operators of Ref.~\cite{Chen2002}, of which the squeezed vacuum
 is an eigenstate, or for polarization measurements on single photons.
 
@@ -1072,7 +1124,7 @@ All results were checked numerically. We evaluated Lorenz curves, the lattice
 supremum via least concave majorants~\cite{CicaleseVaccaro2002}, the analytic
 bounds of Theorems~\ref{thm:direct}, \ref{thm:tensor} and~\ref{thm:povm} and
 Corollaries~\ref{cor:direct}--\ref{cor:tensor}, the eigenvalue characterization
-$S_k=\max_{|J|=k}\lambda_{\max}(\sum_{j\in J}F_j)$, and exact minima of R\'enyi
+$S_k=\max_{|J|=k}\lambda_{\max}(\sum_{j\in J}K_j)$, and exact minima of R\'enyi
 and Tsallis entropy sums.
 
 The closed forms were compared with (a) lattice suprema over $1.8\times10^5$
@@ -1082,8 +1134,10 @@ projectors of rank $d/2$ in dimensions $d=2,4,6$, all with $c<1$ (deviation
 $<10^{-14}$). Pairs with a common eigenvector, which always occur for odd $d$
 or unequal ranks, have $c=1$ and were checked separately; the anticommutator
 form of $c$ was checked for 300 random pairs of projectors of arbitrary rank in
-dimensions $d\le8$. We also checked Propositions~\ref{prop:attain}
-and~\ref{prop:compare}, Corollaries~\ref{cor:direct}--\ref{cor:tensor},
+dimensions $d\le8$, and the tensor-product part of Theorem~\ref{thm:dimd} for 50
+random pairs in $d=4,6$. We also checked
+Propositions~\ref{prop:attain}--\ref{prop:povm-attain},
+Corollaries~\ref{cor:direct}--\ref{cor:tensor},
 Theorem~\ref{thm:tight}, the critical angle $\bar\theta$, the motion of the
 Shannon minimizer beyond $\bar\theta$, the range of R\'enyi orders in which the
 bisector or the eigenstates are optimal, the other values quoted in
