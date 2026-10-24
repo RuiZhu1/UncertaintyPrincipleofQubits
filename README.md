@@ -23,8 +23,16 @@ form).
   credited to Li–Qiao (2019), the Rényi-order dependence to Zozor–Bosyk–Portesi
   (2013), and Sec. II is more precise (parameter ranges, lattice conditions,
   Tsallis order renamed $\gamma$). Not yet submitted. The target is submission
-  before the end of 2026, and the venue is still to be decided with the
-  supervisors.
+  before the end of 2026.
+- **Target journal:** *Communications Physics* (Nature Portfolio); *Phys. Rev. A*
+  is the backup. The manuscript follows the journal's guidelines: Springer
+  Nature LaTeX template (`sn-jnl`, `sn-nature` references, line numbers);
+  Introduction, Results, Discussion and Methods with unnumbered headings;
+  theorem statements kept in Results, all proofs in Methods; a formula-free
+  abstract of 150–250 words; Data availability, Code availability, Author
+  contributions and Competing interests statements. Main text is about
+  4,000 words (limit about 5,000, Methods excluded), with 5 figures (limit 10) and
+  64 references (about 70 recommended).
 
 The applicant's letter of intent is in
 [`GTIIT_Letter_of_Intent_Research_Statement.pdf`](GTIIT_Letter_of_Intent_Research_Statement.pdf).
@@ -62,10 +70,10 @@ the (acute) Bloch angle between the two measurement axes.
 | Corollaries 1–2 | Shannon $h(\sqrt c)$, Tsallis ($\gamma>0$) and Rényi ($\alpha\le1$) bounds from the direct sum; Rényi bounds for all $\alpha$ from the tensor product. | RPZ 2014 (direct sum), PRZ/FGG 2013 (tensor) |
 | Proposition 2 | For $\alpha\le1$ the direct sum beats the tensor product; the direct-sum form fails at $\alpha=\infty$. | (i) is RPZ 2014, App. B; (ii) is new |
 | **Theorem 3** | For $c<1$, every bound for a strictly Schur-concave measure (Shannon, Rényi $0<\alpha<\infty$, Tsallis $\gamma>0$) is strict. Only orders $0$ and $\infty$ are tight. | new |
-| Sec. V C | Comparison across the Rényi family with MU and the exact optimum. The exact Shannon minimum is $2h((1+\sqrt c)/2)$ for $\theta\le\bar\theta$, where $\sqrt{\bar c}\,\mathrm{artanh}\sqrt{\bar c}=1$, i.e. $\bar\theta\approx67.07^\circ$. Beyond $\bar\theta$ the minimiser moves continuously to an eigenstate, reached at $90^\circ$. The bisector is optimal up to $43^\circ$ ($\alpha=3/4$) and $80^\circ$ ($\alpha=1.2$), at all angles iff $\alpha\ge\alpha^\dagger\approx1.43$, and at no angle for $\alpha\le1/2$. | Exact qubit minimum: Ghirardi et al., PLA 317, 32 (2003). Crossover with MU at $81.3^\circ$: consistent with Baek et al. (2019). Earlier majorization bounds vs MU and the optimum: KTW 2014. $\alpha$-dependence of the minimiser, including $\alpha^\dagger$: Zozor–Bosyk–Portesi, J. Phys. A 46, 465301 (2013), Cor. 1–2 (reproduced numerically here). New: the comparison of the majorization bounds across $\alpha$ (Fig. 4). |
+| Results: comparison with MU | Comparison across the Rényi family with MU and the exact optimum. The exact Shannon minimum is $2h((1+\sqrt c)/2)$ for $\theta\le\bar\theta$, where $\sqrt{\bar c}\,\mathrm{artanh}\sqrt{\bar c}=1$, i.e. $\bar\theta\approx67.07^\circ$. Beyond $\bar\theta$ the minimiser moves continuously to an eigenstate, reached at $90^\circ$. The bisector is optimal up to $43^\circ$ ($\alpha=3/4$) and $80^\circ$ ($\alpha=1.2$), at all angles iff $\alpha\ge\alpha^\dagger\approx1.43$, and at no angle for $\alpha\le1/2$. | Exact qubit minimum: Ghirardi et al., PLA 317, 32 (2003). Crossover with MU at $81.3^\circ$: consistent with Baek et al. (2019). Earlier majorization bounds vs MU and the optimum: KTW 2014. $\alpha$-dependence of the minimiser, including $\alpha^\dagger$: Zozor–Bosyk–Portesi, J. Phys. A 46, 465301 (2013), Cor. 1–2 (reproduced numerically here). New: the comparison of the majorization bounds across $\alpha$ (Fig. 4). |
 | Theorem 4 | Closed-form optimal direct-sum bound for arbitrary unsharp **and biased** two-outcome qubit POVMs. Remark: preparation uncertainty persists for jointly measurable pairs. | Unbiased case: Baek–Nha–Son, Entropy 21, 270 (2019). New: bias, ordering (optimality), joint-measurability remark. |
 | Theorem 5 | Theorems 1–2 hold for binary projective measurements on $\mathbb C^d$ with $c=\max\lVert P_iQ_j\rVert^2$, and $\omega_\oplus$ is attained iff $c=1$ (Jordan's lemma). Equivalently $c=\tfrac12+\tfrac14\lVert\{A,B\}\rVert$ with $A=2P-1$, $B=2Q-1$. | technique standard (e.g. Kaniewski–Tomamichel–Wehner 2014, who also give the qubit form of the anticommutator relation) |
-| Sec. VIII | Relation to quantum optics: no minimum-uncertainty state, unlike coherent and squeezed states; the boundary of $\mathcal E_\theta$ as the analogue of the squeezed-state family; commutator vs. anticommutator; single-photon polarization ($c=\cos^2\vartheta$, Malus's law); bias from detector efficiency mismatch. Open question (v): parity, displaced parity and coherent-state tests have $c=1$, and the cat state plays the role of the bisector state. | Discussion. Phase-space majorization of Gaussian states: Van Herstraeten–Jabbour–Cerf, Quantum 7, 1021 (2023). |
+| Discussion | Relation to quantum optics: no minimum-uncertainty state, unlike coherent and squeezed states; the boundary of $\mathcal E_\theta$ as the analogue of the squeezed-state family; commutator vs. anticommutator; single-photon polarization ($c=\cos^2\vartheta$, Malus's law); bias from detector efficiency mismatch. Open question (v): parity, displaced parity and coherent-state tests have $c=1$, and the cat state plays the role of the bisector state. | Discussion. Phase-space majorization of Gaussian states: Van Herstraeten–Jabbour–Cerf, Quantum 7, 1021 (2023). |
 
 ## Repository layout
 
@@ -77,10 +85,13 @@ the (acute) Bloch angle between the two measurement axes.
 │   ├── majorization.py     core library (see below)
 │   ├── verify_bounds.py    numerical check of every theorem and corollary
 │   ├── make_figures.py     regenerates all figures of the paper
-│   └── requirements.txt
+│   ├── requirements.txt
+│   └── LICENSE             MIT license for the code
 └── paper/
-    ├── main.tex            manuscript (revtex4-2, Phys. Rev. A style)
+    ├── main.tex            manuscript (Springer Nature template, Communications Physics)
     ├── references.bib
+    ├── sn-jnl.cls          Springer Nature LaTeX class (template of Dec 2024)
+    ├── sn-nature.bst       Nature Portfolio reference style
     ├── main.pdf            compiled manuscript
     └── figures/            generated by code/make_figures.py
 ```
@@ -139,19 +150,19 @@ It takes about 40 seconds.
 [PASS] Prop 1: no state attains omega_plus for non-commuting M, N  (min sup-distance 0.016)
 [PASS] Cor. 1-2: Shannon bounds are valid; H_inf bound -2 log2((1+sqrt c)/2) is tight
 [PASS] Shannon minimum = 2h((1+sqrt c)/2) exactly iff theta <= theta_bar  (sqrt(c_bar) artanh sqrt(c_bar) = 1: c_bar = 0.6948, theta_bar = 67.07 deg)
-[PASS] Sec. V C: beyond theta_bar the Shannon minimiser moves from the bisector to an eigenstate  (fraction of the way at 68, 70, 75, 80, 85, 89, 90 deg: 0.30, 0.51, 0.77, 0.89, 0.97, 1.00, 1.00)
-[PASS] Sec. V C: bisector optimal up to ~43 deg (alpha = 3/4) and ~80 deg (alpha = 1.2), at all angles for alpha >= alpha_dagger only, at no angle for alpha <= 1/2  (alpha_dagger = 1.4314)
+[PASS] MU comparison: beyond theta_bar the Shannon minimiser moves from the bisector to an eigenstate  (fraction of the way at 68, 70, 75, 80, 85, 89, 90 deg: 0.30, 0.51, 0.77, 0.89, 0.97, 1.00, 1.00)
+[PASS] MU comparison: bisector optimal up to ~43 deg (alpha = 3/4) and ~80 deg (alpha = 1.2), at all angles for alpha >= alpha_dagger only, at no angle for alpha <= 1/2  (alpha_dagger = 1.4314)
 [PASS] Cor. 1-2: direct-sum Renyi (alpha <= 1), Tsallis (gamma > 0) and tensor Renyi bounds hold
 [PASS] Prop 2(i): direct-sum Renyi bound >= tensor bound for alpha <= 1
 [PASS] Prop 2(ii): the direct-sum form fails at alpha = inf
 [PASS] Thm 3: all bounds strict for 0 < alpha < inf and gamma > 0; tight at alpha = 0 and inf  (smallest gap 9.0e-04, largest deviation at alpha in {0, inf}: 3.1e-16)
 [PASS] Thm 4: H(M)+H(N) >= H(omega_plus) for random unsharp/biased POVMs
-[PASS] Sec. VI: jointly measurable pair still has S_2 < 1 + eta and an unattained bound  (Busch sum 1.980 <= 2, S_2 = 1.495 < 1.7, min sup-distance 0.022)
-[PASS] Sec. VI: efficiencies (eta_H, eta_V) give mu = (eta_H - eta_V)/2, eta = (eta_H + eta_V)/2; a single detector gives |mu| + eta = 1
-[PASS] Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; Sec. VIII: the Robertson bound vanishes in the plane of the axes  (max |<[A, B]>| over in-plane states 0.0e+00)
-[PASS] Sec. VIII (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity  (<D Pi D^+> = 0.135, 0.763, 0.964 for r = 0, 1, 2)
-[PASS] Sec. VIII (v): pi[Q(a) + Q(-a)] <= 1 + exp(-2|a|^2), with equality for the even cat state
-[PASS] Sec. VIII (v): pseudospin operators obey the Pauli algebra; the squeezed vacuum is an s_z eigenstate
+[PASS] Noisy measurements: jointly measurable pair still has S_2 < 1 + eta and an unattained bound  (Busch sum 1.980 <= 2, S_2 = 1.495 < 1.7, min sup-distance 0.022)
+[PASS] Noisy measurements: efficiencies (eta_H, eta_V) give mu = (eta_H - eta_V)/2, eta = (eta_H + eta_V)/2; a single detector gives |mu| + eta = 1
+[PASS] Lemma 2: (x, y) in E_theta iff the covariance matrix is PSD; Discussion: the Robertson bound vanishes in the plane of the axes  (max |<[A, B]>| over in-plane states 0.0e+00)
+[PASS] Discussion (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity  (<D Pi D^+> = 0.135, 0.763, 0.964 for r = 0, 1, 2)
+[PASS] Discussion (v): pi[Q(a) + Q(-a)] <= 1 + exp(-2|a|^2), with equality for the even cat state
+[PASS] Discussion (v): pseudospin operators obey the Pauli algebra; the squeezed vacuum is an s_z eigenstate
 ```
 
 The grid-based deviations (about $10^{-5}$) come from discretizing the state
@@ -182,8 +193,10 @@ and inward ticks on all four sides.
 
 ### Compile the paper
 
-The manuscript needs `revtex4-2`, which is included in TeX Live and MiKTeX.
-TeX Live is installed on the group workstation.
+The manuscript uses the Springer Nature LaTeX template recommended by
+*Communications Physics*. Its class and bibliography style (`sn-jnl.cls`,
+`sn-nature.bst`) are included in `paper/`, so a standard TeX Live installation
+is enough. TeX Live is installed on the group workstation.
 
 ```bash
 cd paper
@@ -213,21 +226,35 @@ measurements.
 - [ ] Binary POVMs in dimension $d$ (Naimark dilation)
 - [ ] More than two measurements
 - [ ] Binary measurements on light modes (open question (v) in the Discussion)
-- [ ] Thesis write-up; preprint (arXiv), venue to be decided with the supervisors
+- [ ] Thesis write-up; preprint (arXiv); submission to *Communications Physics*
 
 ## Open items before submission
 
 - Get Gilad's affiliation(s), e-mail address and funding acknowledgement. There
   are TODOs for these in `paper/main.tex`.
-- Choose the journal. If it is a physics journal, we may need to restructure the
-  paper: replace the Theorem/Lemma/Definition environments with prose and move
-  the proofs to appendices.
+- Confirm the draft author-contributions statement and the competing-interests
+  statement with all authors (TODO in `paper/main.tex`). Rui and Marcelo are
+  both marked as corresponding authors; confirm.
+- At submission (Nature Portfolio system), paste the contents of `main.bbl`
+  into `main.tex` in place of `\bibliography{references}`, as the template
+  instructs, and upload the figures as separate files.
+- *Communications Physics* recommends Helvetica or Arial for figure lettering;
+  the figures currently use LaTeX (Computer Modern) fonts, as Marcelo asked.
+  Decide at the revision stage.
+- The journal asks for titles without technical terms; the current title
+  contains "majorization". Check with Gilad, who chose the title.
+- The Code availability statement points referees to this public repository,
+  which also contains the GTIIT letter of intent. Consider removing that file
+  before submission.
 - Proofread the bibliography formatting. The entries were checked against the
   original sources or their publishers' pages.
 - Ask Gilad whether Xiao, Fang & Gour, arXiv:1908.07694 (cited in the
   introduction), has been published.
-- The abstract's "every sensible measure of uncertainty" overstates the scope
-  in the same way the introduction did; fix it when the abstract is reviewed.
+
+## License
+
+The code in `code/` is released under the MIT license (`code/LICENSE`). The
+manuscript and the other documents in this repository are not covered by it.
 
 ## Contact
 
