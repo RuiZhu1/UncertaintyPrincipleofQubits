@@ -34,6 +34,11 @@ form).
   for non-commuting effects; with bias, not always for commuting ones),
   Theorem 5 also covers the tensor-product bound and derives the direct sum
   from the eigenvalue formula, and Fig. 5 has a panel for biased measurements.
+  After the review of Sec. VIII, the new Corollary 3 gives the optimal
+  direct-sum bound for binary POVMs in any dimension, the Discussion no longer
+  claims a tensor bound for POVMs, and the open questions are revised:
+  (ii) and (iii) are partly answered (Corollary 3; Li–Qiao 2019 for three
+  qubit bases), and (i) and (v) are stated more precisely.
   Not yet submitted. The target is submission
   before the end of 2026, and the venue is still to be decided with the
   supervisors.
@@ -78,7 +83,8 @@ the (acute) Bloch angle between the two measurement axes.
 | Theorem 4 | Closed-form optimal direct-sum bound $\omega_\oplus(M,N)$ for arbitrary unsharp **and biased** two-outcome qubit POVMs. Remark: preparation uncertainty persists for jointly measurable pairs. | Unbiased case: Baek–Nha–Son, Entropy 21, 270 (2019). New: bias, ordering (optimality), joint-measurability remark. |
 | Proposition 3 | $\omega_\oplus(M,N)$ is never attained if the effects do not commute, is attained for commuting unbiased effects, and can be missed by commuting biased effects (a classical trade-off). | new |
 | Theorem 5 | Theorems 1–2 hold for binary projective measurements on $\mathbb C^d$ with $c=\max\lVert P_iQ_j\rVert^2$, and $\omega_\oplus$ and $\omega_\otimes$ are attained iff $c=1$. Equivalently $c=\tfrac12+\tfrac14\lVert\{A,B\}\rVert$ with $A=2P-1$, $B=2Q-1$. | The direct sum follows from the eigenvalue formula of Baek et al. (2019) and $\lambda_{\max}(P+Q)=1+\lVert PQ\rVert$; Jordan's lemma, the standard tool (e.g. Kaniewski–Tomamichel–Wehner 2014, who also give the qubit form of the anticommutator relation), gives the tensor product. |
-| Sec. VIII | Relation to quantum optics: no minimum-uncertainty state, unlike coherent and squeezed states; the boundary of $\mathcal E_\theta$ as the analogue of the squeezed-state family; commutator vs. anticommutator; single-photon polarization ($c=\cos^2\vartheta$, Malus's law); bias from detector efficiency mismatch. Open question (v): parity, displaced parity and coherent-state tests have $c=1$, and the cat state plays the role of the bisector state. | Discussion. Phase-space majorization of Gaussian states: Van Herstraeten–Jabbour–Cerf, Quantum 7, 1021 (2023). |
+| Corollary 3 | Binary POVMs in any dimension: $\omega_\oplus=(S_1,S_2-S_1,1+S_1-S_2,1-S_1)$ with $S_1$ the largest eigenvalue of the four effects and $S_2=\max\{1,\lambda_{\max}(E_i+F_j)\}$; always ordered, hence optimal. Contains Theorems 4 and 5. | Follows from the eigenvalue formula of Baek et al. (2019); the explicit binary form is new. |
+| Sec. VIII | Relation to quantum optics: no minimum-uncertainty state, unlike coherent and squeezed states; the boundary of $\mathcal E_\theta$ as the analogue of the squeezed-state family; commutator vs. anticommutator (pure states saturate Robertson–Schrödinger); single-photon polarization ($c=\cos^2\vartheta$, Malus's law); bias from detector efficiency mismatch, which can create a trade-off even within one polarization basis. Open questions: (i) tensor bounds for POVMs ($S_3$ not simple even for unbiased, equally sharp ones); (ii) closed forms for $\lambda_{\max}(E_i+F_j)$ in dimension $d$; (iii) whether the increments stay ordered for more qubit bases (they do for 300 random triples); (iv) state-independent mixed orders; (v) which binary measurements on light modes have $c<1$ (parity, displaced parity and coherent-state tests have $c=1$; the cat state plays the role of the bisector state). | Discussion. Phase-space majorization of Gaussian states: Van Herstraeten–Jabbour–Cerf, Quantum 7, 1021 (2023). Three Pauli bases: Li–Qiao (2019), Example two. |
 
 ## Repository layout
 
@@ -150,6 +156,7 @@ It takes about 40 seconds.
 [PASS] Thm 5, degenerate case: common eigenvector => c = 1 and omega_plus = (1, 1, 0, 0)  (max deviation 2.7e-15)
 [PASS] Thm 5 remark: c = 1/2 + ||{A, B}||/4 with A = 2P - 1, B = 2Q - 1 (d = 2..8, all ranks)  (max deviation 1.3e-15)
 [PASS] Thm 5, tensor product: S_1 = w is attained at a top eigenvector of P_i + Q_j (d = 4, 6) and never exceeded by random states  (max deviation 2.4e-15, largest p_i q_j - w over random states -2.0e-02)
+[PASS] Cor. 3: binary POVMs in d = 2..6: omega_plus = (S_1, S_2 - S_1, 1 + S_1 - S_2, 1 - S_1), already ordered  (max deviation 1.6e-15)
 [PASS] Prop 1(i): no state attains omega_plus for non-commuting M, N  (min sup-distance 0.016)
 [PASS] Prop 1(ii): no state attains omega_times for non-commuting M, N  (min sup-distance 0.021)
 [PASS] Cor. 1-2: Shannon bounds are valid; H_inf bound -2 log2((1+sqrt c)/2) is tight
@@ -167,10 +174,12 @@ It takes about 40 seconds.
 [PASS] Sec. VI: jointly measurable pair still has S_2 < 1 + eta and an unattained bound  (Busch sum 1.980 <= 2, S_2 = 1.495 < 1.7, min sup-distance 0.022)
 [PASS] Prop 3: omega_plus(M, N) is never attained for non-commuting effects, is attained for commuting unbiased ones, and is missed by a commuting biased pair  (biased example: min sup-distance 0.025)
 [PASS] Sec. VI: efficiencies (eta_H, eta_V) give mu = (eta_H - eta_V)/2, eta = (eta_H + eta_V)/2; a single detector gives |mu| + eta = 1
-[PASS] Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; Sec. VIII: the Robertson bound vanishes in the plane of the axes  (max |<[A, B]>| over in-plane states 0.0e+00)
+[PASS] Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; Sec. VIII: the Robertson bound vanishes in the plane of the axes, and every pure state saturates the Robertson-Schroedinger relation  (max |<[A, B]>| over in-plane states 0.0e+00, Robertson-Schroedinger gap of pure states 4.4e-16)
 [PASS] Sec. VIII (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity  (<D Pi D^+> = 0.135, 0.763, 0.964 for r = 0, 1, 2)
 [PASS] Sec. VIII (v): pi[Q(a) + Q(-a)] <= 1 + exp(-2|a|^2), with equality for the even cat state
 [PASS] Sec. VIII (v): pseudospin operators obey the Pauli algebra; the squeezed vacuum is an s_z eigenstate
+[PASS] Sec. VIII (iii): three qubit bases: S_k = k/2 + max|sum n_j|/2, sigma_x,y,z give the Li-Qiao vector, and the increments are ordered for 300 random triples
+[PASS] Sec. VIII (i): unbiased POVMs with eta = zeta = 0.8, orthogonal axes: S_1 is the AM-GM value, but S_3 is attained neither by an eigenstate nor by a bisector state  (S_3 >= 0.9550, eigenstate 0.9500, bisector 0.9528)
 ```
 
 The grid-based deviations (about $10^{-5}$) come from discretizing the state
@@ -228,9 +237,10 @@ measurements.
 - [x] When the bounds are tight (Theorem 3) and comparison with entropy-specific relations
 - [x] General two-outcome qubit POVMs (direct sum), relation to joint measurability
 - [x] Binary projective measurements in dimension $d$
+- [x] Binary POVMs in dimension $d$, direct sum (Corollary 3)
 - [ ] Optimal tensor-product bound for general qubit POVMs
-- [ ] Binary POVMs in dimension $d$ (Naimark dilation)
-- [ ] More than two measurements
+- [ ] Binary POVMs in dimension $d$: closed form for $\lambda_{\max}(E_i+F_j)$, attainment, tensor product
+- [ ] More than two measurements (qubit bases: $S_k$ explicit; ordering of the increments unproven)
 - [ ] Binary measurements on light modes (open question (v) in the Discussion)
 - [ ] Thesis write-up; preprint (arXiv), venue to be decided with the supervisors
 
