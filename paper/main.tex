@@ -60,19 +60,20 @@
 \begin{abstract}
 Making one quantum measurement more predictable can force another to become
 less so.
-Majorization expresses this trade-off with a single list of probabilities that
-covers every state and every sensible measure of uncertainty at once.
+Majorization expresses this trade-off with a single list of numbers that holds
+for every state and bounds a whole family of uncertainty measures at once.
 We study the simplest case: two measurements with two possible results each.
-We show that the existing majorization limits cannot be improved, yet no state
-reaches them unless the measurements are compatible.
-So for incompatible measurements, the resulting limits are never exact, except
-in two extreme cases.
-They outperform the standard Maassen--Uffink relation unless the measurements
-are nearly mutually unbiased, and become almost exact as the measurements grow
-compatible.
-We also find the best limit for noisy measurements, show that uncertainty
-persists even when both can be measured together, and extend the results to
-systems of any size.
+The best such lists are known; we show that no state reaches them unless the
+measurements commute.
+For measurements that do not commute, the uncertainty limits that follow are
+therefore never exact, except for the two most extreme measures of
+uncertainty.
+They still outperform the standard Maassen--Uffink relation unless the
+measurements are nearly mutually unbiased, and become almost exact as the
+measurements approach commuting ones.
+We also find the best limit for noisy and biased measurements, show that
+uncertainty persists even when both can be measured together, and extend the
+results to systems of any size.
 \end{abstract}
 
 \maketitle
@@ -194,10 +195,12 @@ all induced bounds except those of R\'enyi order zero and infinity; the
 comparison of both types of majorization bound with the Maassen--Uffink
 relation and with the exact optimum across the whole R\'enyi family, including
 the failure of the direct-sum form at large orders; the optimal direct-sum bound
-for arbitrary noisy and biased two-outcome qubit measurements, together with its
-relation to joint measurability; and the extension of the results for
-projective measurements to binary projective measurements in any finite
-dimension.
+for arbitrary noisy and biased two-outcome qubit measurements, the conditions
+under which it is attained, and its relation to joint measurability, including
+a trade-off of classical origin that bias creates between commuting
+measurements; and the extension to binary measurements in any finite
+dimension, with both bounds for projective measurements and the direct-sum
+bound for POVMs.
 
 The paper is organized as follows.
 Section~\ref{sec:prelim} introduces majorization, the uncertainty measures and
@@ -208,7 +211,7 @@ measurements, and Sec.~\ref{sec:entropic} discusses their entropic consequences
 and compares them with entropy-specific relations.
 Sections~\ref{sec:povm} and~\ref{sec:dimd} treat general two-outcome qubit
 measurements, described by positive operator-valued measures (POVMs), and
-binary projective measurements in arbitrary dimension, respectively.
+binary measurements in arbitrary dimension, respectively.
 Section~\ref{sec:discussion} discusses the results, including their relation
 to quantum optics, and concludes.
 All analytical results were also checked numerically
@@ -1171,15 +1174,18 @@ No.~12574092).
 \label{app:numerics}
 % ===========================================================================
 
-All results were checked numerically. We evaluated Lorenz curves, the lattice
-supremum via least concave majorants~\cite{CicaleseVaccaro2002}, the analytic
-bounds of Theorems~\ref{thm:direct}, \ref{thm:tensor} and~\ref{thm:povm} and
+All analytical results were also checked numerically. We evaluated Lorenz
+curves, the lattice supremum via least concave
+majorants~\cite{CicaleseVaccaro2002}, the analytic bounds of
+Theorems~\ref{thm:direct}, \ref{thm:tensor} and~\ref{thm:povm} and
 Corollaries~\ref{cor:direct}--\ref{cor:tensor}, the eigenvalue characterization
 $S_k=\max_{|J|=k}\lambda_{\max}(\sum_{j\in J}K_j)$, and exact minima of R\'enyi
 and Tsallis entropy sums.
 
 The closed forms were compared with (a) lattice suprema over $1.8\times10^5$
-grid states (maximal deviation $<10^{-4}$), and (b) the eigenvalue
+grid states, for 40 random pairs of qubit bases (Theorems~\ref{thm:direct}
+and~\ref{thm:tensor}) and 60 random pairs of qubit POVMs
+(Theorem~\ref{thm:povm}), with maximal deviation $<10^{-4}$, and (b) the eigenvalue
 characterization for 200 random qubit POVM pairs and for 150 random pairs of
 projectors of rank $d/2$ in dimensions $d=2,4,6$, all with $c<1$ (deviation
 $<10^{-14}$). Pairs with a common eigenvector, which always occur for odd $d$
@@ -1193,8 +1199,9 @@ Corollaries~\ref{cor:direct}--\ref{cor:tensor},
 Theorem~\ref{thm:tight}, the critical angle $\bar\theta$, the motion of the
 Shannon minimizer beyond $\bar\theta$, the range of R\'enyi orders in which the
 bisector or the eigenstates are optimal, the other values quoted in
-Sec.~\ref{sec:entropic}, the covariance form of Lemma~\ref{lem:ellipse}, and the
-jointly measurable example and the detector model of Sec.~\ref{sec:povm}, the
+Sec.~\ref{sec:entropic}, the covariance form of Lemma~\ref{lem:ellipse}, the
+jointly measurable example, the detector model and the behavior of the gap in
+Fig.~\ref{fig:povm}(b) of Sec.~\ref{sec:povm}, the
 Robertson--Schr\"odinger statement of Sec.~\ref{sec:discussion}, and the
 numerical statements in open questions (i) and (iii), the latter for 300 random
 triples of qubit bases. The statements about light modes in
@@ -1206,7 +1213,11 @@ sums this reduction is justified by the radial argument of
 Sec.~\ref{sec:geometry}, which applies equally to unbiased unsharp
 measurements. For biased measurements we minimize only the Shannon sum, which
 is concave in $(x,y)$ and is therefore minimized on the boundary of
-$\mathcal{E}_\theta$ as well.
+$\mathcal{E}_\theta$ as well. To check that the eigenstates are optimal for
+$\alpha\le\frac12$, where the R\'enyi sums have a cusp at the eigenstates, we
+parametrize the circle by an angle $\varphi$ and write the outcome probabilities
+as $\cos^2(\varphi/2)$ and $\sin^2(\varphi/2)$, which avoids the loss of
+precision in $1-\cos\varphi$.
 
 \section*{Data Availability Statement}
 The data that support the findings of this study are available from the
