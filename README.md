@@ -38,7 +38,11 @@ form).
   direct-sum bound for binary POVMs in any dimension, the Discussion no longer
   claims a tensor bound for POVMs, and the open questions are revised:
   (ii) and (iii) are partly answered (Corollary 3; Li–Qiao 2019 for three
-  qubit bases), and (i) and (v) are stated more precisely.
+  qubit bases), and (i) and (v) are stated more precisely. After the final
+  review of the abstract and appendix, the abstract no longer claims the known
+  optimality or "every sensible measure" and uses "commute" for attainment
+  (pending Marcelo's approval), the introduction lists Proposition 3 and
+  Corollary 3, and every numerical statement in the text is checked.
   Not yet submitted. The target is submission
   before the end of 2026, and the venue is still to be decided with the
   supervisors.
@@ -173,6 +177,7 @@ It takes about 40 seconds.
 [PASS] Thm 4: H(M)+H(N) >= H(omega_plus) for random unsharp/biased POVMs
 [PASS] Sec. VI: jointly measurable pair still has S_2 < 1 + eta and an unattained bound  (Busch sum 1.980 <= 2, S_2 = 1.495 < 1.7, min sup-distance 0.022)
 [PASS] Prop 3: omega_plus(M, N) is never attained for non-commuting effects, is attained for commuting unbiased ones, and is missed by a commuting biased pair  (biased example: min sup-distance 0.025)
+[PASS] Fig. 5(b): with the bias of M the gap grows at 45 deg and is constant at 90 deg, 1 - h((1 + (sqrt 2 - 1)/2)/2)  (45 deg: 0.0027 -> 0.0359; 90 deg: 0.0312)
 [PASS] Sec. VI: efficiencies (eta_H, eta_V) give mu = (eta_H - eta_V)/2, eta = (eta_H + eta_V)/2; a single detector gives |mu| + eta = 1
 [PASS] Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; Sec. VIII: the Robertson bound vanishes in the plane of the axes, and every pure state saturates the Robertson-Schroedinger relation  (max |<[A, B]>| over in-plane states 0.0e+00, Robertson-Schroedinger gap of pure states 4.4e-16)
 [PASS] Sec. VIII (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity  (<D Pi D^+> = 0.135, 0.763, 0.964 for r = 0, 1, 2)
@@ -255,8 +260,13 @@ measurements.
   original sources or their publishers' pages.
 - Ask Gilad whether Xiao, Fang & Gour, arXiv:1908.07694 (cited in Secs. I, V
   and VIII), has been published.
-- The abstract's "every sensible measure of uncertainty" overstates the scope
-  in the same way the introduction did; fix it when the abstract is reviewed.
+- Marcelo to approve the revised abstract (it replaces his version; see the
+  commit "Manuscript: address the abstract and appendix review").
+- Mark the corresponding author: both Rui and Marcelo give e-mail addresses,
+  and the data statement refers to "the corresponding author".
+- Data availability: the statement says "available upon reasonable request"
+  (Marcelo's choice). If the repository is public, consider linking it so that
+  every number in the paper can be reproduced.
 
 ## Contact
 
