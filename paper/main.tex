@@ -32,7 +32,7 @@
 \newcommand{\omplus}{\omega_{\oplus}}
 \newcommand{\omtimes}{\omega_{\otimes}}
 \newcommand{\sqc}{\sqrt{c}}
-\newcommand{\Ach}{\wp}
+\newcommand{\Ach}{\mathcal{P}}
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 
 \begin{document}
@@ -358,9 +358,9 @@ filled ellipse
   \mathcal{E}_\theta=\bigl\{(x,y): x^2-2xy\cos\theta+y^2\le\sin^2\theta\bigr\}.
 \end{equation}
 Its boundary consists exactly of the images of the pure states whose Bloch
-vectors lie in $\mathrm{span}\{\mhat,\nhat\}$. Moreover, for all $\alpha,\beta\in\mathbb{R}$,
+vectors lie in $\mathrm{span}\{\mhat,\nhat\}$. Moreover, for all $s,t\in\mathbb{R}$,
 \begin{equation}
-  \max_{|\vecr|\le1}\,(\alpha x+\beta y)=|\alpha\mhat+\beta\nhat| .
+  \max_{|\vecr|\le1}\,(sx+ty)=|s\mhat+t\nhat| .
   \label{eq:support}
 \end{equation}
 \end{lemma}
@@ -371,9 +371,11 @@ Only $\vec r_\parallel$ contributes to $(x,y)$, and $(x,y)=G\,\xi$ where $\xi$ a
 coefficients of $\vec r_\parallel$ in the basis $\{\mhat,\nhat\}$ and
 $G=\bigl(\begin{smallmatrix}1&\cos\theta\\ \cos\theta&1\end{smallmatrix}\bigr)$
 is the Gram matrix. Then $|\vec r_\parallel|^2=\xi^TG\xi=(x,y)G^{-1}(x,y)^T\le1$,
-which is the stated inequality since $\det G=\sin^2\theta$. Equality holds iff
-$\vec r_\perp=0$ and $|\vecr|=1$. Eq.~\eqref{eq:support} is Cauchy--Schwarz:
-$\alpha x+\beta y=\vecr\cdot(\alpha\mhat+\beta\nhat)$.
+which is the stated inequality since $\det G=\sin^2\theta$; equality holds iff
+$\vec r_\perp=0$ and $|\vecr|=1$. Conversely, every $(x,y)\in\mathcal{E}_\theta$
+is attained by $\vecr=\xi_1\mhat+\xi_2\nhat$ with $\xi=G^{-1}(x,y)^T$, since then
+$|\vecr|^2=(x,y)G^{-1}(x,y)^T\le1$. Eq.~\eqref{eq:support} is Cauchy--Schwarz:
+$sx+ty=\vecr\cdot(s\mhat+t\nhat)$.
 \end{proof}
 
 Equivalently, $(x,y)\in\mathcal{E}_\theta$ if and only if the covariance matrix
@@ -390,13 +392,17 @@ measurements ($\theta=\pi/2$) and degenerates into the segment $x=y$ as
 $\theta\to0$~\cite{Abbott2016}.
 
 Consequently the achievable set
-$\Ach(M,N)=\{p(\rho)\oplus q(\rho)\}\subset\mathbb{R}^4$ is the image of
+$\Ach_\oplus(M,N)=\{p(\rho)\oplus q(\rho)\}\subset\mathbb{R}^4$ is the image of
 $\mathcal{E}_\theta$ under the affine map
 $(x,y)\mapsto\tfrac12(1+x,1-x,1+y,1-y)$: it is convex and compact, and its
 extreme points are the statistics of pure states in the plane of the two axes
-(Fig.~\ref{fig:ellipse}). Any uncertainty measure that is concave in $(x,y)$,
-such as $H(p)+H(q)$, is therefore minimized on $\partial\mathcal{E}_\theta$, and
-the optimization problems below are effectively one-dimensional.
+(Fig.~\ref{fig:ellipse}). Since $\mathcal{E}_\theta$ is centered at the origin,
+moving a point radially outward to $\partial\mathcal{E}_\theta$ multiplies $|x|$
+and $|y|$ by the same factor, which makes both $p$ and $q$ more ordered. Every
+uncertainty measure of the form $\Phi(p)+\Psi(q)$ with $\Phi$ and $\Psi$
+Schur-concave, in particular every R\'enyi and Tsallis sum, is therefore
+minimized on $\partial\mathcal{E}_\theta$, and the optimization problems below
+are effectively one-dimensional.
 
 \begin{figure}[t]
   \centering
@@ -418,7 +424,7 @@ the optimization problems below are effectively one-dimensional.
 
 \subsection{Direct-sum bound}
 
-\begin{theorem}
+\begin{theorem}[\cite{RPZ2014,LiQiao2019}]
 \label{thm:direct}
 Let $M,N$ be projective qubit measurements with maximal overlap $c$. For every
 state $\rho$,
@@ -426,7 +432,7 @@ state $\rho$,
   p(\rho)\oplus q(\rho)\;\maj\;\omplus:=\bigl(1,\;\sqc,\;1-\sqc,\;0\bigr),
   \label{eq:omplus}
 \end{equation}
-and $\omplus$ is the optimal majorization bound for $\Ach(M,N)$.
+and $\omplus$ is the optimal majorization bound for $\Ach_\oplus(M,N)$.
 \end{theorem}
 
 The majorization relation~\eqref{eq:omplus} is the qubit case of the direct-sum
@@ -459,58 +465,25 @@ give $\omplus$, which is non-increasing because $1\ge\sqc\ge1-\sqc\ge0$.
 Lemma~\ref{lem:sup} completes the proof.
 \end{proof}
 
-\begin{proposition}
-\label{prop:attain}
-There is a state with $(p\oplus q)^\downarrow=\omplus$ if and only if $c=1$,
-i.e., $M$ and $N$ commute. For $c<1$, the maxima $S_1,S_3$ are attained only by
-the eigenstates of $M$ and $N$, and $S_2$ only by the bisector states
-$\vecr=\pm(\mhat+\nhat)/|\mhat+\nhat|$ (for $\theta=\pi/2$ also by
-$\vecr=\pm(\mhat-\nhat)/|\mhat-\nhat|$).
-\end{proposition}
-
-\begin{proof}
-$(p\oplus q)^\downarrow_1=1$ forces $\rho$ to be an eigenstate of $M$ or $N$, say
-$\vecr=\pm\mhat$. Then $q=\bigl(\frac{1\pm\cos\theta}{2},\frac{1\mp\cos\theta}{2}\bigr)$ and
-$(p\oplus q)^\downarrow=(1,c,1-c,0)$, which equals $\omplus$ iff $c=\sqc$, i.e.,
-$c=1$. The statement about $S_2$ follows from the equality condition in
-Cauchy--Schwarz and from $|\mhat-\nhat|<|\mhat+\nhat|$ for $\theta<\pi/2$.
-\end{proof}
-
-Proposition~\ref{prop:attain} makes precise the sense in which $\omplus$ is a
-\emph{description} of the achievable set rather than the statistics of a
-particular state: it is the supremum of $\Ach(M,N)$ in the majorization
-lattice, and its partial sums are saturated by two disjoint families of states
-(Fig.~\ref{fig:lorenz}). The gap between
-$(1,c,1-c,0)$ and $\omplus$ quantifies the price one pays for demanding
-certainty about $M$.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\columnwidth]{lorenz.pdf}
-  \caption{Lorenz curves of $p\oplus q$ for $\theta=60^\circ$. Grey: 150 random
-  states. The optimal bound $\omplus$ (blue) is the upper envelope; it touches
-  the eigenstate curve at $k=1,3$ and the bisector-state curve at $k=2$, but no
-  single state reaches it. A similar plot for $\theta=90^\circ$ is Fig.~1(a) of
-  Ref.~\cite{LiQiao2019}.}
-  \label{fig:lorenz}
-\end{figure}
-
 \subsection{Tensor-product bound}
 
-\begin{theorem}
+\begin{theorem}[\cite{FGG2013,PRZ2013}]
 \label{thm:tensor}
-For every state $\rho$,
+Under the assumptions of Theorem~\ref{thm:direct}, for every state $\rho$,
 \begin{equation}
   p(\rho)\otimes q(\rho)\;\maj\;\omtimes:=\bigl(w,\;1-w,\;0,\;0\bigr),
   \label{eq:omtimes}
 \end{equation}
 where $w=\frac14\bigl(1+\sqc\bigr)^2$, and $\omtimes$ is the optimal
-majorization bound for $\{p(\rho)\otimes q(\rho)\}$.
+majorization bound for $\Ach_\otimes(M,N)=\{p(\rho)\otimes q(\rho)\}$.
 \end{theorem}
 
 The vector $\omtimes$ coincides with the vector $Q^{(1)}=(C^2,1-C^2,0,0)$,
 $C=(1+\sqc)/2$, of Pucha{\l}a \emph{et al.}~\cite{PRZ2013}, which for $d=2$
-exhausts their hierarchy of bounds; see also Ref.~\cite{FGG2013}.
+exhausts their hierarchy of bounds. It is also the vector of Friedland
+\emph{et al.}~\cite{FGG2013}, whose entries are the increments of the maximal
+partial sums $S_k$; for qubits these increments are non-increasing, so that
+$\omtimes$ is the least upper bound.
 
 \begin{proof}
 By the arithmetic--geometric mean inequality and Eq.~\eqref{eq:S2},
@@ -521,8 +494,55 @@ $S_2=S_3=S_4=1$. Since $\sqc\ge1/\sqrt2$ we have $w\ge\frac12$, so the increment
 $(w,1-w,0,0)$ are non-increasing, and Lemma~\ref{lem:sup} applies.
 \end{proof}
 
-As before, $\omtimes$ is not attained for $c<1$: equality in both steps of the
-proof forces a bisector state, at which $L_2(p\otimes q)=p_+=(1+\sqc)/2<1$.
+\subsection{Attainability}
+
+Neither optimal bound is the statistics of a state unless the measurements
+commute.
+
+\begin{proposition}
+\label{prop:attain}
+(i) There is a state with $(p\oplus q)^\downarrow=\omplus$ if and only if $c=1$,
+i.e., $M$ and $N$ commute. For $c<1$, the maxima $S_1,S_3$ are attained only by
+the eigenstates of $M$ and $N$, and $S_2$ only by the bisector states
+$\vecr=\pm(\mhat+\nhat)/|\mhat+\nhat|$ (for $\theta=\pi/2$ also by
+$\vecr=\pm(\mhat-\nhat)/|\mhat-\nhat|$).
+(ii) There is a state with $(p\otimes q)^\downarrow=\omtimes$ if and only if
+$c=1$.
+\end{proposition}
+
+\begin{proof}
+(i) $(p\oplus q)^\downarrow_1=1$ forces $\rho$ to be an eigenstate of $M$ or $N$, say
+$\vecr=\pm\mhat$. Then $q=\bigl(\frac{1\pm\cos\theta}{2},\frac{1\mp\cos\theta}{2}\bigr)$ and
+$(p\oplus q)^\downarrow=(1,c,1-c,0)$, which equals $\omplus$ iff $c=\sqc$, i.e.,
+$c=1$. The statement about $S_2$ follows from the equality condition in
+Cauchy--Schwarz and from $|\mhat-\nhat|<|\mhat+\nhat|$ for $\theta<\pi/2$.
+(ii) If $c=1$, a common eigenstate of $M$ and $N$ gives
+$p\otimes q=(1,0,0,0)=\omtimes$. If $c<1$, the largest entry of $p\otimes q$
+equals $w$ only if both inequalities in the proof of Theorem~\ref{thm:tensor}
+are equalities, i.e., $p_i=q_j$ and $p_i+q_j=1+\sqc$. The state then attains the
+direct-sum maximum $S_2=1+\sqc$, so by (i) it is one of the states listed there,
+and both of its outcome distributions are $(a,1-a)$ up to order, with
+$a=(1+\sqc)/2$. Hence $L_2(p\otimes q)=a^2+a(1-a)=a<1=L_2(\omtimes)$.
+\end{proof}
+
+Proposition~\ref{prop:attain} makes precise the sense in which $\omplus$ and
+$\omtimes$ are \emph{descriptions} of the achievable sets rather than the
+statistics of a particular state: each is a supremum in the majorization
+lattice, and the partial sums of $\omplus$ are saturated by two disjoint
+families of states (Fig.~\ref{fig:lorenz}). Demanding certainty about $M$
+lowers the largest attainable $L_2(p\oplus q)$ from $1+\sqc$ to $1+c$; this
+deficit, $\sqc(1-\sqc)$, vanishes only for commuting measurements.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{lorenz.pdf}
+  \caption{Lorenz curves of $p\oplus q$ for $\theta=60^\circ$. Grey: 150 random
+  states. The optimal bound $\omplus$ (blue) is the smallest concave curve above
+  all of them; it touches the eigenstate curve at $k=1,3$ and the bisector-state
+  curve at $k=2$, but no single state reaches it. A similar plot for
+  $\theta=90^\circ$ is Fig.~1(a) of Ref.~\cite{LiQiao2019}.}
+  \label{fig:lorenz}
+\end{figure}
 
 % ===========================================================================
 \section{Entropic uncertainty relations}
@@ -625,10 +645,10 @@ states, respectively.
 \begin{proof}
 (i) The achievable statistics form a compact set, so the minimum of $\Phi$ is
 attained at some state $\rho^\ast$. By Theorem~\ref{thm:direct} and
-Proposition~\ref{prop:attain}, $p\oplus q(\rho^\ast)\maj\omplus$ with
+Proposition~\ref{prop:attain}(i), $p\oplus q(\rho^\ast)\maj\omplus$ with
 $(p\oplus q)^\downarrow\neq\omplus$, hence $\Phi(p\oplus q(\rho^\ast))>\Phi(\omplus)$.
-The tensor product is analogous, using the non-attainment of $\omtimes$ shown
-after Theorem~\ref{thm:tensor}. The Shannon and Tsallis sums are strictly
+The tensor product is analogous, by Theorem~\ref{thm:tensor} and
+Proposition~\ref{prop:attain}(ii). The Shannon and Tsallis sums are strictly
 Schur-concave functions of $p\oplus q$, and $H_\alpha(p)+H_\alpha(q)=H_\alpha(p\otimes q)$
 with $H_\alpha$ strictly Schur-concave for $0<\alpha<\infty$. For~\eqref{eq:Rdirect}
 with $\alpha<1$, apply the argument to $v\mapsto\sum_kv_k^\alpha$ in the proof of
@@ -784,7 +804,8 @@ The largest single outcome probability is
 $\max_\rho\frac12\bigl(1+|\mu+\eta\,\hat a\cdot\vecr|\bigr)=\frac12(1+|\mu|+\eta)$ for $M$,
 so $S_1=\frac12(1+\kappa)$; likewise the smallest is $\frac12(1-\kappa)$, so
 $S_3=2-\frac12(1-\kappa)$. For $S_2$, a pair within one distribution sums to $1$,
-while a cross pair gives, by Eq.~\eqref{eq:support},
+while a cross pair gives, by the Cauchy--Schwarz inequality as in
+Eq.~\eqref{eq:support},
 \begin{multline}
   \max_\rho\bigl[1+\tfrac12\bigl(s(\mu+\eta\,\hat a\cdot\vecr)+t(\nu+\zeta\,\hat b\cdot\vecr)\bigr)\bigr]\\
   =1+\tfrac12\bigl[s\mu+t\nu+|s\eta\hat a+t\zeta\hat b|\bigr].
@@ -1061,11 +1082,12 @@ statements about light modes in Sec.~\ref{sec:discussion} were checked in a
 Fock space of dimension 600.
 
 The exact entropy minima are obtained by a dense grid over the great circle in
-$\mathrm{span}\{\mhat,\nhat\}$ refined by Nelder--Mead. This reduction is justified
-by Lemma~\ref{lem:ellipse}: the Shannon entropy is concave in $(x,y)$ and is
-therefore minimized on the boundary of $\mathcal{E}_\theta$. For unbiased
-measurements, moving $\vecr$ outwards makes both $p$ and $q$ more ordered, so the
-same holds for every R\'enyi and Tsallis entropy.
+$\mathrm{span}\{\mhat,\nhat\}$ refined by Nelder--Mead. For R\'enyi and Tsallis
+sums this reduction is justified by the radial argument of
+Sec.~\ref{sec:geometry}, which applies equally to unbiased unsharp
+measurements. For biased measurements we minimize only the Shannon sum, which
+is concave in $(x,y)$ and is therefore minimized on the boundary of
+$\mathcal{E}_\theta$ as well.
 
 \section*{Data Availability Statement}
 The data that support the findings of this study are available from the
