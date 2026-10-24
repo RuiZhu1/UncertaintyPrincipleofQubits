@@ -159,9 +159,10 @@ unsharp qubit observables the direct-sum bound was evaluated in
 Ref.~\cite{Baek2019}.
 Building on these results, we give a unified and self-contained treatment of
 the binary case.
-We show that the expectation values that qubit states can reach fill an
-ellipse, and use this geometry to derive both bounds, to prove that they cannot
-be improved, and to identify the states that come closest to them.
+The expectation values that qubit states can reach are known to fill an
+ellipse~\cite{LiQiao2015,Abbott2016}; we use this geometry to derive both
+bounds, to prove that they cannot be improved, and to identify the states that
+come closest to them.
 No single state attains these bounds unless the measurements commute.
 Consequently, for non-commuting measurements the entropic bounds they imply are
 strict for the Shannon entropy, for the Tsallis entropies and for all R\'enyi
@@ -183,8 +184,9 @@ measurements, and Sec.~\ref{sec:entropic} discusses their entropic consequences
 and compares them with entropy-specific relations.
 Sections~\ref{sec:povm} and~\ref{sec:dimd} treat general two-outcome qubit
 measurements, described by positive operator-valued measures (POVMs), and
-binary projective measurements in arbitrary dimension, respectively, and
-Sec.~\ref{sec:discussion} concludes.
+binary projective measurements in arbitrary dimension, respectively.
+Section~\ref{sec:discussion} discusses the results, including their relation
+to quantum optics, and concludes.
 All results are verified numerically (Appendix~\ref{app:numerics}).
 
 % ===========================================================================
@@ -303,7 +305,7 @@ measurements correspond to $\eta=1$, $\mu=0$.
 
 The statistics~\eqref{eq:pq} depend on $\vecr$ only through $(x,y)$.
 
-\begin{lemma}
+\begin{lemma}[\cite{LiQiao2015,KTW2014,Abbott2016}]
 \label{lem:ellipse}
 For non-parallel axes, the set $\{(\mhat\cdot\vecr,\nhat\cdot\vecr):|\vecr|\le1\}$ is the
 filled ellipse
@@ -328,6 +330,19 @@ which is the stated inequality since $\det G=\sin^2\theta$. Equality holds iff
 $\vec r_\perp=0$ and $|\vecr|=1$. Eq.~\eqref{eq:support} is Cauchy--Schwarz:
 $\alpha x+\beta y=\vecr\cdot(\alpha\mhat+\beta\nhat)$.
 \end{proof}
+
+Equivalently, $(x,y)\in\mathcal{E}_\theta$ if and only if the covariance matrix
+of the observables $A=\mhat\cdot\vsigma$ and $B=\nhat\cdot\vsigma$,
+\begin{equation}
+  \Gamma=\begin{pmatrix}1-x^2&\cos\theta-xy\\ \cos\theta-xy&1-y^2\end{pmatrix},
+  \label{eq:cov}
+\end{equation}
+is positive semidefinite, because
+$\det\Gamma=\sin^2\theta-(x^2-2xy\cos\theta+y^2)$. Its off-diagonal entry
+contains the anticommutator $\frac12\{A,B\}=\cos\theta\,\mathds{1}$, which does
+not depend on the state. The ellipse is a disk for mutually unbiased
+measurements ($\theta=\pi/2$) and degenerates into the segment $x=y$ as
+$\theta\to0$~\cite{Abbott2016}.
 
 Consequently the achievable set
 $\Ach(M,N)=\{p(\rho)\oplus q(\rho)\}\subset\mathbb{R}^4$ is the image of
@@ -596,13 +611,30 @@ second-derivative test shows that this happens when
 $\sqrt{\bar c}\,\artanh\sqrt{\bar c}=1$, i.e., at $\bar c\approx0.6948$ and
 $\bar\theta\approx67.07^\circ$. For $\bar\theta<\theta<\pi/2$ the minimizers
 bifurcate and the minimum has to be computed numerically~\cite{Ghirardi2003}.
+As $\theta$ grows they move continuously towards the eigenstates of $M$ and
+$N$, which they reach at $\theta=\pi/2$, where MU is tight.
+
+The range in which the bisector is optimal depends on the uncertainty measure.
+For R\'enyi entropies it widens with the order. Numerically, the bisector is
+optimal up to $43^\circ$ for $\alpha=3/4$, up to $80^\circ$ for $\alpha=1.2$, and
+at all angles for $\alpha\ge\alpha_c\approx1.43$, in line with the tightness of
+the min-entropy bound; here $\alpha_c$ solves
+$2H_\alpha\bigl(\frac{2+\sqrt2}{4},\frac{2-\sqrt2}{4}\bigr)=1$, i.e., it is the
+order at which bisector and eigenstates perform equally well for mutually
+unbiased measurements. For $\alpha\le\frac12$, conversely, the eigenstates
+outperform the bisector at all angles. For the max-entropy they give
+$\log_2(1+\sin\theta)$ against $2\log_2(1+\sin\frac\theta2)$, and for
+$\alpha<\frac12$ the two values scale as $(\theta^2/4)^\alpha$ and
+$2(\theta^2/16)^\alpha$ as $\theta\to0$.
 
 For mutually unbiased measurements ($\theta=90^\circ$, $c=\frac12$) MU is tight
 (1 bit), while $h(1/\sqrt2)\approx0.872$ and $h(w)\approx0.844$. As the
 measurements become more compatible, however, the majorization bounds take
 over: $h(\sqc)>-\log_2c$ for $\sqc>t^\ast\approx0.7585$, i.e., for Bloch angles
 $\theta<\theta^\ast\approx81.3^\circ$ (the tensor bound overtakes MU at $\theta<79.3^\circ$), in
-agreement with Ref.~\cite{Baek2019}.
+agreement with Ref.~\cite{Baek2019}; earlier majorization
+bounds~\cite{FGG2013,PRZ2013} were compared with MU and with the optimal qubit
+bound in Ref.~\cite{KTW2014}.
 
 As $c\to1$ the advantage over MU becomes unbounded, and the direct-sum bound
 becomes tight in ratio. With $\varepsilon=1-\sqc\approx\theta^2/8$ one has
@@ -729,6 +761,16 @@ mixed with the uniform vector. For unequal sharpness or nonzero bias, $\omplus$
 is not of this form, and the relevant geometric quantities are the lengths
 $|\eta\hat a\pm\zeta\hat b|$ rather than the overlap $c$.
 
+Bias and unequal sharpness arise naturally in photon counting. If the two
+outputs of a polarizing beam splitter are monitored by detectors of
+efficiencies $\eta_H$ and $\eta_V$, and no-click events are assigned to either
+outcome at random, the effect of outcome $H$ has the form~\eqref{eq:povm} with
+$\hat a=\hat z$, $\mu=(\eta_H-\eta_V)/2$ and $\eta=(\eta_H+\eta_V)/2$. A
+mismatch of detection efficiencies, a known concern in quantum key
+distribution~\cite{Makarov2006}, thus appears as a bias. A single
+click/no-click detector behind a polarizer, with no-click events counted as the
+second outcome, gives $\mu=\eta_d-1$ and $\eta=\eta_d$, so that $|\mu|+\eta=1$.
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{povm.pdf}
@@ -797,6 +839,13 @@ $\omplus=(1,1,0,0)$.
 In particular, all bounds of Sec.~\ref{sec:entropic} hold for binary projective
 measurements in any dimension with $c=\max_{i,j}\|P_iQ_j\|^2$, and the
 min-entropy bound remains tight.
+Equivalently, $c=\frac12+\frac14\|\{A,B\}\|_\infty$ with $A=2P-\mathds{1}$ and
+$B=2Q-\mathds{1}$. Indeed, on a two-dimensional block, where $P$ and $Q$ act as
+qubit projectors with axes $\mhat_b$ and $\nhat_b$,
+$\{A,B\}=2(\mhat_b\cdot\nhat_b)\mathds{1}$ and
+$c_b=\frac12(1+|\mhat_b\cdot\nhat_b|)$, while $\{A,B\}=\pm2$ on a
+one-dimensional block. For qubits this is the relation between the overlap and
+the effective anticommutator of Ref.~\cite{KTW2014}.
 For arbitrary POVMs in any dimension, the eigenvalue formula for $S_k$ quoted in
 Sec.~\ref{sec:povm}, together with Lemma~\ref{lem:sup}, gives an exact
 numerical procedure, which we use to verify Theorems~\ref{thm:povm}
@@ -837,6 +886,52 @@ the better bound; for the tensor-product bound the crossover lies at
 $79.3^\circ$. Among the two forms, the direct sum is preferable for
 $\alpha\le1$, while only the tensor product survives for large $\alpha$.
 
+\emph{Relation to quantum optics.}---These results contrast instructively with
+the quadratures of a light mode. There, coherent and squeezed states are
+minimum-uncertainty states: for their principal quadratures they saturate both
+the Heisenberg relation and the entropic relation of Bia{\l}ynicki-Birula and
+Mycielski~\cite{BBM1975}; moreover, all pure Gaussian states are equivalent
+under continuous majorization in phase space and are conjectured to majorize
+every Wigner-positive state~\cite{VanHerstraeten2023}. For incompatible binary
+measurements no such state exists (Proposition~\ref{prop:attain}), and the
+optimal state depends on the uncertainty measure. The ellipse
+$\mathcal{E}_\theta$ resembles the covariance ellipse of a squeezed vacuum: it
+is a disk for mutually unbiased measurements and flattens as they become
+compatible, although it describes the pair of measurements rather than a single
+state. Its boundary, traced by the pure states in the plane of the two axes,
+plays the role of the family of squeezed states, trading predictability of $N$
+for that of $M$. The balanced bisector state, the analogue of a coherent state,
+minimizes the Shannon sum up to $\bar\theta\approx67^\circ$; for larger angles
+the minimizer moves towards an eigenstate of either measurement, the analogue
+of an infinitely squeezed state, and the range in which the balanced state is
+optimal shrinks for smaller R\'enyi orders and grows for larger ones
+(Sec.~\ref{sec:entropic}). A single qubit cannot be squeezed in the usual
+sense~\cite{KitagawaUeda1993}, as all its pure states are spin coherent states;
+the essential difference is algebraic. For quadratures the commutator is a
+$c$-number, which makes the Heisenberg bound state independent. For binary
+observables it is the anticommutator that is, blockwise, a $c$-number
+[Eq.~\eqref{eq:cov}], and it fixes $c=\frac12+\frac14\|\{A,B\}\|_\infty$
+(Sec.~\ref{sec:dimd}). The Robertson bound
+$\Delta A\,\Delta B\ge|\langle(\mhat\times\nhat)\cdot\vsigma\rangle|$, by
+contrast, vanishes for every state whose Bloch vector lies in the plane of the
+two axes, which contains all optimal states. Commutator-based relations are
+therefore uninformative here, and state-independent descriptions are needed:
+tight variance relations~\cite{Abbott2016} or, for all Schur-concave measures
+at once, majorization.
+
+The results apply directly to photonic qubits. Restricted to single photons,
+the Stokes operators of polarization are the Pauli matrices, and two linear
+polarization analyzers at a relative angle $\vartheta$ correspond to
+$\theta=2\vartheta$, so that $c=\cos^2\vartheta$ is Malus's law; the crossover
+with MU and the angle $\bar\theta$ correspond to $\vartheta\approx40.7^\circ$ and
+$\vartheta\approx33.5^\circ$, respectively. For many photons the Stokes
+operators form a collective spin that can be squeezed (polarization
+squeezing~\cite{Korolkova2002,Bowen2002}); the single-photon case is the limit
+in which only the redistribution of uncertainty along the boundary of
+$\mathcal{E}_\theta$ remains. Imperfect detectors lead to the unsharp and
+biased measurements of Theorem~\ref{thm:povm}, with the bias set by the
+mismatch of detection efficiencies (Sec.~\ref{sec:povm}).
+
 Several questions remain open.
 (i) \emph{Tensor bounds for POVMs.} The AM--GM step of Theorem~\ref{thm:tensor}
 is no longer tight for biased or unequally sharp measurements; the optimal
@@ -852,6 +947,23 @@ partial sums involve signed sums of several Bloch vectors, and the lattice
 structure of the bound becomes genuinely relevant.
 (iv) \emph{Mixed orders.} It remains open whether majorization can be adapted
 to yield relations such as $H_\infty(p)+H_{1/2}(q)\ge-\log_2c$.
+(v) \emph{Binary measurements on light modes.} In infinite dimension
+$c=\sup_{i,j}\|P_iQ_j\|^2$ can equal $1$ without a common eigenvector. For
+photon-number parity and displaced parity, whose expectation values sample the
+Wigner function~\cite{Royer1977}, increasingly squeezed vacua, which contain
+only even photon numbers, approach simultaneous eigenstates of both, so no
+non-trivial state-independent relation exists. Tests for coherent states,
+$\{\ket{\nu}\!\bra{\nu},\mathds{1}-\ket{\nu}\!\bra{\nu}\}$, realized by a
+displacement followed by on/off detection with no-click probability
+$\pi Q(\nu)=\bra{\nu}\rho\ket{\nu}$ (the Husimi function), also have $c=1$,
+because all states orthogonal to both coherent states are common eigenvectors.
+Individual partial sums remain informative, however:
+$\pi[Q(\nu_1)+Q(\nu_2)]\le1+e^{-|\nu_1-\nu_2|^2/2}$, with equality for an
+equal-weight superposition of $\ket{\nu_1}$ and $\ket{\nu_2}$, an optical cat
+state~\cite{Ourjoumtsev2007,Lewenstein2021}, which thus plays the role of the
+bisector state. Non-trivial relations require $\|\{A,B\}\|_\infty<2$, as for
+the pseudospin operators of Ref.~\cite{Chen2002}, of which the squeezed vacuum
+is an eigenstate, or for polarization measurements on single photons.
 
 \begin{acknowledgments}
 R.~Z.\ and M.~F.~C.\ acknowledge support by the Quantum Science and
@@ -883,11 +995,16 @@ grid states (maximal deviation $<10^{-4}$), and (b) the eigenvalue
 characterization for 200 random qubit POVM pairs and for 150 random pairs of
 projectors of rank $d/2$ in dimensions $d=2,4,6$, all with $c<1$ (deviation
 $<10^{-14}$). Pairs with a common eigenvector, which always occur for odd $d$
-or unequal ranks, have $c=1$ and were checked separately. We also checked
-Propositions~\ref{prop:attain} and~\ref{prop:compare},
-Corollaries~\ref{cor:direct}--\ref{cor:tensor}, Theorem~\ref{thm:tight}, the
-critical angle $\bar\theta$, and the jointly measurable example of
-Sec.~\ref{sec:povm}.
+or unequal ranks, have $c=1$ and were checked separately; the anticommutator
+form of $c$ was checked for 300 random pairs of projectors of arbitrary rank in
+dimensions $d\le8$. We also checked Propositions~\ref{prop:attain}
+and~\ref{prop:compare}, Corollaries~\ref{cor:direct}--\ref{cor:tensor},
+Theorem~\ref{thm:tight}, the critical angle $\bar\theta$, the motion of the
+Shannon minimizer beyond $\bar\theta$, the range of R\'enyi orders in which the
+bisector is optimal, the covariance form of Lemma~\ref{lem:ellipse}, and the
+jointly measurable example and the detector model of Sec.~\ref{sec:povm}. The
+statements about light modes in Sec.~\ref{sec:discussion} were checked in a
+Fock space of dimension 600.
 
 The exact entropy minima are obtained by a dense grid over the great circle in
 $\mathrm{span}\{\mhat,\nhat\}$ refined by Nelder--Mead. This reduction is justified
