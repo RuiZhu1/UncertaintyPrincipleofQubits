@@ -138,6 +138,30 @@ for _ in range(300):
 check("Thm 5 remark: c = 1/2 + ||{A, B}||/4 with A = 2P - 1, B = 2Q - 1 (d = 2..8, all ranks)",
       worst < 1e-10, f"max deviation {worst:.1e}")
 
+# Tensor product in dimension d: S_1 = w is attained at a top eigenvector of P_i + Q_j
+rng_t = np.random.default_rng(11)  # separate stream: the numbers printed elsewhere stay unchanged
+worst, excess = 0.0, -np.inf
+for _ in range(50):
+    dim = int(rng_t.choice([4, 6]))
+    P = mj.random_projector(dim, dim // 2, rng_t)
+    Q = mj.random_projector(dim, dim // 2, rng_t)
+    I = np.eye(dim)
+    w = mj.omega_tensor_projective(mj.max_overlap_projectors(P, Q))[0]
+    psi = rng_t.normal(size=(2000, dim)) + 1j * rng_t.normal(size=(2000, dim))
+    psi /= np.linalg.norm(psi, axis=1, keepdims=True)
+    best = 0.0
+    for Pi in (P, I - P):
+        for Qj in (Q, I - Q):
+            v = np.linalg.eigh(Pi + Qj)[1][:, -1]
+            best = max(best, (v.conj() @ Pi @ v).real * (v.conj() @ Qj @ v).real)
+            pq = (np.einsum("ni,ij,nj->n", psi.conj(), Pi, psi).real
+                  * np.einsum("ni,ij,nj->n", psi.conj(), Qj, psi).real)
+            excess = max(excess, float(pq.max() - w))
+    worst = max(worst, abs(best - w))
+check("Thm 5, tensor product: S_1 = w is attained at a top eigenvector of P_i + Q_j (d = 4, 6) "
+      "and never exceeded by random states", worst < 1e-10 and excess < 0,
+      f"max deviation {worst:.1e}, largest p_i q_j - w over random states {excess:.1e}")
+
 # --- 4. Non-attainability (Proposition 1) -----------------------------------
 M, N = pair(np.pi / 3)
 c = mj.overlap_cmax(M, N)
@@ -386,6 +410,39 @@ s2 = w[0] + w[1]
 check("Sec. VI: jointly measurable pair still has S_2 < 1 + eta and an unattained bound",
       busch <= 2 and abs(s2 - (1 + eta / np.sqrt(2))) < 1e-12 and gap > 1e-3,
       f"Busch sum {busch:.3f} <= 2, S_2 = {s2:.3f} < {1 + eta:.1f}, min sup-distance {gap:.3f}")
+
+
+# Proposition 3: attainment for POVMs
+def s1_states(m: mj.TwoOutcomePOVM, n: mj.TwoOutcomePOVM) -> list[np.ndarray]:
+    """The pure states at which the largest outcome probability (1 + kappa)/2 is attained."""
+    kappa = max(m.kappa, n.kappa)
+    return [s * e.axis for e in (m, n) if np.isclose(e.kappa, kappa)
+            for s in ((1, -1) if e.mu == 0 else (np.sign(e.mu),))]
+
+
+rng_p = np.random.default_rng(13)  # separate stream: the numbers printed elsewhere stay unchanged
+ok, n_pairs = True, 0
+while n_pairs < 200:
+    M, N = random_povm(rng_p), random_povm(rng_p)
+    if M.eta * N.eta * np.linalg.norm(np.cross(M.axis, N.axis)) < 1e-2:
+        continue  # nearly commuting: the strict inequality becomes too small to resolve
+    n_pairs += 1
+    s2 = np.cumsum(mj.omega_direct_sum(M, N))[1]
+    for r in s1_states(M, N):  # only these states attain S_1 ...
+        v = mj.sort_desc(mj.direct_sum(M.probs(r), N.probs(r)))
+        ok &= v[0] + v[1] < s2 - 1e-9  # ... and none of them attains S_2
+z = np.array([0.0, 0.0, 1.0])
+for Mc, Nc in ((mj.TwoOutcomePOVM(z, eta=0.9), mj.TwoOutcomePOVM(z, eta=0.4)),
+               (mj.TwoOutcomePOVM(z, eta=0.3), mj.TwoOutcomePOVM(-z, eta=0.8))):
+    ok &= np.allclose(mj.sort_desc(mj.direct_sum(Mc.probs(z), Nc.probs(z))), mj.omega_direct_sum(Mc, Nc))
+Mb, Nb = mj.TwoOutcomePOVM(z, eta=0.6, mu=0.3), mj.TwoOutcomePOVM(z, eta=0.15, mu=-0.8)
+zs = np.linspace(-1, 1, 20001)  # commuting effects: the statistics depend on r only through z
+v = mj.sort_desc(mj.direct_sum(Mb.probs(np.outer(zs, z)), Nb.probs(np.outer(zs, z))))
+gap = np.min(np.max(np.abs(v - mj.omega_direct_sum(Mb, Nb)), axis=1))
+ok &= zs[np.argmax(v[:, 0])] == -1 and zs[np.argmax(v[:, :2].sum(1))] == 1 and gap > 1e-2
+check("Prop 3: omega_plus(M, N) is never attained for non-commuting effects, is attained for "
+      "commuting unbiased ones, and is missed by a commuting biased pair", ok,
+      f"biased example: min sup-distance {gap:.3f}")
 
 # Photon counting: detector efficiencies set the bias and the sharpness
 H_proj, V_proj = np.diag([1.0, 0.0]), np.diag([0.0, 1.0])  # |H> has Bloch vector +z
