@@ -9,6 +9,7 @@ Every check prints PASS/FAIL; the script exits with status 1 on any failure.
 from __future__ import annotations
 
 import sys
+from itertools import combinations
 
 import numpy as np
 from scipy.linalg import expm
@@ -161,6 +162,31 @@ for _ in range(50):
 check("Thm 5, tensor product: S_1 = w is attained at a top eigenvector of P_i + Q_j (d = 4, 6) "
       "and never exceeded by random states", worst < 1e-10 and excess < 0,
       f"max deviation {worst:.1e}, largest p_i q_j - w over random states {excess:.1e}")
+
+
+# Corollary 3: binary POVMs in any dimension
+def random_effect(dim: int, rng: np.random.Generator) -> np.ndarray:
+    """Random effect 0 <= E <= 1: random eigenbasis, eigenvalues uniform in [0, 1]."""
+    u, _ = np.linalg.qr(rng.normal(size=(dim, dim)) + 1j * rng.normal(size=(dim, dim)))
+    return (u * rng.random(dim)) @ u.conj().T
+
+
+def lam_max(x: np.ndarray) -> float:
+    return float(np.linalg.eigvalsh(x)[-1])
+
+
+rng_b = np.random.default_rng(17)  # separate stream: the numbers printed elsewhere stay unchanged
+worst = 0.0
+for _ in range(300):
+    dim = int(rng_b.integers(2, 7))
+    E, F = random_effect(dim, rng_b), random_effect(dim, rng_b)
+    I = np.eye(dim)
+    s1 = max(lam_max(K) for K in (E, I - E, F, I - F))
+    s2 = max(1.0, max(lam_max(Ei + Fj) for Ei in (E, I - E) for Fj in (F, I - F)))
+    closed = np.array([s1, s2 - s1, 1 + s1 - s2, 1 - s1])
+    worst = max(worst, np.abs(closed - mj.omega_direct_sum_operators([E, I - E], [F, I - F])).max())
+check("Cor. 3: binary POVMs in d = 2..6: omega_plus = (S_1, S_2 - S_1, 1 + S_1 - S_2, 1 - S_1), "
+      "already ordered", worst < 1e-10, f"max deviation {worst:.1e}")
 
 # --- 4. Non-attainability (Proposition 1) -----------------------------------
 M, N = pair(np.pi / 3)
@@ -470,10 +496,17 @@ inside = x**2 - 2 * x * y * np.cos(theta) + y**2 <= np.sin(theta) ** 2
 gamma = np.stack([np.stack([1 - x * x, np.cos(theta) - x * y], -1),
                   np.stack([np.cos(theta) - x * y, 1 - y * y], -1)], -2)
 psd = np.linalg.eigvalsh(gamma)[:, 0] >= 0
+# Robertson-Schroedinger: det Gamma >= <(m x n).sigma>^2, with equality for every pure state
+pure = mj.fibonacci_sphere(2000)
+xp, yp = pure @ M.axis, pure @ N.axis
+rs_gap = np.abs((1 - xp**2) * (1 - yp**2) - (np.cos(theta) - xp * yp) ** 2
+                - (pure @ np.cross(M.axis, N.axis)) ** 2).max()
 check("Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; "
-      "Sec. VIII: the Robertson bound vanishes in the plane of the axes",
-      bool(np.array_equal(inside, psd)) and robertson < 1e-12,
-      f"max |<[A, B]>| over in-plane states {robertson:.1e}")
+      "Sec. VIII: the Robertson bound vanishes in the plane of the axes, and every pure state "
+      "saturates the Robertson-Schroedinger relation",
+      bool(np.array_equal(inside, psd)) and robertson < 1e-12 and rs_gap < 1e-12,
+      f"max |<[A, B]>| over in-plane states {robertson:.1e}, "
+      f"Robertson-Schroedinger gap of pure states {rs_gap:.1e}")
 
 NF = 600  # Fock-space truncation: photon numbers 0..599
 a_op = np.diag(np.sqrt(np.arange(1, NF)), 1).astype(complex)
@@ -521,6 +554,39 @@ ok = (np.allclose(s_x @ s_x, np.eye(NF)) and np.allclose(s_x @ s_z + s_z @ s_x, 
       and abs(np.vdot(psi, s_z @ psi).real + 1) < 1e-8)
 check("Sec. VIII (v): pseudospin operators obey the Pauli algebra; the squeezed vacuum is an "
       "s_z eigenstate", ok)
+
+
+# --- 10. Numerical statements in the open questions (Sec. VIII) ----------------
+def qubit_partial_sums(axes) -> np.ndarray:
+    """S_k = k/2 + max_J |sum_{j in J} n_j|/2 over sets J of k outcomes, n_j = +-axis."""
+    vecs = [s * n for n in axes for s in (1, -1)]
+    return np.array([k / 2 + max(np.linalg.norm(sum(vecs[j] for j in J)) / 2
+                                 for J in combinations(range(len(vecs)), k))
+                     for k in range(1, len(vecs) + 1)])
+
+
+r2, r3 = np.sqrt(2), np.sqrt(3)
+li_qiao = np.array([1, r2 / 2, (1 + r3 - r2) / 2, (1 - r3 + r2) / 2, (2 - r2) / 2, 0])
+ok = np.allclose(np.diff(np.r_[0, qubit_partial_sums(np.eye(3))]), li_qiao)
+rng_m = np.random.default_rng(19)  # separate stream: the numbers printed elsewhere stay unchanged
+for _ in range(300):
+    axes = [mj.unit(v) for v in rng_m.normal(size=(3, 3))]
+    w = np.diff(np.r_[0, qubit_partial_sums(axes)])
+    w_op = mj.omega_direct_sum_operators(*[mj.projective(n).effects for n in axes])
+    ok &= bool(np.all(np.diff(w) <= 1e-12)) and np.allclose(w, w_op)
+check("Sec. VIII (iii): three qubit bases: S_k = k/2 + max|sum n_j|/2, sigma_x,y,z give the "
+      "Li-Qiao vector, and the increments are ordered for 300 random triples", ok)
+
+M, N = pair(np.pi / 2, 0.8)  # unbiased, equal sharpness, orthogonal axes
+L = np.cumsum(mj.sort_desc(mj.tensor(M.probs(STATES), N.probs(STATES))), axis=-1).max(axis=0)
+L_eig = np.cumsum(mj.sort_desc(mj.tensor(M.probs(M.axis), N.probs(M.axis))))
+r_bis = mj.unit(M.axis + N.axis)
+L_bis = np.cumsum(mj.sort_desc(mj.tensor(M.probs(r_bis), N.probs(r_bis))))
+w1 = ((1 + 0.8 * np.sqrt(0.5)) / 2) ** 2  # AM-GM value of S_1
+ok = abs(L_bis[0] - w1) < 1e-12 and L[0] <= w1 + 1e-12 and L[2] > max(L_eig[2], L_bis[2]) + 1e-3
+check("Sec. VIII (i): unbiased POVMs with eta = zeta = 0.8, orthogonal axes: S_1 is the AM-GM value, "
+      "but S_3 is attained neither by an eigenstate nor by a bisector state", ok,
+      f"S_3 >= {L[2]:.4f}, eigenstate {L_eig[2]:.4f}, bisector {L_bis[2]:.4f}")
 
 t1 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_direct_sum_projective(c)))
 t2 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_tensor_projective(c)))
