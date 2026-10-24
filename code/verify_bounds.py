@@ -185,7 +185,7 @@ for deg in (68, 70, 75, 80, 85, 89, 90):
     psi = np.arctan2(r_star[0], r_star[2]) % np.pi  # polar angle in the x-z plane (r ~ -r)
     dist = min(abs(psi - theta / 2), np.pi - abs(psi - theta / 2))
     fracs.append(dist / (theta / 2))  # 0 at the bisector, 1 at an eigenstate
-check("Sec. V C: beyond theta_bar the Shannon minimiser moves from the bisector to an eigenstate",
+check("MU comparison: beyond theta_bar the Shannon minimiser moves from the bisector to an eigenstate",
       fracs[0] > 0.05 and bool(np.all(np.diff(fracs) > 0)) and abs(fracs[-1] - 1) < 1e-4,
       "fraction of the way at 68, 70, 75, 80, 85, 89, 90 deg: "
       + ", ".join(f"{f:.2f}" for f in fracs))
@@ -218,7 +218,7 @@ for a in (0.1, 0.3, 0.5):  # the eigenstates beat the bisector at every angle
     ok &= bool(np.all(mj.renyi(eig_dist, a) < 2 * mj.renyi(bis_dist, a)))
 ok &= (np.allclose(mj.renyi(eig_dist, 0.5), np.log2(1 + np.sin(th)))
        and np.allclose(2 * mj.renyi(bis_dist, 0.5), 2 * np.log2(1 + np.sin(th / 2))))
-check("Sec. V C: bisector optimal up to ~43 deg (alpha = 3/4) and ~80 deg (alpha = 1.2), "
+check("MU comparison: bisector optimal up to ~43 deg (alpha = 3/4) and ~80 deg (alpha = 1.2), "
       "at all angles for alpha >= alpha_dagger only, at no angle for alpha <= 1/2", ok,
       f"alpha_dagger = {alpha_dag:.4f}")
 
@@ -284,7 +284,7 @@ w = mj.omega_direct_sum(M, N)
 vecs = mj.direct_sum(M.probs(STATES), N.probs(STATES))
 gap = np.min(np.max(np.abs(mj.sort_desc(vecs) - w), axis=1))
 s2 = w[0] + w[1]
-check("Sec. VI: jointly measurable pair still has S_2 < 1 + eta and an unattained bound",
+check("Noisy measurements: jointly measurable pair still has S_2 < 1 + eta and an unattained bound",
       busch <= 2 and abs(s2 - (1 + eta / np.sqrt(2))) < 1e-12 and gap > 1e-3,
       f"Busch sum {busch:.3f} <= 2, S_2 = {s2:.3f} < {1 + eta:.1f}, min sup-distance {gap:.3f}")
 
@@ -298,10 +298,10 @@ for e_h, e_v in [(0.9, 0.9), (0.9, 0.7), (0.6, 0.3), (0.2, 0.95)]:
 e_d = 0.8
 single = mj.TwoOutcomePOVM([0, 0, 1], eta=e_d, mu=e_d - 1)  # no click counted as outcome 2
 ok &= np.allclose(e_d * H_proj, single.effects[0]) and abs(single.kappa - 1) < 1e-12
-check("Sec. VI: efficiencies (eta_H, eta_V) give mu = (eta_H - eta_V)/2, eta = (eta_H + eta_V)/2; "
+check("Noisy measurements: efficiencies (eta_H, eta_V) give mu = (eta_H - eta_V)/2, eta = (eta_H + eta_V)/2; "
       "a single detector gives |mu| + eta = 1", ok)
 
-# --- 9. Covariance form of Lemma 2 and the quantum-optics remarks (Sec. VIII) --
+# --- 9. Covariance form of Lemma 2 and the quantum-optics remarks (Discussion) --
 rng_qo = np.random.default_rng(9)
 theta = np.radians(60)
 M, N = pair(theta)
@@ -314,8 +314,8 @@ inside = x**2 - 2 * x * y * np.cos(theta) + y**2 <= np.sin(theta) ** 2
 gamma = np.stack([np.stack([1 - x * x, np.cos(theta) - x * y], -1),
                   np.stack([np.cos(theta) - x * y, 1 - y * y], -1)], -2)
 psd = np.linalg.eigvalsh(gamma)[:, 0] >= 0
-check("Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; "
-      "Sec. VIII: the Robertson bound vanishes in the plane of the axes",
+check("Lemma 2: (x, y) in E_theta iff the covariance matrix is PSD; "
+      "Discussion: the Robertson bound vanishes in the plane of the axes",
       bool(np.array_equal(inside, psd)) and robertson < 1e-12,
       f"max |<[A, B]>| over in-plane states {robertson:.1e}")
 
@@ -343,7 +343,7 @@ for r in (0.0, 1.0, 2.0):
     ok &= (abs(np.vdot(psi, parity @ psi).real - 1) < 1e-8
            and abs(dpar - np.exp(-2 * np.exp(-2 * r))) < 1e-8)
     vals.append(dpar)
-check("Sec. VIII (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity",
+check("Discussion (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity",
       ok, "<D Pi D^+> = " + ", ".join(f"{v:.3f}" for v in vals) + " for r = 0, 1, 2")
 
 ok = True
@@ -353,7 +353,7 @@ for al in (0.5, 1.0, 2.0):
     cat = (k1 + k2) / np.linalg.norm(k1 + k2)
     ok &= (abs(lam[-1] - (1 + np.exp(-2 * al**2))) < 1e-10
            and abs(abs(np.vdot(cat, vec[:, -1])) - 1) < 1e-10)
-check("Sec. VIII (v): pi[Q(a) + Q(-a)] <= 1 + exp(-2|a|^2), with equality for the even cat state", ok)
+check("Discussion (v): pi[Q(a) + Q(-a)] <= 1 + exp(-2|a|^2), with equality for the even cat state", ok)
 
 s_z = -parity  # +1 on odd, -1 on even photon numbers
 s_m = np.zeros((NF, NF))
@@ -363,7 +363,7 @@ psi = squeezed_vacuum(0.8)
 ok = (np.allclose(s_x @ s_x, np.eye(NF)) and np.allclose(s_x @ s_z + s_z @ s_x, 0)
       and np.allclose(s_x @ s_y - s_y @ s_x, 2j * s_z)
       and abs(np.vdot(psi, s_z @ psi).real + 1) < 1e-8)
-check("Sec. VIII (v): pseudospin operators obey the Pauli algebra; the squeezed vacuum is an "
+check("Discussion (v): pseudospin operators obey the Pauli algebra; the squeezed vacuum is an "
       "s_z eigenstate", ok)
 
 t1 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_direct_sum_projective(c)))
