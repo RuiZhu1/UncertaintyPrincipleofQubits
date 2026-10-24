@@ -470,6 +470,23 @@ check("Prop 3: omega_plus(M, N) is never attained for non-commuting effects, is 
       "commuting unbiased ones, and is missed by a commuting biased pair", ok,
       f"biased example: min sup-distance {gap:.3f}")
 
+# Fig. 5(b): as the bias of M grows (eta = zeta = 1/2), the gap between the exact minimum and
+# H(omega_plus) grows at 45 deg; at 90 deg the minimum stays at the eigenstate of M and the gap
+# is constant, 1 - h((1 + (sqrt 2 - 1)/2)/2)
+gaps = {45: [], 90: []}
+for deg in gaps:
+    N5 = mj.TwoOutcomePOVM(mj.axis_in_xz_plane(np.radians(deg)), eta=0.5)
+    for mu in np.linspace(0, 0.5, 11):
+        M5 = mj.TwoOutcomePOVM(mj.axis_in_xz_plane(0), eta=0.5, mu=mu)
+        gaps[deg].append(mj.min_entropy_sum(M5, N5, num=4001)[0]
+                         - mj.shannon(mj.omega_direct_sum(M5, N5)))
+g45, g90 = np.array(gaps[45]), np.array(gaps[90])
+gap90 = 1 - float(mj.binary_entropy((1 + (np.sqrt(2) - 1) / 2) / 2))
+check("Fig. 5(b): with the bias of M the gap grows at 45 deg and is constant at 90 deg, "
+      "1 - h((1 + (sqrt 2 - 1)/2)/2)",
+      bool(np.all(np.diff(g45) > 0)) and np.abs(g90 - gap90).max() < 1e-9,
+      f"45 deg: {g45[0]:.4f} -> {g45[-1]:.4f}; 90 deg: {gap90:.4f}")
+
 # Photon counting: detector efficiencies set the bias and the sharpness
 H_proj, V_proj = np.diag([1.0, 0.0]), np.diag([0.0, 1.0])  # |H> has Bloch vector +z
 ok = True
