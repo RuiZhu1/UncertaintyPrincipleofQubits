@@ -22,7 +22,11 @@ form).
   question and separates known from new results, Theorem 1's optimality is
   credited to Li–Qiao (2019), the Rényi-order dependence to Zozor–Bosyk–Portesi
   (2013), and Sec. II is more precise (parameter ranges, lattice conditions,
-  Tsallis order renamed $\gamma$). Not yet submitted. The target is submission
+  Tsallis order renamed $\gamma$). After the review of Secs. III–IV, Theorems 1
+  and 2 cite their sources in the header, Proposition 1 also covers the
+  tensor-product bound (new subsection IV C), and Sec. III shows that every
+  Rényi and Tsallis sum is minimized on the boundary of the ellipse. Not yet
+  submitted. The target is submission
   before the end of 2026, and the venue is still to be decided with the
   supervisors.
 
@@ -57,8 +61,8 @@ the (acute) Bloch angle between the two measurement axes.
 |---|---|---|
 | Lemma 2 | The achievable set is an affine image of the ellipse $x^2-2xy\cos\theta+y^2\le\sin^2\theta$. Its boundary is traced by pure states. Equivalently, the covariance matrix of $(A,B)$ is positive semidefinite. | Known: Li–Qiao, Sci. Rep. 5, 12708 (2015); Abbott et al., Mathematics 4, 8 (2016); anticommutator form in Kaniewski–Tomamichel–Wehner, PRA 90, 012332 (2014). |
 | Theorem 1 | $p\oplus q\prec\omega_\oplus=(1,\sqrt c,1-\sqrt c,0)$, and $\omega_\oplus$ is the lattice supremum. | The relation is the $d=2$ case of Rudnicki–Puchała–Życzkowski, PRA 89, 052115 (2014). Optimality and the saturating states: Li–Qiao, Ann. Phys. (Berlin) 531, 1900143 (2019), App. B.1. New here: only the derivation from the ellipse. |
-| Theorem 2 | $p\otimes q\prec\omega_\otimes=(w,1-w,0,0)$, $w=(1+\sqrt c)^2/4$, also the supremum. | The vector is $Q^{(1)}$ of Puchała–Rudnicki–Życzkowski, J. Phys. A 46, 272002 (2013); see also Friedland–Gheorghiu–Gour, PRL 111, 230401 (2013). |
-| Proposition 1 | No state attains $\omega_\oplus$ unless $[M,N]=0$. Eigenstates saturate $k=1,3$; bisector states saturate $k=2$. | new |
+| Theorem 2 | $p\otimes q\prec\omega_\otimes=(w,1-w,0,0)$, $w=(1+\sqrt c)^2/4$, also the supremum. | The vector is $Q^{(1)}$ of Puchała–Rudnicki–Życzkowski, J. Phys. A 46, 272002 (2013), and the vector of Friedland–Gheorghiu–Gour, PRL 111, 230401 (2013), built from the maximal partial sums. New here: only the observation that it is ordered, hence the supremum. |
+| Proposition 1 | (i) No state attains $\omega_\oplus$ unless $[M,N]=0$. Eigenstates saturate $k=1,3$; bisector states saturate $k=2$. (ii) No state attains $\omega_\otimes$ unless $[M,N]=0$. | new |
 | Corollaries 1–2 | Shannon $h(\sqrt c)$, Tsallis ($\gamma>0$) and Rényi ($\alpha\le1$) bounds from the direct sum; Rényi bounds for all $\alpha$ from the tensor product. | RPZ 2014 (direct sum), PRZ/FGG 2013 (tensor) |
 | Proposition 2 | For $\alpha\le1$ the direct sum beats the tensor product; the direct-sum form fails at $\alpha=\infty$. | (i) is RPZ 2014, App. B; (ii) is new |
 | **Theorem 3** | For $c<1$, every bound for a strictly Schur-concave measure (Shannon, Rényi $0<\alpha<\infty$, Tsallis $\gamma>0$) is strict. Only orders $0$ and $\infty$ are tight. | new |
@@ -136,7 +140,8 @@ It takes about 40 seconds.
 [PASS] Thm 5: omega_plus in d = 2, 4, 6 with c = max||P_i Q_j||^2 (all 150 instances have c < 1)  (max deviation 3.8e-15, c in [0.505, 0.999])
 [PASS] Thm 5, degenerate case: common eigenvector => c = 1 and omega_plus = (1, 1, 0, 0)  (max deviation 2.7e-15)
 [PASS] Thm 5 remark: c = 1/2 + ||{A, B}||/4 with A = 2P - 1, B = 2Q - 1 (d = 2..8, all ranks)  (max deviation 1.3e-15)
-[PASS] Prop 1: no state attains omega_plus for non-commuting M, N  (min sup-distance 0.016)
+[PASS] Prop 1(i): no state attains omega_plus for non-commuting M, N  (min sup-distance 0.016)
+[PASS] Prop 1(ii): no state attains omega_times for non-commuting M, N  (min sup-distance 0.021)
 [PASS] Cor. 1-2: Shannon bounds are valid; H_inf bound -2 log2((1+sqrt c)/2) is tight
 [PASS] Shannon minimum = 2h((1+sqrt c)/2) exactly iff theta <= theta_bar  (sqrt(c_bar) artanh sqrt(c_bar) = 1: c_bar = 0.6948, theta_bar = 67.07 deg)
 [PASS] Sec. V C: beyond theta_bar the Shannon minimiser moves from the bisector to an eigenstate  (fraction of the way at 68, 70, 75, 80, 85, 89, 90 deg: 0.30, 0.51, 0.77, 0.89, 0.97, 1.00, 1.00)
