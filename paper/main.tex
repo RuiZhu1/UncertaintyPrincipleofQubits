@@ -251,7 +251,8 @@ $0<\alpha<\infty$ and $T_\gamma$ for all $\gamma>0$, whereas $H_0$ and $H_\infty
 are not.
 
 Let $p(\rho)$ and $q(\rho)$ denote the outcome distributions of two
-measurements $M$ and $N$ on a state $\rho$. For measurements in orthonormal
+measurements $M$ and $N$ on a state $\rho$; we also write $H_\alpha(M)=H_\alpha(p)$
+and $H_\alpha(N)=H_\alpha(q)$. For measurements in orthonormal
 bases $\{\ket{m_i}\}$ and $\{\ket{n_j}\}$, the Maassen--Uffink (MU)
 relation~\cite{MaassenUffink1988} reads
 \begin{equation}
@@ -553,7 +554,7 @@ Let $h(t)=-t\log_2t-(1-t)\log_2(1-t)$ be the binary entropy.
 
 \subsection{Bounds for the R\'enyi and Tsallis families}
 
-\begin{corollary}
+\begin{corollary}[\cite{RPZ2014}]
 \label{cor:direct}
 For every concave $\phi$ on $[0,1]$,
 $\sum_i\phi(p_i)+\sum_j\phi(q_j)\ge\phi(1)+\phi(\sqc)+\phi(1-\sqc)+\phi(0)$.
@@ -588,7 +589,7 @@ and $1+X+Y=\sum_k(p\oplus q)_k^\alpha-1\ge\sum_k(\omplus)_k^\alpha-1=c^{\alpha/2
 by Schur-concavity of $v\mapsto\sum_kv_k^\alpha$.
 \end{proof}
 
-\begin{corollary}
+\begin{corollary}[\cite{FGG2013,PRZ2013}]
 \label{cor:tensor}
 For every $\alpha\in[0,\infty]$,
 \begin{equation}
@@ -601,12 +602,9 @@ state); since $H\ge H_\infty$, it contains Deutsch's Shannon
 bound~\cite{Deutsch1983}, which has the same right-hand side.
 \end{corollary}
 
-As noted in Sec.~\ref{sec:prelim}, the two forms are natural for different
-families: Tsallis entropies are
-additive over direct sums, as used in the proof of Corollary~\ref{cor:direct},
-whereas R\'enyi entropies are additive over tensor products,
-$H_\alpha(p\otimes q)=H_\alpha(p)+H_\alpha(q)$. Where both forms apply, the
-direct sum is stronger, but it cannot be extended to all orders:
+As noted in Sec.~\ref{sec:prelim}, the two forms suit different families of
+entropies. Where both apply, the direct sum is stronger, but it cannot be
+extended to all orders:
 
 \begin{proposition}
 \label{prop:compare}
@@ -657,6 +655,12 @@ Corollary~\ref{cor:direct}.
 state gives $\max_ip_i\max_jq_j=w$.
 \end{proof}
 
+The proof of (i) uses only that the achievable statistics form a compact set
+whose least upper bound is not attained. It therefore applies whenever the
+optimal bound is not attained, for instance to unbiased noisy measurements of
+equal sharpness (Sec.~\ref{sec:povm}) and to the direct-sum bound for binary
+projective measurements in any dimension (Sec.~\ref{sec:dimd}).
+
 Theorem~\ref{thm:tight} makes precise in what sense the majorization bounds are
 optimal. As majorization bounds they cannot be improved
 (Theorems~\ref{thm:direct} and~\ref{thm:tensor}); yet, because the supremum is
@@ -670,11 +674,11 @@ it.
 
 Figure~\ref{fig:entropic} compares the Shannon bounds with MU and with the
 exact minimum of $H(p)+H(q)$, which is known for
-qubits~\cite{SanchezRuiz1998,Ghirardi2003}. By Lemma~\ref{lem:ellipse} the
+qubits~\cite{SanchezRuiz1998,Ghirardi2003}. By Sec.~\ref{sec:geometry} the
 minimum lies on the great circle through $\mhat$ and $\nhat$. For
 $\theta\le\bar\theta$ it is attained at the bisector states and equals
 $2h\bigl(\frac{1+\sqc}{2}\bigr)$~\cite{Ghirardi2003}. At $\bar\theta$ the
-bisector turns from a minimum into a saddle point along the circle; a
+bisector turns from a local minimum into a local maximum along the circle; a
 second-derivative test shows that this happens when
 $\sqrt{\bar c}\,\artanh\sqrt{\bar c}=1$, i.e., at $\bar c\approx0.6948$ and
 $\bar\theta\approx67.07^\circ$. For $\bar\theta<\theta<\pi/2$ the minimizers
@@ -713,8 +717,8 @@ $h(\sqc)=h(\varepsilon)\approx\varepsilon\log_2(e/\varepsilon)$, whereas the
 exact minimum is $2h(\varepsilon/2)\approx\varepsilon\log_2(2e/\varepsilon)$.
 To leading order the ratio of the exact minimum to $h(\sqc)$ is therefore
 $1+1/\log_2(e/\varepsilon)$: it tends to $1$, but only logarithmically ($1.09$
-at $\theta=0.1$, $1.047$ at $\theta=0.003$), while the ratio to MU grows as
-$\frac12\ln(16e/\theta^2)$ ($4.2$ and $7.7$). The eigenstates of $M$, although
+at $\theta=0.1$, $1.047$ at $\theta=0.003$), while the ratio of $h(\sqc)$ to MU
+grows as $\frac12\ln(8e/\theta^2)$ ($3.8$ and $7.3$). The eigenstates of $M$, although
 they saturate $S_1$ and $S_3$, give $h(c)$, asymptotically twice the minimum.
 
 \begin{figure}[t]
@@ -750,8 +754,9 @@ Theorem~\ref{thm:tight} requires.
   \caption{Bounds on $H_\alpha(M)+H_\alpha(N)$ across the R\'enyi family for
   (a)~$\theta=60^\circ$ and (b)~$\theta=85^\circ$. Black: exact minimum.
   Blue: direct-sum bound $H_\alpha(\sqc,1-\sqc)$ of Corollary~\ref{cor:direct},
-  valid for $\alpha\le1$; its thin dashed continuation for $\alpha>1$ is not a
-  bound and eventually exceeds the exact minimum. Green (dotted):
+  valid for $\alpha\le1$; its thin dashed continuation for $\alpha>1$ is not
+  guaranteed to be a bound and exceeds the exact minimum above $\alpha\approx2.1$
+  in (a) and $\alpha\approx2.5$ in (b). Green (dotted):
   tensor-product bound $H_\alpha(\omtimes)$ of Corollary~\ref{cor:tensor}.
   Orange (dashed): MU, valid for $\alpha\le1$. The dotted vertical line marks
   the Shannon case $\alpha=1$.}
@@ -763,7 +768,9 @@ $1/\alpha+1/\beta=2$~\cite{MaassenUffink1988}, which includes the pair
 $H_\infty(p)+H_{1/2}(q)\ge-\log_2c$ of min- and max-entropy. Majorization
 relations of the form~\eqref{eq:maj-UR} are symmetric under the exchange of $p$
 and $q$ and therefore yield such mixed-order relations only indirectly, through
-the monotonicity of $H_\alpha$ in $\alpha$.
+the monotonicity of $H_\alpha$ in $\alpha$. Conditional majorization bounds,
+which constrain $q$ for a given $p$, yield them directly: for qubits they give
+the full uncertainty region of any pair $(H_\alpha,H_\beta)$~\cite{XiaoFangGour2019}.
 
 % ===========================================================================
 \section{General two-outcome qubit POVMs}
@@ -1020,8 +1027,11 @@ not apply as it stands.
 (iii) \emph{More measurements.} For three or more binary measurements the
 partial sums involve signed sums of several Bloch vectors, and the lattice
 structure of the bound becomes genuinely relevant.
-(iv) \emph{Mixed orders.} It remains open whether majorization can be adapted
-to yield relations such as $H_\infty(p)+H_{1/2}(q)\ge-\log_2c$.
+(iv) \emph{Mixed orders.} For qubits, conditional majorization bounds yield
+optimal relations for any pair of orders~\cite{XiaoFangGour2019}. Whether
+state-independent relations of the form~\eqref{eq:maj-UR} can reproduce
+mixed-order relations such as $H_\infty(p)+H_{1/2}(q)\ge-\log_2c$ remains
+open.
 (v) \emph{Binary measurements on light modes.} In infinite dimension
 $c=\sup_{i,j}\|P_iQ_j\|^2$ can equal $1$ without a common eigenvector. For
 photon-number parity and displaced parity, whose expectation values sample the
@@ -1076,7 +1086,8 @@ dimensions $d\le8$. We also checked Propositions~\ref{prop:attain}
 and~\ref{prop:compare}, Corollaries~\ref{cor:direct}--\ref{cor:tensor},
 Theorem~\ref{thm:tight}, the critical angle $\bar\theta$, the motion of the
 Shannon minimizer beyond $\bar\theta$, the range of R\'enyi orders in which the
-bisector is optimal, the covariance form of Lemma~\ref{lem:ellipse}, and the
+bisector or the eigenstates are optimal, the other values quoted in
+Sec.~\ref{sec:entropic}, the covariance form of Lemma~\ref{lem:ellipse}, and the
 jointly measurable example and the detector model of Sec.~\ref{sec:povm}. The
 statements about light modes in Sec.~\ref{sec:discussion} were checked in a
 Fock space of dimension 600.
