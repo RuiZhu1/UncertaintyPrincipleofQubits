@@ -1,5 +1,6 @@
 """
-Numerical verification of every theorem, proposition and corollary of the paper.
+Numerical verification of every theorem, proposition and corollary of the paper,
+and of the numerical statements made in the text.
 
 Run:  python verify_bounds.py
 Every check prints PASS/FAIL; the script exits with status 1 on any failure.
@@ -10,6 +11,8 @@ from __future__ import annotations
 import sys
 
 import numpy as np
+from scipy.linalg import expm
+from scipy.optimize import brentq
 
 import majorization as mj
 
@@ -122,6 +125,19 @@ for _ in range(50):
 check("Thm 5, degenerate case: common eigenvector => c = 1 and omega_plus = (1, 1, 0, 0)",
       worst < 1e-8, f"max deviation {worst:.1e}")
 
+# c from the anticommutator of the reflections A = 2P - 1 and B = 2Q - 1
+rng_ac = np.random.default_rng(5)  # separate stream: the numbers printed below stay unchanged
+worst = 0.0
+for _ in range(300):
+    dim = int(rng_ac.integers(2, 9))
+    P = mj.random_projector(dim, int(rng_ac.integers(1, dim)), rng_ac)
+    Q = mj.random_projector(dim, int(rng_ac.integers(1, dim)), rng_ac)
+    A, B = 2 * P - np.eye(dim), 2 * Q - np.eye(dim)
+    worst = max(worst, abs(mj.max_overlap_projectors(P, Q)
+                           - (0.5 + 0.25 * np.linalg.norm(A @ B + B @ A, 2))))
+check("Thm 5 remark: c = 1/2 + ||{A, B}||/4 with A = 2P - 1, B = 2Q - 1 (d = 2..8, all ranks)",
+      worst < 1e-10, f"max deviation {worst:.1e}")
+
 # --- 4. Non-attainability (Proposition 1) -----------------------------------
 M, N = pair(np.pi / 3)
 c = mj.overlap_cmax(M, N)
@@ -159,6 +175,51 @@ for deg in (68, 70, 80, 90):
 check("Shannon minimum = 2h((1+sqrt c)/2) exactly iff theta <= theta_bar", ok,
       f"sqrt(c_bar) artanh sqrt(c_bar) = 1: c_bar = {c_bar:.4f}, "
       f"theta_bar = {np.degrees(theta_bar):.2f} deg")
+
+# Beyond theta_bar the minimiser moves continuously from the bisector to an eigenstate
+fracs = []
+for deg in (68, 70, 75, 80, 85, 89, 90):
+    theta = np.radians(deg)
+    M, N = pair(theta)
+    r_star = mj.min_entropy_sum(M, N, num=20001)[1]
+    psi = np.arctan2(r_star[0], r_star[2]) % np.pi  # polar angle in the x-z plane (r ~ -r)
+    dist = min(abs(psi - theta / 2), np.pi - abs(psi - theta / 2))
+    fracs.append(dist / (theta / 2))  # 0 at the bisector, 1 at an eigenstate
+check("Sec. V C: beyond theta_bar the Shannon minimiser moves from the bisector to an eigenstate",
+      fracs[0] > 0.05 and bool(np.all(np.diff(fracs) > 0)) and abs(fracs[-1] - 1) < 1e-4,
+      "fraction of the way at 68, 70, 75, 80, 85, 89, 90 deg: "
+      + ", ".join(f"{f:.2f}" for f in fracs))
+
+
+# Renyi orders: range of angles in which the bisector is optimal
+def bisector_renyi(c: float, a: float) -> float:
+    t = np.sqrt(c)
+    return 2 * float(mj.renyi(np.array([(1 + t) / 2, (1 - t) / 2]), a))
+
+
+def bisector_optimal(deg: float, a: float) -> bool:
+    M, N = pair(np.radians(deg))
+    return (mj.min_entropy_sum(M, N, alpha=a)[0]
+            > bisector_renyi(mj.overlap_cmax(M, N), a) - 1e-10)
+
+
+alpha_c = brentq(lambda a: bisector_renyi(0.5, a) - 1, 1.1, 2.0)  # MUB: bisector = eigenstate
+ok = (bisector_optimal(42, 0.75) and not bisector_optimal(44, 0.75)
+      and bisector_optimal(79.5, 1.2) and not bisector_optimal(81, 1.2)
+      and not bisector_optimal(90, alpha_c - 1e-3)
+      and all(bisector_optimal(deg, a) for a in (alpha_c + 1e-3, 2.0, 5.0, np.inf)
+              for deg in (10, 30, 50, 70, 85, 89, 90)))
+th = np.radians(np.linspace(0.01, 90, 9000))
+cs_grid = np.cos(th / 2) ** 2
+eig_dist = np.stack([cs_grid, 1 - cs_grid], axis=-1)  # N-statistics of an eigenstate of M
+bis_dist = np.stack([(1 + np.sqrt(cs_grid)) / 2, (1 - np.sqrt(cs_grid)) / 2], axis=-1)
+for a in (0.1, 0.3, 0.5):  # the eigenstates beat the bisector at every angle
+    ok &= bool(np.all(mj.renyi(eig_dist, a) < 2 * mj.renyi(bis_dist, a)))
+ok &= (np.allclose(mj.renyi(eig_dist, 0.5), np.log2(1 + np.sin(th)))
+       and np.allclose(2 * mj.renyi(bis_dist, 0.5), 2 * np.log2(1 + np.sin(th / 2))))
+check("Sec. V C: bisector optimal up to ~43 deg (alpha = 3/4) and ~80 deg (alpha = 1.2), "
+      "at all angles for alpha >= alpha_c only, at no angle for alpha <= 1/2", ok,
+      f"alpha_c = {alpha_c:.4f}")
 
 # --- 6. Renyi and Tsallis families (Corollaries 1-2, Proposition 2) ----------
 ok_valid = ok_order = True
@@ -225,6 +286,84 @@ s2 = w[0] + w[1]
 check("Sec. VI: jointly measurable pair still has S_2 < 1 + eta and an unattained bound",
       busch <= 2 and abs(s2 - (1 + eta / np.sqrt(2))) < 1e-12 and gap > 1e-3,
       f"Busch sum {busch:.3f} <= 2, S_2 = {s2:.3f} < {1 + eta:.1f}, min sup-distance {gap:.3f}")
+
+# Photon counting: detector efficiencies set the bias and the sharpness
+H_proj, V_proj = np.diag([1.0, 0.0]), np.diag([0.0, 1.0])  # |H> has Bloch vector +z
+ok = True
+for e_h, e_v in [(0.9, 0.9), (0.9, 0.7), (0.6, 0.3), (0.2, 0.95)]:
+    E_H = e_h * H_proj + 0.5 * ((1 - e_h) * H_proj + (1 - e_v) * V_proj)  # no click: coin toss
+    model = mj.TwoOutcomePOVM([0, 0, 1], eta=(e_h + e_v) / 2, mu=(e_h - e_v) / 2)
+    ok &= np.allclose(E_H, model.effects[0])
+e_d = 0.8
+single = mj.TwoOutcomePOVM([0, 0, 1], eta=e_d, mu=e_d - 1)  # no click counted as outcome 2
+ok &= np.allclose(e_d * H_proj, single.effects[0]) and abs(single.kappa - 1) < 1e-12
+check("Sec. VI: efficiencies (eta_H, eta_V) give mu = (eta_H - eta_V)/2, eta = (eta_H + eta_V)/2; "
+      "a single detector gives |mu| + eta = 1", ok)
+
+# --- 9. Covariance form of Lemma 2 and the quantum-optics remarks (Sec. VIII) --
+rng_qo = np.random.default_rng(9)
+theta = np.radians(60)
+M, N = pair(theta)
+A, B = mj.sigma_dot(M.axis), mj.sigma_dot(N.axis)
+e2 = mj.unit(N.axis - np.cos(theta) * M.axis)
+robertson = max(abs(np.trace(mj.density_matrix(np.cos(f) * M.axis + np.sin(f) * e2)
+                             @ (A @ B - B @ A))) for f in np.linspace(0, 2 * np.pi, 361))
+x, y = rng_qo.uniform(-1.2, 1.2, size=(2, 20000))
+inside = x**2 - 2 * x * y * np.cos(theta) + y**2 <= np.sin(theta) ** 2
+gamma = np.stack([np.stack([1 - x * x, np.cos(theta) - x * y], -1),
+                  np.stack([np.cos(theta) - x * y, 1 - y * y], -1)], -2)
+psd = np.linalg.eigvalsh(gamma)[:, 0] >= 0
+check("Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; "
+      "Sec. VIII: the Robertson bound vanishes in the plane of the axes",
+      bool(np.array_equal(inside, psd)) and robertson < 1e-12,
+      f"max |<[A, B]>| over in-plane states {robertson:.1e}")
+
+NF = 600  # Fock-space truncation: photon numbers 0..599
+a_op = np.diag(np.sqrt(np.arange(1, NF)), 1).astype(complex)
+vac = np.zeros(NF, complex)
+vac[0] = 1
+parity = np.diag((-1.0) ** np.arange(NF))
+
+
+def displacement(beta: complex) -> np.ndarray:
+    return expm(beta * a_op.conj().T - np.conj(beta) * a_op)
+
+
+def squeezed_vacuum(r: float) -> np.ndarray:
+    """S(r)|0> with S(z) = exp[(z* a^2 - z a^dag^2)/2]: x squeezed, p anti-squeezed."""
+    return expm(0.5 * r * (a_op @ a_op - a_op.conj().T @ a_op.conj().T)) @ vac
+
+
+D = displacement(1j)  # |beta| = 1 along the anti-squeezed axis
+ok, vals = True, []
+for r in (0.0, 1.0, 2.0):
+    psi = squeezed_vacuum(r)
+    dpar = np.vdot(psi, D @ parity @ D.conj().T @ psi).real
+    ok &= (abs(np.vdot(psi, parity @ psi).real - 1) < 1e-8
+           and abs(dpar - np.exp(-2 * np.exp(-2 * r))) < 1e-8)
+    vals.append(dpar)
+check("Sec. VIII (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity",
+      ok, "<D Pi D^+> = " + ", ".join(f"{v:.3f}" for v in vals) + " for r = 0, 1, 2")
+
+ok = True
+for al in (0.5, 1.0, 2.0):
+    k1, k2 = displacement(al) @ vac, displacement(-al) @ vac
+    lam, vec = np.linalg.eigh(np.outer(k1, k1.conj()) + np.outer(k2, k2.conj()))
+    cat = (k1 + k2) / np.linalg.norm(k1 + k2)
+    ok &= (abs(lam[-1] - (1 + np.exp(-2 * al**2))) < 1e-10
+           and abs(abs(np.vdot(cat, vec[:, -1])) - 1) < 1e-10)
+check("Sec. VIII (v): pi[Q(a) + Q(-a)] <= 1 + exp(-2|a|^2), with equality for the even cat state", ok)
+
+s_z = -parity  # +1 on odd, -1 on even photon numbers
+s_m = np.zeros((NF, NF))
+s_m[np.arange(0, NF, 2), np.arange(1, NF, 2)] = 1  # sum_n |2n><2n+1|
+s_x, s_y = s_m + s_m.T, -1j * (s_m.T - s_m)
+psi = squeezed_vacuum(0.8)
+ok = (np.allclose(s_x @ s_x, np.eye(NF)) and np.allclose(s_x @ s_z + s_z @ s_x, 0)
+      and np.allclose(s_x @ s_y - s_y @ s_x, 2j * s_z)
+      and abs(np.vdot(psi, s_z @ psi).real + 1) < 1e-8)
+check("Sec. VIII (v): pseudospin operators obey the Pauli algebra; the squeezed vacuum is an "
+      "s_z eigenstate", ok)
 
 t1 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_direct_sum_projective(c)))
 t2 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_tensor_projective(c)))
