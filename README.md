@@ -100,7 +100,8 @@ the (acute) Bloch angle between the two measurement axes.
 │   ├── majorization.py     core library (see below)
 │   ├── verify_bounds.py    numerical check of every theorem and corollary
 │   ├── make_figures.py     regenerates all figures of the paper
-│   └── requirements.txt
+│   ├── requirements.txt
+│   └── LICENSE             MIT license for the code
 └── paper/
     ├── main.tex            manuscript (revtex4-2, Phys. Rev. A style)
     ├── references.bib
@@ -265,8 +266,14 @@ measurements.
 - Mark the corresponding author: both Rui and Marcelo give e-mail addresses,
   and the data statement refers to "the corresponding author".
 - Data availability: the statement says "available upon reasonable request"
-  (Marcelo's choice). If the repository is public, consider linking it so that
-  every number in the paper can be reproduced.
+  (Marcelo's choice). The repository is public, so it could be linked to make
+  every number in the paper reproducible. Rui will ask Marcelo first; until he
+  agrees, the statement stays as it is.
+
+## License
+
+The code in `code/` is released under the MIT license (`code/LICENSE`). The
+manuscript and the other documents in this repository are not covered by it.
 
 ## Contact
 
