@@ -192,6 +192,7 @@ check("Sec. V C: beyond theta_bar the Shannon minimiser moves from the bisector 
 
 
 # Renyi orders: range of angles in which the bisector is optimal
+# (known: Zozor, Bosyk and Portesi, J. Phys. A 46, 465301 (2013), Cor. 1-2)
 def bisector_renyi(c: float, a: float) -> float:
     t = np.sqrt(c)
     return 2 * float(mj.renyi(np.array([(1 + t) / 2, (1 - t) / 2]), a))
@@ -203,11 +204,11 @@ def bisector_optimal(deg: float, a: float) -> bool:
             > bisector_renyi(mj.overlap_cmax(M, N), a) - 1e-10)
 
 
-alpha_c = brentq(lambda a: bisector_renyi(0.5, a) - 1, 1.1, 2.0)  # MUB: bisector = eigenstate
+alpha_dag = brentq(lambda a: bisector_renyi(0.5, a) - 1, 1.1, 2.0)  # MUB: bisector = eigenstate
 ok = (bisector_optimal(42, 0.75) and not bisector_optimal(44, 0.75)
       and bisector_optimal(79.5, 1.2) and not bisector_optimal(81, 1.2)
-      and not bisector_optimal(90, alpha_c - 1e-3)
-      and all(bisector_optimal(deg, a) for a in (alpha_c + 1e-3, 2.0, 5.0, np.inf)
+      and not bisector_optimal(90, alpha_dag - 1e-3)
+      and all(bisector_optimal(deg, a) for a in (alpha_dag + 1e-3, 2.0, 5.0, np.inf)
               for deg in (10, 30, 50, 70, 85, 89, 90)))
 th = np.radians(np.linspace(0.01, 90, 9000))
 cs_grid = np.cos(th / 2) ** 2
@@ -218,8 +219,8 @@ for a in (0.1, 0.3, 0.5):  # the eigenstates beat the bisector at every angle
 ok &= (np.allclose(mj.renyi(eig_dist, 0.5), np.log2(1 + np.sin(th)))
        and np.allclose(2 * mj.renyi(bis_dist, 0.5), 2 * np.log2(1 + np.sin(th / 2))))
 check("Sec. V C: bisector optimal up to ~43 deg (alpha = 3/4) and ~80 deg (alpha = 1.2), "
-      "at all angles for alpha >= alpha_c only, at no angle for alpha <= 1/2", ok,
-      f"alpha_c = {alpha_c:.4f}")
+      "at all angles for alpha >= alpha_dagger only, at no angle for alpha <= 1/2", ok,
+      f"alpha_dagger = {alpha_dag:.4f}")
 
 # --- 6. Renyi and Tsallis families (Corollaries 1-2, Proposition 2) ----------
 ok_valid = ok_order = True
@@ -236,7 +237,7 @@ for deg in (10, 30, 45, 60, 75, 85, 90):
     for q in (0.3, 0.5, 2.0, 3.0):
         ok_valid &= (mj.min_tsallis_sum(M, N, q, num=2001)[0]
                      >= mj.tsallis_direct_sum_bound(c, q) - 1e-9)
-check("Cor. 1-2: direct-sum Renyi (alpha <= 1), Tsallis (q > 0) and tensor Renyi bounds hold",
+check("Cor. 1-2: direct-sum Renyi (alpha <= 1), Tsallis (gamma > 0) and tensor Renyi bounds hold",
       ok_valid)
 check("Prop 2(i): direct-sum Renyi bound >= tensor bound for alpha <= 1", ok_order)
 
@@ -263,7 +264,7 @@ for deg in (30, 60, 85):
     for a in (0.0, np.inf):
         tight = max(tight, abs(mj.min_entropy_sum(M, N, alpha=a, num=2001)[0]
                                - mj.renyi_tensor_bound(c, a)))
-check("Thm 3: all bounds strict for 0 < alpha < inf and q > 0; tight at alpha = 0 and inf",
+check("Thm 3: all bounds strict for 0 < alpha < inf and gamma > 0; tight at alpha = 0 and inf",
       min(gaps) > 1e-4 and tight < 1e-9, f"smallest gap {min(gaps):.1e}, "
       f"largest deviation at alpha in {{0, inf}}: {tight:.1e}")
 
