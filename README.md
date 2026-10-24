@@ -25,7 +25,11 @@ form).
   Tsallis order renamed $\gamma$). After the review of Secs. III–IV, Theorems 1
   and 2 cite their sources in the header, Proposition 1 also covers the
   tensor-product bound (new subsection IV C), and Sec. III shows that every
-  Rényi and Tsallis sum is minimized on the boundary of the ellipse. Not yet
+  Rényi and Tsallis sum is minimized on the boundary of the ellipse. After the
+  review of Sec. V, Corollaries 1–2 cite their sources, the mixed-order
+  discussion and open question (iv) credit Xiao–Fang–Gour (2019), Fig. 4 no
+  longer calls the $\alpha>1$ continuation "not a bound", and
+  `verify_bounds.py` checks every number quoted in Sec. V C. Not yet
   submitted. The target is submission
   before the end of 2026, and the venue is still to be decided with the
   supervisors.
@@ -66,7 +70,7 @@ the (acute) Bloch angle between the two measurement axes.
 | Corollaries 1–2 | Shannon $h(\sqrt c)$, Tsallis ($\gamma>0$) and Rényi ($\alpha\le1$) bounds from the direct sum; Rényi bounds for all $\alpha$ from the tensor product. | RPZ 2014 (direct sum), PRZ/FGG 2013 (tensor) |
 | Proposition 2 | For $\alpha\le1$ the direct sum beats the tensor product; the direct-sum form fails at $\alpha=\infty$. | (i) is RPZ 2014, App. B; (ii) is new |
 | **Theorem 3** | For $c<1$, every bound for a strictly Schur-concave measure (Shannon, Rényi $0<\alpha<\infty$, Tsallis $\gamma>0$) is strict. Only orders $0$ and $\infty$ are tight. | new |
-| Sec. V C | Comparison across the Rényi family with MU and the exact optimum. The exact Shannon minimum is $2h((1+\sqrt c)/2)$ for $\theta\le\bar\theta$, where $\sqrt{\bar c}\,\mathrm{artanh}\sqrt{\bar c}=1$, i.e. $\bar\theta\approx67.07^\circ$. Beyond $\bar\theta$ the minimiser moves continuously to an eigenstate, reached at $90^\circ$. The bisector is optimal up to $43^\circ$ ($\alpha=3/4$) and $80^\circ$ ($\alpha=1.2$), at all angles iff $\alpha\ge\alpha^\dagger\approx1.43$, and at no angle for $\alpha\le1/2$. | Exact qubit minimum: Ghirardi et al., PLA 317, 32 (2003). Crossover with MU at $81.3^\circ$: consistent with Baek et al. (2019). Earlier majorization bounds vs MU and the optimum: KTW 2014. $\alpha$-dependence of the minimiser, including $\alpha^\dagger$: Zozor–Bosyk–Portesi, J. Phys. A 46, 465301 (2013), Cor. 1–2 (reproduced numerically here). New: the comparison of the majorization bounds across $\alpha$ (Fig. 4). |
+| Sec. V C | Comparison across the Rényi family with MU and the exact optimum. The exact Shannon minimum is $2h((1+\sqrt c)/2)$ for $\theta\le\bar\theta$, where $\sqrt{\bar c}\,\mathrm{artanh}\sqrt{\bar c}=1$, i.e. $\bar\theta\approx67.07^\circ$. Beyond $\bar\theta$ the minimiser moves continuously to an eigenstate, reached at $90^\circ$. The bisector is optimal up to $43^\circ$ ($\alpha=3/4$) and $80^\circ$ ($\alpha=1.2$), at all angles iff $\alpha\ge\alpha^\dagger\approx1.43$, and at no angle for $\alpha\le1/2$. | Exact qubit minimum: Ghirardi et al., PLA 317, 32 (2003). Crossover with MU at $81.3^\circ$: consistent with Baek et al. (2019). Earlier majorization bounds vs MU and the optimum: KTW 2014. $\alpha$-dependence of the minimiser, including $\alpha^\dagger$: Zozor–Bosyk–Portesi, J. Phys. A 46, 465301 (2013), Cor. 1–2 (reproduced numerically here). New: the comparison of the majorization bounds across $\alpha$ (Fig. 4). Mixed orders via conditional majorization: Xiao–Fang–Gour, arXiv:1908.07694 (2019). |
 | Theorem 4 | Closed-form optimal direct-sum bound for arbitrary unsharp **and biased** two-outcome qubit POVMs. Remark: preparation uncertainty persists for jointly measurable pairs. | Unbiased case: Baek–Nha–Son, Entropy 21, 270 (2019). New: bias, ordering (optimality), joint-measurability remark. |
 | Theorem 5 | Theorems 1–2 hold for binary projective measurements on $\mathbb C^d$ with $c=\max\lVert P_iQ_j\rVert^2$, and $\omega_\oplus$ is attained iff $c=1$ (Jordan's lemma). Equivalently $c=\tfrac12+\tfrac14\lVert\{A,B\}\rVert$ with $A=2P-1$, $B=2Q-1$. | technique standard (e.g. Kaniewski–Tomamichel–Wehner 2014, who also give the qubit form of the anticommutator relation) |
 | Sec. VIII | Relation to quantum optics: no minimum-uncertainty state, unlike coherent and squeezed states; the boundary of $\mathcal E_\theta$ as the analogue of the squeezed-state family; commutator vs. anticommutator; single-photon polarization ($c=\cos^2\vartheta$, Malus's law); bias from detector efficiency mismatch. Open question (v): parity, displaced parity and coherent-state tests have $c=1$, and the cat state plays the role of the bisector state. | Discussion. Phase-space majorization of Gaussian states: Van Herstraeten–Jabbour–Cerf, Quantum 7, 1021 (2023). |
@@ -146,6 +150,9 @@ It takes about 40 seconds.
 [PASS] Shannon minimum = 2h((1+sqrt c)/2) exactly iff theta <= theta_bar  (sqrt(c_bar) artanh sqrt(c_bar) = 1: c_bar = 0.6948, theta_bar = 67.07 deg)
 [PASS] Sec. V C: beyond theta_bar the Shannon minimiser moves from the bisector to an eigenstate  (fraction of the way at 68, 70, 75, 80, 85, 89, 90 deg: 0.30, 0.51, 0.77, 0.89, 0.97, 1.00, 1.00)
 [PASS] Sec. V C: bisector optimal up to ~43 deg (alpha = 3/4) and ~80 deg (alpha = 1.2), at all angles for alpha >= alpha_dagger only, at no angle for alpha <= 1/2  (alpha_dagger = 1.4314)
+[PASS] Sec. V C: eigenstates are the global minimum for alpha <= 1/2, intermediate states for 1/2 < alpha < alpha*(c), and alpha* rises from ~1/2 (c -> 1) to alpha_dagger (90 deg)  (alpha* at 5, 20, 40, 60, theta_bar, 75, 85, 90 deg: 0.522, 0.597, 0.727, 0.914, 1.000, 1.114, 1.293, 1.431)
+[PASS] Fig. 4: at 85 deg the bounds beat MU for alpha < 0.69 (direct) and 0.58 (tensor), at 60 deg for all alpha <= 1; max-entropy ratios 83%, 91%; direct-sum form fails above 2.1, 2.5  (crossings 0.6885, 0.5840; ratios 0.8328, 0.9134; failure orders 2.144, 2.460)
+[PASS] Sec. V C: MUB values 0.872, 0.844; at theta = 0.1, 0.003 exact/h(sqrt c) = 1.09, 1.047 and h(sqrt c)/MU = 3.8, 7.3; eigenstates/exact rises towards 2  (exact/h 1.0902, 1.0472; h/MU 3.840, 7.349; eigen/exact 1.668, 1.820)
 [PASS] Cor. 1-2: direct-sum Renyi (alpha <= 1), Tsallis (gamma > 0) and tensor Renyi bounds hold
 [PASS] Prop 2(i): direct-sum Renyi bound >= tensor bound for alpha <= 1
 [PASS] Prop 2(ii): the direct-sum form fails at alpha = inf
@@ -229,8 +236,8 @@ measurements.
   the proofs to appendices.
 - Proofread the bibliography formatting. The entries were checked against the
   original sources or their publishers' pages.
-- Ask Gilad whether Xiao, Fang & Gour, arXiv:1908.07694 (cited in the
-  introduction), has been published.
+- Ask Gilad whether Xiao, Fang & Gour, arXiv:1908.07694 (cited in Secs. I, V
+  and VIII), has been published.
 - The abstract's "every sensible measure of uncertainty" overstates the scope
   in the same way the introduction did; fix it when the abstract is reviewed.
 
