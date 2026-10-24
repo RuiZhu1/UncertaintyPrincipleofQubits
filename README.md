@@ -14,7 +14,10 @@ form).
   comments the paper has a new abstract, defines POVMs in the introduction,
   explains the $81.3^\circ$ crossover with Maassen–Uffink in the Discussion, no
   longer refers to the code in the appendix, and has a data availability
-  statement. Not yet submitted. The target is submission before the end of 2026,
+  statement. The Discussion now also relates the results to quantum optics
+  (minimum-uncertainty and squeezed states, single-photon polarization,
+  detector efficiency mismatch, binary measurements on light modes), and
+  Lemma 2 credits the earlier derivations of the ellipse. Not yet submitted. The target is submission before the end of 2026,
   and the venue is still to be decided with the supervisors.
 
 The applicant's letter of intent is in
@@ -45,16 +48,17 @@ the (acute) Bloch angle between the two measurement axes.
 
 | Paper | Statement | Prior work |
 |---|---|---|
-| Lemma 2 | The achievable set is an affine image of the ellipse $x^2-2xy\cos\theta+y^2\le\sin^2\theta$. Its boundary is traced by pure states. | elementary |
+| Lemma 2 | The achievable set is an affine image of the ellipse $x^2-2xy\cos\theta+y^2\le\sin^2\theta$. Its boundary is traced by pure states. Equivalently, the covariance matrix of $(A,B)$ is positive semidefinite. | Known: Li–Qiao, Sci. Rep. 5, 12708 (2015); Abbott et al., Mathematics 4, 8 (2016); anticommutator form in Kaniewski–Tomamichel–Wehner, PRA 90, 012332 (2014). |
 | Theorem 1 | $p\oplus q\prec\omega_\oplus=(1,\sqrt c,1-\sqrt c,0)$, and $\omega_\oplus$ is the lattice supremum. | The relation is the $d=2$ case of Rudnicki–Puchała–Życzkowski, PRA 89, 052115 (2014). New: optimality and the maximizing states. |
 | Theorem 2 | $p\otimes q\prec\omega_\otimes=(w,1-w,0,0)$, $w=(1+\sqrt c)^2/4$, also the supremum. | The vector is $Q^{(1)}$ of Puchała–Rudnicki–Życzkowski, J. Phys. A 46, 272002 (2013); see also Friedland–Gheorghiu–Gour, PRL 111, 230401 (2013). |
 | Proposition 1 | No state attains $\omega_\oplus$ unless $[M,N]=0$. Eigenstates saturate $k=1,3$; bisector states saturate $k=2$. | new |
 | Corollaries 1–2 | Shannon $h(\sqrt c)$, Tsallis ($q>0$) and Rényi ($\alpha\le1$) bounds from the direct sum; Rényi bounds for all $\alpha$ from the tensor product. | RPZ 2014 (direct sum), PRZ/FGG 2013 (tensor) |
 | Proposition 2 | For $\alpha\le1$ the direct sum beats the tensor product; the direct-sum form fails at $\alpha=\infty$. | (i) is RPZ 2014, App. B; (ii) is new |
 | **Theorem 3** | For $c<1$, every bound for a strictly Schur-concave measure (Shannon, Rényi $0<\alpha<\infty$, Tsallis $q>0$) is strict. Only orders $0$ and $\infty$ are tight. | new |
-| Sec. V C | Comparison across the Rényi family with MU and the exact optimum. The exact Shannon minimum is $2h((1+\sqrt c)/2)$ for $\theta\le\bar\theta$, where $\sqrt{\bar c}\,\mathrm{artanh}\sqrt{\bar c}=1$, i.e. $\bar\theta\approx67.07^\circ$. | Exact qubit minimum: Ghirardi et al., PLA 317, 32 (2003). Crossover with MU at $81.3^\circ$: consistent with Baek et al. (2019). |
+| Sec. V C | Comparison across the Rényi family with MU and the exact optimum. The exact Shannon minimum is $2h((1+\sqrt c)/2)$ for $\theta\le\bar\theta$, where $\sqrt{\bar c}\,\mathrm{artanh}\sqrt{\bar c}=1$, i.e. $\bar\theta\approx67.07^\circ$. Beyond $\bar\theta$ the minimiser moves continuously to an eigenstate, reached at $90^\circ$. The bisector is optimal up to $43^\circ$ ($\alpha=3/4$) and $80^\circ$ ($\alpha=1.2$), at all angles iff $\alpha\ge\alpha_c\approx1.43$, and at no angle for $\alpha\le1/2$. | Exact qubit minimum: Ghirardi et al., PLA 317, 32 (2003). Crossover with MU at $81.3^\circ$: consistent with Baek et al. (2019). Earlier majorization bounds vs MU and the optimum: KTW 2014. Minimiser motion and $\alpha$-dependence: new (numerical). |
 | Theorem 4 | Closed-form optimal direct-sum bound for arbitrary unsharp **and biased** two-outcome qubit POVMs. Remark: preparation uncertainty persists for jointly measurable pairs. | Unbiased case: Baek–Nha–Son, Entropy 21, 270 (2019). New: bias, ordering (optimality), joint-measurability remark. |
-| Theorem 5 | Theorems 1–2 hold for binary projective measurements on $\mathbb C^d$ with $c=\max\lVert P_iQ_j\rVert^2$, and $\omega_\oplus$ is attained iff $c=1$ (Jordan's lemma). | technique standard (e.g. Kaniewski–Tomamichel–Wehner 2014) |
+| Theorem 5 | Theorems 1–2 hold for binary projective measurements on $\mathbb C^d$ with $c=\max\lVert P_iQ_j\rVert^2$, and $\omega_\oplus$ is attained iff $c=1$ (Jordan's lemma). Equivalently $c=\tfrac12+\tfrac14\lVert\{A,B\}\rVert$ with $A=2P-1$, $B=2Q-1$. | technique standard (e.g. Kaniewski–Tomamichel–Wehner 2014, who also give the qubit form of the anticommutator relation) |
+| Sec. VIII | Relation to quantum optics: no minimum-uncertainty state, unlike coherent and squeezed states; the boundary of $\mathcal E_\theta$ as the analogue of the squeezed-state family; commutator vs. anticommutator; single-photon polarization ($c=\cos^2\vartheta$, Malus's law); bias from detector efficiency mismatch. Open question (v): parity, displaced parity and coherent-state tests have $c=1$, and the cat state plays the role of the bisector state. | Discussion. Phase-space majorization of Gaussian states: Van Herstraeten–Jabbour–Cerf, Quantum 7, 1021 (2023). |
 
 ## Repository layout
 
@@ -114,7 +118,7 @@ python verify_bounds.py
 ```
 
 Expected output: every line prints `PASS`, and the script exits with status 0.
-It takes about 30 seconds.
+It takes about 40 seconds.
 
 ```
 [PASS] Bloch formula == Born rule
@@ -124,15 +128,23 @@ It takes about 30 seconds.
 [PASS] Thm 4 == eigenvalue formula S_k = max lambda_max(sum of k effects)  (max deviation 1.7e-15)
 [PASS] Thm 5: omega_plus in d = 2, 4, 6 with c = max||P_i Q_j||^2 (all 150 instances have c < 1)  (max deviation 3.8e-15, c in [0.505, 0.999])
 [PASS] Thm 5, degenerate case: common eigenvector => c = 1 and omega_plus = (1, 1, 0, 0)  (max deviation 2.7e-15)
+[PASS] Thm 5 remark: c = 1/2 + ||{A, B}||/4 with A = 2P - 1, B = 2Q - 1 (d = 2..8, all ranks)  (max deviation 1.3e-15)
 [PASS] Prop 1: no state attains omega_plus for non-commuting M, N  (min sup-distance 0.016)
 [PASS] Cor. 1-2: Shannon bounds are valid; H_inf bound -2 log2((1+sqrt c)/2) is tight
 [PASS] Shannon minimum = 2h((1+sqrt c)/2) exactly iff theta <= theta_bar  (sqrt(c_bar) artanh sqrt(c_bar) = 1: c_bar = 0.6948, theta_bar = 67.07 deg)
+[PASS] Sec. V C: beyond theta_bar the Shannon minimiser moves from the bisector to an eigenstate  (fraction of the way at 68, 70, 75, 80, 85, 89, 90 deg: 0.30, 0.51, 0.77, 0.89, 0.97, 1.00, 1.00)
+[PASS] Sec. V C: bisector optimal up to ~43 deg (alpha = 3/4) and ~80 deg (alpha = 1.2), at all angles for alpha >= alpha_c only, at no angle for alpha <= 1/2  (alpha_c = 1.4314)
 [PASS] Cor. 1-2: direct-sum Renyi (alpha <= 1), Tsallis (q > 0) and tensor Renyi bounds hold
 [PASS] Prop 2(i): direct-sum Renyi bound >= tensor bound for alpha <= 1
 [PASS] Prop 2(ii): the direct-sum form fails at alpha = inf
 [PASS] Thm 3: all bounds strict for 0 < alpha < inf and q > 0; tight at alpha = 0 and inf  (smallest gap 9.0e-04, largest deviation at alpha in {0, inf}: 3.1e-16)
 [PASS] Thm 4: H(M)+H(N) >= H(omega_plus) for random unsharp/biased POVMs
 [PASS] Sec. VI: jointly measurable pair still has S_2 < 1 + eta and an unattained bound  (Busch sum 1.980 <= 2, S_2 = 1.495 < 1.7, min sup-distance 0.022)
+[PASS] Sec. VI: efficiencies (eta_H, eta_V) give mu = (eta_H - eta_V)/2, eta = (eta_H + eta_V)/2; a single detector gives |mu| + eta = 1
+[PASS] Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; Sec. VIII: the Robertson bound vanishes in the plane of the axes  (max |<[A, B]>| over in-plane states 0.0e+00)
+[PASS] Sec. VIII (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity  (<D Pi D^+> = 0.135, 0.763, 0.964 for r = 0, 1, 2)
+[PASS] Sec. VIII (v): pi[Q(a) + Q(-a)] <= 1 + exp(-2|a|^2), with equality for the even cat state
+[PASS] Sec. VIII (v): pseudospin operators obey the Pauli algebra; the squeezed vacuum is an s_z eigenstate
 ```
 
 The grid-based deviations (about $10^{-5}$) come from discretizing the state
@@ -193,6 +205,7 @@ measurements.
 - [ ] Optimal tensor-product bound for general qubit POVMs
 - [ ] Binary POVMs in dimension $d$ (Naimark dilation)
 - [ ] More than two measurements
+- [ ] Binary measurements on light modes (open question (v) in the Discussion)
 - [ ] Thesis write-up; preprint (arXiv), venue to be decided with the supervisors
 
 ## Open items before submission
