@@ -37,7 +37,7 @@
 
 \begin{document}
 
-\title{Uncertainty principles from majorization and entropy in the binary case}
+\title{Uncertainty relations from majorization and entropy in the binary case}
 
 \author{Rui Zhu}
 \email{rui.zhu@gtiit.edu.cn}
@@ -60,20 +60,20 @@
 \begin{abstract}
 Making one quantum measurement more predictable can force another to become
 less so.
-Majorization expresses this trade-off with a single list of numbers that holds
-for every state and bounds a whole family of uncertainty measures at once.
-We study the simplest case: two measurements with two possible results each.
-The best such lists are known; we show that no state reaches them unless the
-measurements commute.
-For measurements that do not commute, the uncertainty limits that follow are
-therefore never exact, except for the two most extreme measures of
-uncertainty.
-They still outperform the standard Maassen--Uffink relation unless the
-measurements are nearly mutually unbiased, and become almost exact as the
-measurements approach commuting ones.
-We also find the best limit for noisy and biased measurements, show that
-uncertainty persists even when both can be measured together, and extend the
-results to systems of any size.
+Majorization expresses this trade-off with a single probability vector, valid
+for every state, that bounds a whole family of uncertainty measures at once.
+We study the simplest case: two measurements with two outcomes each.
+The optimal such vectors are known; we prove that no state attains them unless
+the measurements commute.
+Every bound they imply for a strictly Schur-concave measure, such as the
+Shannon entropy, is therefore strict; only the R\'enyi entropies of order zero
+and infinity are bounded tightly, and the direct-sum form fails at large
+orders.
+The Shannon bound still beats the Maassen--Uffink relation unless the
+measurements are nearly mutually unbiased, and becomes tight in ratio, though
+slowly, as they approach commuting ones.
+We also derive the optimal bound for noisy and biased measurements and extend
+the results to any finite dimension.
 \end{abstract}
 
 \maketitle
@@ -160,7 +160,10 @@ entropies~\cite{BosykPortesiPlastino2012,ZozorBosykPortesi2013}.
 Earlier majorization bounds have been compared with the Maassen--Uffink
 relation and with the optimal Shannon bound~\cite{KTW2014,Baek2019}, and the
 optimal direct-sum bound for two qubit bases has been identified in the
-majorization lattice~\cite{LiQiao2019}.
+majorization lattice~\cite{LiQiao2019}. Li and Qiao also observed that the
+partial sums of this bound are usually reached by different states and that, in
+examples, its Shannon entropy falls short of the optimal Shannon
+bound~\cite{LiQiao2018}.
 What is missing is a complete account of when such bounds are tight, why, and
 how this depends on the uncertainty measure. In the simplest setting, where
 both approaches can be carried out completely, what exactly does majorization
@@ -172,12 +175,16 @@ Unless the measurements commute, no state attains the optimal majorization
 bound, so every bound it implies for a strictly Schur-concave measure of
 uncertainty, such as the Shannon entropy, is strict; only the R\'enyi entropies
 of order zero and infinity are bounded tightly.
-Even so, the direct-sum Shannon bound outperforms the Maassen--Uffink relation
-unless the measurement axes on the Bloch sphere are within about nine degrees of
-orthogonal, i.e., unless the measurements are nearly mutually
-unbiased~\cite{Baek2019}, and its ratio to the exact minimum tends to one as the
-measurements approach compatibility, where the Maassen--Uffink relation is
-weakest.
+The price is substantial: for two qubit bases the direct-sum Shannon bound
+falls short of the exact minimum by up to $22\%$. Even so, it outperforms the
+Maassen--Uffink relation unless the measurement axes on the Bloch sphere are
+within about nine degrees of orthogonal, i.e., unless the measurements are
+nearly mutually unbiased~\cite{Baek2019}, and its ratio to the exact minimum
+tends to one, though only logarithmically, as the measurements approach
+compatibility, where the Maassen--Uffink relation is weakest. For the Shannon
+entropy alone, a known closed-form bound~\cite{SanchezRuiz1998,KTW2014} is
+stronger than both at every angle; the case for majorization rests on its
+universality, not on its sharpness for any single measure.
 
 Several ingredients of this analysis are known.
 For two qubit bases the relevant majorization bounds are special cases of the
@@ -190,11 +197,15 @@ Ref.~\cite{Baek2019}.
 We give a unified and self-contained treatment that derives both bounds, their
 optimality and the states that saturate each of their partial sums from this
 ellipse.
-What is new is the non-attainment result and its consequence, the strictness of
-all induced bounds except those of R\'enyi order zero and infinity; the
-comparison of both types of majorization bound with the Maassen--Uffink
-relation and with the exact optimum across the whole R\'enyi family, including
-the failure of the direct-sum form at large orders; the optimal direct-sum bound
+What is new is a proof of the non-attainment result for both bounds, which
+makes rigorous and general the observations of Ref.~\cite{LiQiao2018} on the
+direct-sum bound, and its consequence, the strictness of all induced bounds for
+strictly Schur-concave measures, with only R\'enyi orders zero and infinity
+tight; a quantitative account of the resulting gap; the comparison of both types
+of majorization bound with the Maassen--Uffink relation and with the exact
+optimum across the whole R\'enyi family, including an explicit counterexample to
+the direct-sum form at large orders, whose failure for $\alpha>1$ was stated
+without proof in Ref.~\cite{RPZ2014}; the optimal direct-sum bound
 for arbitrary noisy and biased two-outcome qubit measurements, the conditions
 under which it is attained, and its relation to joint measurability, including
 a trade-off of classical origin that bias creates between commuting
