@@ -605,6 +605,80 @@ check("Sec. VIII (i): unbiased POVMs with eta = zeta = 0.8, orthogonal axes: S_1
       "but S_3 is attained neither by an eigenstate nor by a bisector state", ok,
       f"S_3 >= {L[2]:.4f}, eigenstate {L_eig[2]:.4f}, bisector {L_bis[2]:.4f}")
 
+# --- Referee revision: Eq. (SR), the size of the gap, Theorem 5's c >= 1/2 ---------------
+from scipy.optimize import minimize_scalar  # noqa: E402
+
+
+def exact_and_c(deg: float, num: int = 4001) -> tuple[float, float]:
+    M, N = pair(np.radians(deg))
+    return mj.min_entropy_sum(M, N, num=num)[0], mj.overlap_cmax(M, N)
+
+
+ok = True
+for deg in np.arange(0.5, 90.01, 0.5):
+    e, c = exact_and_c(deg)
+    sr, hd = mj.sanchez_ruiz_ktw(c), float(mj.binary_entropy(np.sqrt(c)))
+    ok &= (sr <= e + 1e-9) and (sr >= hd - 1e-12) and (sr >= mj.maassen_uffink(c) - 1e-12)
+e60, c60 = exact_and_c(60)
+ok &= abs(mj.sanchez_ruiz_ktw(c60) - 0.601) < 5e-4 and abs(mj.binary_entropy(np.sqrt(c60)) - 0.568) < 5e-4
+ok &= abs(mj.sanchez_ruiz_ktw(0.5) - 1) < 1e-12
+check("Sec. V C, Eq. (SR): h((1+sqrt(2c-1))/2) lies between max{h(sqrt c), MU} and the exact minimum "
+      "at every angle, equals MU at 90 deg, and gives 0.601 vs 0.568 at 60 deg", bool(ok))
+
+
+def neg_gap(deg: float, bound) -> float:
+    e, c = exact_and_c(deg, 20001)
+    return -(e - bound(c))
+
+
+def ratio(deg: float) -> float:
+    e, c = exact_and_c(deg, 20001)
+    return float(mj.binary_entropy(np.sqrt(c))) / e
+
+
+h_direct = lambda c: float(mj.binary_entropy(np.sqrt(c)))  # noqa: E731
+h_tensor = lambda c: float(mj.shannon(mj.omega_tensor_projective(c)))  # noqa: E731
+r_min = minimize_scalar(ratio, bounds=(60, 80), method="bounded", options={"xatol": 1e-3})
+g_d = minimize_scalar(lambda d: neg_gap(d, h_direct), bounds=(65, 85), method="bounded",
+                      options={"xatol": 1e-3})
+g_t = minimize_scalar(lambda d: neg_gap(d, h_tensor), bounds=(65, 85), method="bounded",
+                      options={"xatol": 1e-3})
+gap90 = exact_and_c(90)[0] - h_direct(0.5)
+coarse = [ratio(d) for d in np.arange(1, 90.01, 1)]
+ok = (abs(r_min.fun - 0.782) < 5e-4 and abs(r_min.x - 70) < 1 and min(coarse) >= r_min.fun - 1e-9
+      and abs(-g_d.fun - 0.196) < 5e-4 and abs(g_d.x - 74) < 1
+      and abs(-g_t.fun - 0.217) < 5e-4 and abs(gap90 - 0.128) < 5e-4)
+check("Sec. V C: h(sqrt c) >= 0.782 x exact minimum (worst near 70 deg); largest gaps 0.196 bit "
+      "(direct sum, near 74 deg) and 0.217 bit (tensor); 0.128 bit at 90 deg", bool(ok),
+      f"ratio {r_min.fun:.4f} at {r_min.x:.2f} deg, gaps {-g_d.fun:.4f} at {g_d.x:.2f} deg, "
+      f"{-g_t.fun:.4f} at {g_t.x:.2f} deg, {gap90:.4f} at 90 deg")
+
+eig_ratios = []
+for th_rad in (0.1, 0.003):
+    c = np.cos(th_rad / 2) ** 2
+    eig_ratios.append(float(mj.binary_entropy(c)) / mj.bisector_shannon(c))
+check("Sec. V C: eigenstate value h(c) over the exact minimum is 1.67 and 1.82 at theta = 0.1, "
+      "0.003 rad", abs(eig_ratios[0] - 1.67) < 5e-3 and abs(eig_ratios[1] - 1.82) < 5e-3,
+      ", ".join(f"{x:.4f}" for x in eig_ratios))
+
+
+def random_projector(dim: int, rank: int, gen: np.random.Generator) -> np.ndarray:
+    z = gen.normal(size=(dim, rank)) + 1j * gen.normal(size=(dim, rank))
+    q, _ = np.linalg.qr(z)
+    return q @ q.conj().T
+
+
+rng_c = np.random.default_rng(23)  # separate stream: the numbers printed elsewhere stay unchanged
+ok = True
+for _ in range(300):
+    dim = int(rng_c.integers(2, 9))
+    P = random_projector(dim, int(rng_c.integers(1, dim)), rng_c)
+    Q = random_projector(dim, int(rng_c.integers(1, dim)), rng_c)
+    Id = np.eye(dim)
+    c = max(np.linalg.norm(A @ B, 2) ** 2 for A in (P, Id - P) for B in (Q, Id - Q))
+    ok &= c >= 0.5 - 1e-12
+check("Theorem 5 proof: c = max ||P_i Q_j||^2 >= 1/2 for 300 random projector pairs, d <= 8", bool(ok))
+
 t1 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_direct_sum_projective(c)))
 t2 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_tensor_projective(c)))
 print(f"\nCrossover with Maassen-Uffink: sqrt(c) = {t1:.4f} (direct sum), {t2:.4f} (tensor)")
