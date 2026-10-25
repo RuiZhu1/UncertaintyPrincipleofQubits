@@ -102,7 +102,7 @@ def fig_achievable_set():
 # ---------------------------------------------------------------------------
 def fig_entropic_bounds():
     thetas = np.linspace(1e-3, np.pi / 2, 181)
-    exact, mu, bplus, btimes = [], [], [], []
+    exact, mu, bplus, btimes, bsr = [], [], [], [], []
     for th in thetas:
         M, N = pair(th)
         c = mj.overlap_cmax(M, N)
@@ -110,6 +110,7 @@ def fig_entropic_bounds():
         mu.append(mj.maassen_uffink(c))
         bplus.append(mj.shannon(mj.omega_direct_sum_projective(c)))
         btimes.append(mj.shannon(mj.omega_tensor_projective(c)))
+        bsr.append(mj.sanchez_ruiz_ktw(c))
     deg = np.degrees(thetas)
 
     fig, ax = plt.subplots(figsize=(COL, 2.5))
@@ -117,6 +118,8 @@ def fig_entropic_bounds():
     ax.plot(deg, bplus, color=C1, label=r"$H(\omega_\oplus)$ (direct sum)")
     ax.plot(deg, btimes, color=C3, ls=(0, (1.2, 1.2)), label=r"$H(\omega_\otimes)$ (tensor)")
     ax.plot(deg, mu, color=C2, ls="--", label=r"Maassen--Uffink $-\log_2 c$")
+    ax.plot(deg, bsr, color=C4, ls="-.", lw=1.3,
+            label=r"S\'anchez-Ruiz--KTW")
 
     t1 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_direct_sum_projective(c)))
     th1 = np.degrees(2 * np.arccos(t1))

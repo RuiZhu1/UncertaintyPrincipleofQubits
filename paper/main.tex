@@ -619,7 +619,9 @@ bound~\cite{Deutsch1983}, which has the same right-hand side.
 
 As noted in Sec.~\ref{sec:prelim}, the two forms suit different families of
 entropies. Where both apply, the direct sum is stronger, but it cannot be
-extended to all orders:
+extended to all orders. That the direct-sum R\'enyi relation does not hold for
+$\alpha>1$ was stated in Ref.~\cite{RPZ2014} (Sec.~III); part~(ii) below gives
+an explicit counterexample:
 
 \begin{proposition}
 \label{prop:compare}
@@ -695,7 +697,7 @@ $\theta\le\bar\theta$ it is attained at the bisector states and equals
 $2h\bigl(\frac{1+\sqc}{2}\bigr)$~\cite{Ghirardi2003}. At $\bar\theta$ the
 bisector turns from a local minimum into a local maximum along the circle; a
 second-derivative test shows that this happens when
-$\sqrt{\bar c}\,\artanh\sqrt{\bar c}=1$, i.e., at $\bar c\approx0.6948$ and
+$\sqrt{\bar c}\,\artanh\sqrt{\bar c}=1$~\cite{Bosyk2011}, i.e., at $\bar c\approx0.6948$ and
 $\bar\theta\approx67.07^\circ$. For $\bar\theta<\theta<\pi/2$ the minimizers
 bifurcate and the minimum has to be computed numerically~\cite{Ghirardi2003}.
 As $\theta$ grows they move continuously towards the eigenstates of $M$ and
@@ -703,10 +705,12 @@ $N$, which they reach at $\theta=\pi/2$, where MU is tight.
 
 The range in which the bisector is optimal depends on the uncertainty measure,
 as Zozor \emph{et al.} showed for R\'enyi entropies~\cite{ZozorBosykPortesi2013}.
-The eigenstates are optimal for $\alpha\le\frac12$, the bisector for
-$\alpha\ge\alpha^\star(c)$, and intermediate states in between, where
-$\alpha^\star$ decreases from $\alpha^\dagger\approx1.43$ for mutually unbiased
-measurements to $\frac12$ as $c\to1$. In terms of the Bloch angle, the bisector
+For $c>\frac12$ the eigenstates are optimal for $\alpha\le\frac12$, the
+bisector for $\alpha\ge\alpha^\star(c)$, and intermediate states in between,
+where $\alpha^\star$ decreases from $\alpha^\dagger\approx1.43$ as
+$c\to\frac12$ to $\frac12$ as $c\to1$; for mutually unbiased measurements the
+eigenstates remain optimal for all $\alpha<\alpha^\dagger$, and the bisector
+takes over at $\alpha^\dagger$. In terms of the Bloch angle, the bisector
 is optimal up to $43^\circ$ for $\alpha=3/4$, up to $\bar\theta\approx67^\circ$
 for the Shannon entropy and up to $80^\circ$ for $\alpha=1.2$, and at all angles
 for $\alpha\ge\alpha^\dagger$, in line with the tightness of the min-entropy
@@ -720,10 +724,22 @@ For mutually unbiased measurements ($\theta=90^\circ$, $c=\frac12$) MU is tight
 (1 bit), while $h(1/\sqrt2)\approx0.872$ and $h(w)\approx0.844$. As the
 measurements become more compatible, however, the majorization bounds take
 over: $h(\sqc)>-\log_2c$ for $\sqc>t^\ast\approx0.7585$, i.e., for Bloch angles
-$\theta<\theta^\ast\approx81.3^\circ$ (the tensor bound overtakes MU at $\theta<79.3^\circ$), in
-agreement with Ref.~\cite{Baek2019}; earlier majorization
+$\theta<\theta^\ast\approx81.3^\circ$ (the tensor bound overtakes MU at $\theta<79.3^\circ$), as
+reported numerically in Ref.~\cite{Baek2019}; earlier majorization
 bounds~\cite{FGG2013,PRZ2013} were compared with MU and with the optimal qubit
 bound in Ref.~\cite{KTW2014}.
+For the Shannon entropy alone, however, neither majorization bound is the best
+closed-form relation available. The bound
+\begin{equation}
+  H(p)+H(q)\;\ge\;h\Bigl(\frac{1+\sqrt{2c-1}}{2}\Bigr)
+  \label{eq:SR}
+\end{equation}
+of Refs.~\cite{SanchezRuiz1998,KTW2014} (see also Ref.~\cite{Coles2017}), where
+$2c-1=\cos\theta$, is stronger than both $h(\sqc)$ and MU at every angle, and it
+coincides with MU, and hence is tight, at $\theta=90^\circ$
+(Fig.~\ref{fig:entropic}); at $\theta=60^\circ$, for instance, it gives
+$0.601$~bit against $0.568$ for $h(\sqc)$. What majorization offers instead is a
+single bound for all Schur-concave measures at once.
 
 As $c\to1$ the advantage over MU becomes unbounded, and the direct-sum bound
 becomes tight in ratio. With $\varepsilon=1-\sqc\approx\theta^2/8$ one has
@@ -732,9 +748,22 @@ $h(\sqc)=h(\varepsilon)\approx\varepsilon\log_2(e/\varepsilon)$, whereas the
 exact minimum is $2h(\varepsilon/2)\approx\varepsilon\log_2(2e/\varepsilon)$.
 To leading order the ratio of the exact minimum to $h(\sqc)$ is therefore
 $1+1/\log_2(e/\varepsilon)$: it tends to $1$, but only logarithmically ($1.09$
-at $\theta=0.1$, $1.047$ at $\theta=0.003$), while the ratio of $h(\sqc)$ to MU
+at $\theta=0.1$~rad, $1.047$ at $\theta=0.003$~rad), while the ratio of $h(\sqc)$ to MU
 grows as $\frac12\ln(8e/\theta^2)$ ($3.8$ and $7.3$). The eigenstates of $M$, although
-they saturate $S_1$ and $S_3$, give $h(c)$, asymptotically twice the minimum.
+they saturate $S_1$ and $S_3$, give $h(c)$, asymptotically twice the minimum
+(the ratio approaches $2$ slowly; it is $1.67$ and $1.82$ at the same angles).
+
+Between these limits the strictness of Theorem~\ref{thm:tight} is far from
+marginal. Over all angles the direct-sum bound $h(\sqc)$ reaches at least
+$78\%$ of the exact minimum, the smallest ratio, $0.782$, occurring at
+$\theta\approx70^\circ$, just beyond $\bar\theta$, where the minimizer leaves the
+bisector; the absolute gap is largest, $0.196$~bit, at $\theta\approx74^\circ$,
+and the tensor-product bound $h(w)$ falls short by up to $0.217$~bit. At
+$\theta=90^\circ$, where MU is tight, $h(\sqc)$ still misses the exact value
+$1$~bit by $0.128$~bit. Wherever a single strictly Schur-concave measure is
+what matters, such as the Shannon entropy in the analysis of key distribution,
+this gap is the price of universality, and the entropy-specific optimum should
+be used.
 
 \begin{figure}[t]
   \centering
@@ -743,8 +772,11 @@ they saturate $S_1$ and $S_3$, give $h(c)$, asymptotically twice the minimum.
   $\theta$ ($c=\cos^2\frac\theta2$). Black: exact minimum, equal to
   $2h\bigl(\frac{1+\sqc}{2}\bigr)$ for $\theta\le\bar\theta\approx67.07^\circ$.
   Blue: direct-sum bound $h(\sqc)$. Green (dotted): tensor-product bound
-  $h(w)$. Orange (dashed): Maassen--Uffink. The direct-sum bound is stronger
-  than MU for $\theta<81.3^\circ$ (dotted vertical line).}
+  $h(w)$. Orange (dashed): Maassen--Uffink. Yellow (dash-dotted): the
+  closed-form Shannon bound~\eqref{eq:SR} of
+  Refs.~\cite{SanchezRuiz1998,KTW2014}, which is stronger than both $h(\sqc)$
+  and MU at every angle. The direct-sum bound is stronger than MU for
+  $\theta<81.3^\circ$ (dotted vertical line).}
   \label{fig:entropic}
 \end{figure}
 
@@ -1061,8 +1093,12 @@ as the measurements approach compatibility, precisely where MU is weakest.
 Only in the narrow window $\theta^\ast<\theta\le90^\circ$ next to mutually
 unbiased measurements ($\theta=90^\circ$), for which MU is tight, does MU give
 the better bound; for the tensor-product bound the crossover lies at
-$79.3^\circ$. Of the two forms, the direct sum is preferable for
-$\alpha\le1$, while only the tensor product survives for large $\alpha$.
+$79.3^\circ$. For the Shannon entropy alone, the closed-form
+bound~\eqref{eq:SR} is stronger than both at every angle, and the exact
+minimum exceeds $h(\sqc)$ by up to $22\%$; the strength of the majorization
+bounds lies in their universality. Of the two forms, the direct sum is
+preferable for $\alpha\le1$, while only the tensor product survives for large
+$\alpha$.
 
 \emph{Relation to quantum optics.}---These results contrast instructively with
 the quadratures of a light mode. There, coherent and squeezed states are
@@ -1073,7 +1109,9 @@ under continuous majorization in phase space and are conjectured to majorize
 every Wigner-positive state~\cite{VanHerstraeten2023}. For non-commuting binary
 measurements no such state exists (Propositions~\ref{prop:attain}
 and~\ref{prop:povm-attain}), and the optimal state depends on the uncertainty
-measure. The boundary of $\mathcal{E}_\theta$, traced by the pure states in the
+measure, in line with the finding of Korzekwa and
+Lostaglio~\cite{KorzekwaLostaglio2016} that no qubit state minimizes all
+information-theoretic uncertainty measures at once. The boundary of $\mathcal{E}_\theta$, traced by the pure states in the
 plane of the two axes, plays the role of the family of squeezed states, trading
 predictability of $N$ for that of $M$. The balanced bisector state, the analogue
 of a coherent state, minimizes the Shannon sum up to $\bar\theta\approx67^\circ$;
