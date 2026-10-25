@@ -947,7 +947,9 @@ second outcome, gives $\mu=\eta_d-1$ and $\eta=\eta_d$, so that $|\mu|+\eta=1$.
 \emph{Uncertainty versus incompatibility.}---For unbiased POVMs the vectors
 $\eta\hat a\pm\zeta\hat b$ that determine $\Lambda$ also decide joint
 measurability: the pair is jointly measurable if and only if
-$|\eta\hat a+\zeta\hat b|+|\eta\hat a-\zeta\hat b|\le2$~\cite{Busch1986,HMZ2016}.
+$|\eta\hat a+\zeta\hat b|+|\eta\hat a-\zeta\hat b|\le2$~\cite{Busch1986,HMZ2016};
+for biased POVMs the criterion is more involved and no longer depends on these
+vectors alone~\cite{StanoReitznerHeinosaari2008,BuschSchmidt2010,Yu2010}.
 The two notions are nevertheless distinct. For orthogonal axes and
 $\eta=\zeta\le1/\sqrt2$ the measurements are jointly measurable, yet
 $S_2=1+\eta/\sqrt2$ stays below the value $1+\eta$ that would be reached if both
@@ -989,9 +991,12 @@ By the eigenvalue formula of Sec.~\ref{sec:povm}, $S_k$ for the direct sum is
 the largest eigenvalue of a sum of $k$ of the four projectors. Hence $S_1=1$,
 $S_3=2$, since any three of them include $P_1+P_2=\mathds{1}$ or
 $Q_1+Q_2=\mathds{1}$, and $S_2=\max_{i,j}\lambda_{\max}(P_i+Q_j)=1+\sqc$, since
-$\lambda_{\max}(P+Q)=1+\|PQ\|$ for any two projectors~\cite{Halmos1969}. The
-increments give $\omplus$, which is ordered, so Lemma~\ref{lem:sup} yields
-Theorem~\ref{thm:direct}. For the tensor product,
+$\lambda_{\max}(P+Q)=1+\|PQ\|$ for any two projectors~\cite{Halmos1969}.
+Moreover $c\ge\frac12$: if $Q_1\neq0$ and $\psi$ is a unit vector in its range,
+then $\|P_1\psi\|^2+\|P_2\psi\|^2=1$, so $\max_i\|P_iQ_1\|^2\ge\frac12$ (and if
+$Q_1=0$, then $Q_2=\mathds{1}$ and $c=1$). The increments therefore give
+$\omplus$, which is ordered because $1\ge\sqc\ge1-\sqc$, so
+Lemma~\ref{lem:sup} yields Theorem~\ref{thm:direct}. For the tensor product,
 $p_iq_j\le\bigl(\frac{p_i+q_j}{2}\bigr)^2\le w$, with equality at a top
 eigenvector of $P_i+Q_j$ with $\|P_iQ_j\|^2=c$. Indeed, by Jordan's
 lemma~\cite{Halmos1969}, which is also the standard tool for entropic
@@ -1000,8 +1005,9 @@ decomposes into mutually orthogonal subspaces of dimension one or two that are
 invariant under $P$ and $Q$; on a two-dimensional subspace with overlap $c$, the
 bisector state of the qubit measurements that $P$ and $Q$ induce there gives
 $p_i=q_j=(1+\sqc)/2$, and for $c=1$ a common eigenvector gives $p_i=q_j=1$.
-Hence $S_1=w$, while a state in the range of $P$ gives $S_2=S_3=S_4=1$, and
-Theorem~\ref{thm:tensor} follows.
+Hence $S_1=w$, while a state in the range of $P$ gives $S_2=S_3=S_4=1$; since
+$c\ge\frac12$ implies $w\ge\frac12$, the increments $(w,1-w,0,0)$ are ordered,
+and Theorem~\ref{thm:tensor} follows.
 
 If $c<1$, a state with $L_1(p\oplus q)=1$ lies in the range of some $P_i$ (or
 $Q_j$); then $q_j=\tr(\rho P_iQ_jP_i)\le\|P_iQ_j\|^2\le c$ for all $j$, so
@@ -1022,7 +1028,9 @@ qubit projectors with axes $\mhat_b$ and $\nhat_b$,
 $\{A,B\}=2(\mhat_b\cdot\nhat_b)\mathds{1}$ and
 $c_b=\frac12(1+|\mhat_b\cdot\nhat_b|)$, while $\{A,B\}=\pm2$ on a
 one-dimensional block. For qubits this is the relation between the overlap and
-the effective anticommutator of Ref.~\cite{KTW2014}.
+the effective anticommutator of Ref.~\cite{KTW2014}; it is closely
+related to the anticommutator norm formula
+$\|PQ+QP\|=\|PQ\|+\|PQ\|^2$~\cite{Walters2016}.
 
 The argument for the direct sum uses only the eigenvalue formula, so it carries
 over to binary POVMs in any dimension.
@@ -1163,9 +1171,10 @@ Several questions remain open.
 sums of products of affine functions over $\mathcal{E}_\theta$, and we have not
 found it for any noisy measurements. For unbiased measurements of equal
 sharpness the AM--GM step of Theorem~\ref{thm:tensor} still gives $S_1$, but
-already $S_3$ has no simple form: numerically, for orthogonal axes and
-$\eta=\zeta=0.8$ it is attained neither by an eigenstate nor by a bisector
-state. For biased or unequally sharp measurements the AM--GM step itself is no
+$S_3$ is no longer attained at the states that saturate the projective bounds:
+numerically, for orthogonal axes and $\eta=\zeta=0.8$ it is attained neither by
+an eigenstate nor by a bisector state, and we have not derived it in closed
+form. For biased or unequally sharp measurements the AM--GM step itself is no
 longer tight, and the least concave majorant in Lemma~\ref{lem:sup} may become
 non-trivial.
 (ii) \emph{Binary POVMs in dimension $d$.} Corollary~\ref{cor:binary-povm} gives
@@ -1195,7 +1204,7 @@ only even photon numbers, approach simultaneous eigenstates of both, so no
 non-trivial state-independent relation exists. Tests for coherent states,
 $\{\ket{\nu}\!\bra{\nu},\mathds{1}-\ket{\nu}\!\bra{\nu}\}$, realized by a
 displacement followed by on/off detection with no-click probability
-$\pi Q(\nu)=\bra{\nu}\rho\ket{\nu}$ (the Husimi function), also have $c=1$,
+$\pi Q(\nu)=\bra{\nu}\rho\ket{\nu}$, with $Q$ the Husimi function, also have $c=1$,
 because all states orthogonal to both coherent states are common eigenvectors.
 Individual partial sums remain informative, however:
 $\pi[Q(\nu_1)+Q(\nu_2)]\le1+e^{-|\nu_1-\nu_2|^2/2}$, with equality for the
