@@ -102,7 +102,7 @@ def fig_achievable_set():
 # ---------------------------------------------------------------------------
 def fig_entropic_bounds():
     thetas = np.linspace(1e-3, np.pi / 2, 181)
-    exact, mu, bplus, btimes = [], [], [], []
+    exact, mu, bplus, btimes, bsr = [], [], [], [], []
     for th in thetas:
         M, N = pair(th)
         c = mj.overlap_cmax(M, N)
@@ -110,6 +110,7 @@ def fig_entropic_bounds():
         mu.append(mj.maassen_uffink(c))
         bplus.append(mj.shannon(mj.omega_direct_sum_projective(c)))
         btimes.append(mj.shannon(mj.omega_tensor_projective(c)))
+        bsr.append(mj.sanchez_ruiz_ktw(c))
     deg = np.degrees(thetas)
 
     fig, ax = plt.subplots(figsize=(COL, 2.5))
@@ -117,6 +118,8 @@ def fig_entropic_bounds():
     ax.plot(deg, bplus, color=C1, label=r"$H(\omega_\oplus)$ (direct sum)")
     ax.plot(deg, btimes, color=C3, ls=(0, (1.2, 1.2)), label=r"$H(\omega_\otimes)$ (tensor)")
     ax.plot(deg, mu, color=C2, ls="--", label=r"Maassen--Uffink $-\log_2 c$")
+    ax.plot(deg, bsr, color=C4, ls="-.", lw=1.3,
+            label=r"S\'anchez-Ruiz--KTW")
 
     t1 = mj.crossover_sqrt_c(lambda c: mj.shannon(mj.omega_direct_sum_projective(c)))
     th1 = np.degrees(2 * np.arccos(t1))
@@ -187,7 +190,7 @@ def fig_renyi_family():
         ax.plot(alphas[valid], dsum[valid], color=C1,
                 label=r"direct sum $H_\alpha(\sqrt{c},1-\sqrt{c})$, $\alpha\leq1$")
         ax.plot(alphas[~valid], dsum[~valid], color=C1, lw=0.9, ls=(0, (4, 2)),
-                label=r"same expression, $\alpha>1$ (not a bound)")
+                label=r"same expression, $\alpha>1$ (not guaranteed)")
         ax.plot(alphas, tens, color=C3, ls=(0, (1.2, 1.2)), label=r"tensor product $H_\alpha(\omega_\otimes)$")
         ax.plot(alphas[valid], np.full(valid.sum(), mj.maassen_uffink(c)), color=C2, ls="--",
                 label=r"Maassen--Uffink, $\alpha\leq1$")
@@ -207,25 +210,32 @@ def fig_renyi_family():
 
 
 # ---------------------------------------------------------------------------
-# Fig. 5 - unsharp measurements: bound vs exact as a function of sharpness
+# Fig. 5 - POVMs: bound vs exact as a function of sharpness (a) and of bias (b)
 # ---------------------------------------------------------------------------
 def fig_povm():
     etas = np.linspace(0.02, 1.0, 50)
-    fig, ax = plt.subplots(figsize=(COL, 2.5))
+    mus = np.linspace(0.0, 0.5, 26)
+    fig, (ax_a, ax_b) = plt.subplots(2, 1, figsize=(COL, 4.6))
+    fig.subplots_adjust(hspace=0.4)  # room for the x label of panel (a)
     for theta, col, lab in [(np.pi / 2, C1, r"90^\circ"), (np.pi / 4, C2, r"45^\circ")]:
-        exact, bound = [], []
-        for eta in etas:
-            M = mj.TwoOutcomePOVM(mj.axis_in_xz_plane(0), eta=eta)
-            N = mj.TwoOutcomePOVM(mj.axis_in_xz_plane(theta), eta=eta)
-            exact.append(mj.min_entropy_sum(M, N, num=1201)[0])
-            bound.append(mj.shannon(mj.omega_direct_sum(M, N)))
-        ax.plot(etas, exact, color=col, label=rf"exact, $\theta={lab}$")
-        ax.plot(etas, bound, color=col, ls="--", label=rf"$H(\omega_\oplus)$, $\theta={lab}$")
-    ax.set_xlabel(r"sharpness $\eta=\zeta$ (unbiased, $\mu=\nu=0$)")
-    ax.set_ylabel(r"$H(M)+H(N)$ (bits)")
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0.3, 2.1)
-    ax.legend(loc="lower left", ncol=1)
+        a, b = mj.axis_in_xz_plane(0), mj.axis_in_xz_plane(theta)
+        pairs_a = [(mj.TwoOutcomePOVM(a, eta=eta), mj.TwoOutcomePOVM(b, eta=eta)) for eta in etas]
+        pairs_b = [(mj.TwoOutcomePOVM(a, eta=0.5, mu=mu), mj.TwoOutcomePOVM(b, eta=0.5)) for mu in mus]
+        for ax, xs, pairs in ((ax_a, etas, pairs_a), (ax_b, mus, pairs_b)):
+            exact = [mj.min_entropy_sum(M, N, num=1201)[0] for M, N in pairs]
+            bound = [mj.shannon(mj.omega_direct_sum(M, N)) for M, N in pairs]
+            ax.plot(xs, exact, color=col, label=rf"exact, $\theta={lab}$")
+            ax.plot(xs, bound, color=col, ls="--", label=rf"$H(\omega_\oplus)$, $\theta={lab}$")
+    ax_a.set_xlabel(r"sharpness $\eta=\zeta$ (unbiased, $\mu=\nu=0$)")
+    ax_a.set_xlim(0, 1)
+    ax_a.set_ylim(0.3, 2.1)
+    ax_a.legend(loc="lower left", ncol=1)
+    ax_b.set_xlabel(r"bias $\mu$ of $M$ ($\eta=\zeta=\frac12$, $\nu=0$)")
+    ax_b.set_xlim(0, 0.5)
+    ax_b.set_ylim(0.8, 1.9)
+    for ax, tag in ((ax_a, "(a)"), (ax_b, "(b)")):
+        ax.set_ylabel(r"$H(M)+H(N)$ (bits)")
+        ax.text(0.97, 0.93, tag, transform=ax.transAxes, ha="right", va="top", fontsize=8, color=INK2)
     fig.savefig(OUT / "povm.pdf")
     plt.close(fig)
 
