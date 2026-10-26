@@ -605,6 +605,158 @@ check("Sec. VIII (i): unbiased POVMs with eta = zeta = 0.8, orthogonal axes: S_1
       "but S_3 is attained neither by an eigenstate nor by a bisector state", ok,
       f"S_3 >= {L[2]:.4f}, eigenstate {L_eig[2]:.4f}, bisector {L_bis[2]:.4f}")
 
+
+# --- 11. Imperfect detectors (Proposition 4, Fig. 6) --------------------------
+rng_d = np.random.default_rng(44)
+pts = mj.random_ball(4000, rng_d)
+pts = np.vstack([pts, mj.fibonacci_sphere(4000)])
+
+
+def sharp_of(povm: mj.TwoOutcomePOVM) -> mj.TwoOutcomePOVM:
+    return mj.projective(povm.axis)
+
+
+# (i) unbiased noise: p + q (direct sum) is majorized by the sharp statistics of the same state
+ok = True
+for _ in range(100):
+    a, b = rng_d.normal(size=3), rng_d.normal(size=3)
+    M, N = mj.TwoOutcomePOVM(a, eta=rng_d.random()), mj.TwoOutcomePOVM(b, eta=rng_d.random())
+    noisy = mj.direct_sum(M.probs(pts), N.probs(pts))
+    sharp = mj.direct_sum(sharp_of(M).probs(pts), sharp_of(N).probs(pts))
+    ok &= all(mj.is_majorized(u, v) for u, v in zip(noisy[::40], sharp[::40]))
+check("Prop 4(i): unbiased noise only adds uncertainty: p + q of (M, N) is majorized by that of "
+      "the sharp measurements, state by state", bool(ok))
+
+# (ii) biased: ideal relation holds for all states iff Lambda <= 2 sqrt c
+agree, tested, margin = 0, 0, []
+for _ in range(400):
+    M, N = random_povm(rng_d), random_povm(rng_d)
+    c = mj.overlap_cmax(sharp_of(M), sharp_of(N))
+    lam = mj.big_lambda(M, N)
+    if abs(lam - 2 * np.sqrt(c)) < 2e-3:
+        continue
+    tested += 1
+    # largest p_i + q_j over states: Cauchy-Schwarz maximiser from Theorem 4 (exact) and grid
+    vecs = mj.direct_sum(M.probs(pts), N.probs(pts))
+    l2_grid = mj.lorenz(vecs)[:, 1].max() if vecs.ndim == 2 else mj.lorenz(vecs)[1]
+    l2_exact = 1 + lam / 2
+    violates = l2_exact > 1 + np.sqrt(c) + 1e-12
+    agree += (violates == (not mj.ideal_relation_holds(M, N))) and l2_grid <= l2_exact + 1e-9
+    margin.append(l2_exact - l2_grid)
+check("Prop 4(ii): p + q < (1, sqrt c, 1 - sqrt c, 0) for all states iff Lambda <= 2 sqrt c; "
+      "otherwise the Landau-Pollak sum p_i + q_j exceeds 1 + sqrt c", agree == tested,
+      f"{tested} random POVM pairs, grid L2 below the exact S_2 by at most {max(margin):.1e}")
+
+# (iii) common detectors for both settings: Lambda = 2|mu| + 2 eta sqrt c; click detectors violate
+ok = True
+for _ in range(200):
+    eta = rng_d.random()
+    mu = (1 - eta) * rng_d.uniform(-1, 1)
+    th = rng_d.uniform(0.01, np.pi / 2)
+    a, b = mj.axis_in_xz_plane(0), mj.axis_in_xz_plane(th)
+    M, N = mj.TwoOutcomePOVM(a, eta=eta, mu=mu), mj.TwoOutcomePOVM(b, eta=eta, mu=mu)
+    ok &= abs(mj.big_lambda(M, N) - (2 * abs(mu) + 2 * eta * np.cos(th / 2))) < 1e-12
+for th in np.radians([10, 30, 60, 90]):
+    a, b = mj.axis_in_xz_plane(0), mj.axis_in_xz_plane(th)
+    for e in (0.3, 0.5, 0.8, 0.95, 0.999):
+        ok &= not mj.ideal_relation_holds(mj.click_detector(a, e), mj.click_detector(b, e))
+check("Prop 4(iii): Lambda = 2|mu| + 2 eta sqrt c for a shared detector pair; click/no-click "
+      "detectors violate the ideal relation for every eta_d < 1", bool(ok))
+
+# Shannon: click/no-click detectors fall below the ideal-detector minimum (Fig. 6b)
+ok, worst = True, -1.0
+for deg in (30, 60, 90):
+    th = np.radians(deg)
+    ideal = mj.shannon_min_in_plane(th, 0.0, 1.0)
+    a, b = mj.axis_in_xz_plane(0), mj.axis_in_xz_plane(th)
+    for e in (0.3, 0.5, 0.7, 0.9, 0.95, 0.99):
+        true_min = mj.shannon_min_in_plane(th, e - 1, e)
+        bound = float(mj.shannon(mj.omega_direct_sum(mj.click_detector(a, e), mj.click_detector(b, e))))
+        ok &= bound <= true_min + 1e-9 < ideal
+        worst = max(worst, true_min - ideal)
+for e in (0.3, 0.6, 0.9, 0.99):  # theta = 90 deg, dark eigenstate of M: H = 0 + h(eta_d/2)
+    M, N = mj.click_detector([0, 0, 1], e), mj.click_detector([1, 0, 0], e)
+    r = np.array([0.0, 0.0, -1.0])
+    val = float(mj.shannon(M.probs(r)) + mj.shannon(N.probs(r)))
+    ok &= abs(val - float(mj.binary_entropy(e / 2))) < 1e-12 and val < 1
+check("Fig. 6(b): click/no-click detectors lower min H(M)+H(N) below the ideal minimum at 30, 60, "
+      "90 deg for every eta_d < 1, and H(omega_plus(M, N)) remains a valid bound", bool(ok),
+      f"largest (true - ideal) {worst:.1e}")
+
+# Random no-click assignment: thresholds quoted in the text (theta = 90 deg)
+sc = np.cos(np.pi / 4)
+thr = lambda eh: (eh * (1 + sc) - 2 * sc) / (1 - sc)
+sh_thr = {}
+for eh in (0.99, 0.95):
+    evs = np.linspace(0, eh, 4001)
+    bad = [ev for ev in evs if mj.shannon_min_in_plane(np.pi / 2, (eh - ev) / 2, (eh + ev) / 2,
+                                                       num=4001) < 1 - 1e-9]
+    sh_thr[eh] = max(bad)
+ok = (abs(thr(0.99) - 0.942) < 1e-3 and abs(thr(0.95) - 0.708) < 1e-3
+      and abs(sh_thr[0.99] - 0.578) < 2e-3 and abs(sh_thr[0.95] - 0.211) < 2e-3)
+ok &= all(mj.shannon_min_in_plane(np.pi / 2, (eh - ev) / 2, (eh + ev) / 2) >= 1 - 1e-9
+          for eh in (0.9, 0.8) for ev in np.linspace(0, eh, 41))
+check("Sec. on detectors: eta_H = 0.99 (0.95) violates the ideal relation for eta_V < 0.942 (0.708) "
+      "and the 1-bit Shannon bound for eta_V < 0.578 (0.211); not at all for eta_H <= 0.9", bool(ok),
+      f"Shannon thresholds {sh_thr[0.99]:.3f}, {sh_thr[0.95]:.3f}")
+
+# --- 12. Renyi refinements (review): validity of the direct-sum form up to alpha = 2 and the
+#         range in which the eigenstates are optimal ----------------------------------------
+def renyi_circle_min(theta: float, a: float, num: int = 20001) -> tuple[float, float]:
+    phi = np.linspace(0, np.pi, num)
+    x, y = np.cos(phi), np.cos(phi - theta)
+    p = np.stack([(1 + x) / 2, (1 - x) / 2], axis=-1)
+    q = np.stack([(1 + y) / 2, (1 - y) / 2], axis=-1)
+    v = mj.renyi(p, a) + mj.renyi(q, a)
+    return float(v.min()), float(v[0])
+
+
+ok, fails = True, []
+for deg in (5, 15, 30, 45, 60, 75, 85, 89.9):
+    th = np.radians(deg)
+    c = np.cos(th / 2) ** 2
+    ok &= all(renyi_circle_min(th, a)[0] >= mj.renyi_direct_sum_bound(c, a) - 1e-10
+              for a in np.linspace(1.0, 2.0, 21))
+    a_fail = brentq(lambda a: renyi_circle_min(th, a)[0] - mj.renyi_direct_sum_bound(c, a), 2.0001, 3.0)
+    fails.append(a_fail)
+ok &= 2.0 < min(fails) and max(fails) < 2.6
+check("Sec. on Renyi family: H_alpha(sqrt c, 1 - sqrt c) is a valid bound for every alpha <= 2 at all "
+      "angles and fails above an angle-dependent order between 2 and 2.6", bool(ok),
+      "failure orders at 5..89.9 deg: " + ", ".join(f"{f:.3f}" for f in fails))
+
+
+def alpha_eig(deg: float) -> float:
+    th = np.radians(deg)
+    lo, hi = 0.45, 1.6
+    for _ in range(30):
+        mid = (lo + hi) / 2
+        m, eig = renyi_circle_min(th, mid, 40001)
+        lo, hi = (mid, hi) if m >= eig - 1e-10 else (lo, mid)
+    return lo
+
+
+a0 = {d: alpha_eig(d) for d in (20, 60, 85)}
+ok = all(a > 0.5 for a in a0.values()) and abs(a0[60] - 0.56) < 0.01 and abs(a0[85] - 0.66) < 0.01
+check("Sec. on Renyi family: the eigenstates stay optimal up to an order alpha_0(c) > 1/2 "
+      "(about 0.52, 0.56, 0.66 at 20, 60, 85 deg)", bool(ok),
+      ", ".join(f"alpha_0({d}) = {a:.3f}" for d, a in a0.items()))
+
+# Tensor-product Shannon bound vs exact minimum, and the fixed-spectrum bound (review)
+best = min((float(mj.shannon(mj.omega_tensor_projective(np.cos(np.radians(d) / 2) ** 2)))
+            / mj.shannon_min_in_plane(np.radians(d), 0.0, 1.0, num=40001), d)
+           for d in np.arange(40, 90.01, 0.1))
+ok = abs(best[0] - 0.761) < 1e-3 and abs(best[1] - 70.6) < 0.3
+th, rr = np.radians(60), 0.6
+a_, b_ = mj.axis_in_xz_plane(0), mj.axis_in_xz_plane(th)
+pts_r = mj.fibonacci_sphere(40000) * rr
+num_r = mj.lattice_supremum(mj.direct_sum(mj.projective(a_).probs(pts_r), mj.projective(b_).probs(pts_r)))
+sc_r = np.cos(th / 2)
+an_r = 0.5 * np.array([1 + rr, 1 - rr + 2 * rr * sc_r, 1 + rr - 2 * rr * sc_r, 1 - rr])
+ok &= np.abs(num_r - an_r).max() < 1e-4
+check("Review: h(w) >= 0.761 x exact minimum (worst near 70.6 deg); fixed spectrum |r| = r gives "
+      "(1+r, 1-r+2r sqrt c, 1+r-2r sqrt c, 1-r)/2", bool(ok),
+      f"min ratio {best[0]:.4f} at {best[1]:.1f} deg; fixed-spectrum deviation {np.abs(num_r - an_r).max():.1e}")
+
 # --- Referee revision: Eq. (SR), the size of the gap, Theorem 5's c >= 1/2 ---------------
 from scipy.optimize import minimize_scalar  # noqa: E402
 
