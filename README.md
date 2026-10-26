@@ -59,14 +59,14 @@ form).
   before the end of 2026, and the venue is still to be decided with the
   supervisors.
 
-**Communications Physics version** (branch `commphys-revision`, October 26):
-`paper/commphys.tex` restructures the paper as a Communications Physics Article
-(Introduction / Results / Discussion / Methods, proofs in Methods, 143-word
-abstract), adds Proposition 4 and Corollary 1 on imperfect detectors (bias,
-unlike noise, can invalidate ideal-detector uncertainty bounds and the steering
-tests built on them; the criterion is $\Lambda\le2\sqrt c$) with Fig. 6, and
-addresses the referee-style review. See `paper/commphys_revision_notes.md` for
-the full change log and the open decisions. `paper/main.tex` is unchanged.
+**Revision of October 26** (branch `commphys-revision`): `paper/main.tex`
+(same structure and format) now credits Partovi for the non-attainment remark
+and KTW for the anticommutator form of $c$ in any dimension, adds
+Proposition 4 and Corollary 3 on imperfect detectors (detector bias, unlike
+noise, can invalidate ideal-detector uncertainty bounds and the steering tests
+built on them; the criterion is $\Lambda\le2\sqrt c$) with Fig. 6, shows that the
+direct-sum Rényi form holds up to $\alpha=2$, corrects the "22%" in Sec. VIII
+to 28%, and adds the fixed-spectrum bound. See `paper/revision_notes.md`.
 
 The applicant's letter of intent is in
 [`GTIIT_Letter_of_Intent_Research_Statement.pdf`](GTIIT_Letter_of_Intent_Research_Statement.pdf).
