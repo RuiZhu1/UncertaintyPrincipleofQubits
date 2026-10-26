@@ -234,6 +234,15 @@ def maassen_uffink(c: float) -> float:
     return -np.log2(c)
 
 
+def sanchez_ruiz_ktw(c: float) -> float:
+    """Closed-form Shannon bound H(M) + H(N) >= h((1 + sqrt(2c - 1))/2) for two qubit bases.
+
+    Sanchez-Ruiz, Phys. Lett. A 244, 189 (1998); Kaniewski, Tomamichel and Wehner,
+    PRA 90, 012332 (2014).  Here 2c - 1 = cos(theta) for the Bloch angle theta.
+    """
+    return float(binary_entropy((1.0 + np.sqrt(max(2.0 * c - 1.0, 0.0))) / 2.0))
+
+
 def renyi_direct_sum_bound(c: float, alpha: float) -> float:
     """
     Corollary 1: H_alpha(M) + H_alpha(N) >= H_alpha(sqrt c, 1 - sqrt c).

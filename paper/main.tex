@@ -32,12 +32,12 @@
 \newcommand{\omplus}{\omega_{\oplus}}
 \newcommand{\omtimes}{\omega_{\otimes}}
 \newcommand{\sqc}{\sqrt{c}}
-\newcommand{\Ach}{\wp}
+\newcommand{\Ach}{\mathcal{P}}
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 
 \begin{document}
 
-\title{Uncertainty principles from majorization and entropy in the binary case}
+\title{Uncertainty relations from majorization and entropy in the binary case}
 
 \author{Rui Zhu}
 \email{rui.zhu@gtiit.edu.cn}
@@ -60,19 +60,20 @@
 \begin{abstract}
 Making one quantum measurement more predictable can force another to become
 less so.
-Majorization expresses this trade-off with a single list of probabilities that
-covers every state and every sensible measure of uncertainty at once.
-We study the simplest case: two measurements with two possible results each.
-We show that the existing majorization limits cannot be improved, yet no state
-reaches them unless the measurements are compatible.
-So for incompatible measurements, the resulting limits are never exact, except
-in two extreme cases.
-They outperform the standard Maassen--Uffink relation unless the measurements
-are nearly mutually unbiased, and become almost exact as the measurements grow
-compatible.
-We also find the best limit for noisy measurements, show that uncertainty
-persists even when both can be measured together, and extend the results to
-systems of any size.
+Majorization expresses this trade-off with a single probability vector, valid
+for every state, that bounds a whole family of uncertainty measures at once.
+We study the simplest case: two measurements with two outcomes each.
+The optimal such vectors are known; we prove that no state attains them unless
+the measurements commute.
+Every bound they imply for a strictly Schur-concave measure, such as the
+Shannon entropy, is therefore strict; only the R\'enyi entropies of order zero
+and infinity are bounded tightly, and the direct-sum form fails at large
+orders.
+The Shannon bound still beats the Maassen--Uffink relation unless the
+measurements are nearly mutually unbiased, and becomes tight in ratio, though
+slowly, as they approach commuting ones.
+We also derive the optimal bound for noisy and biased measurements and extend
+the results to any finite dimension.
 \end{abstract}
 
 \maketitle
@@ -86,8 +87,11 @@ The uncertainty principle is one of the defining features of quantum
 mechanics~\cite{Heisenberg1927,Robertson1929,BuschHeinonenLahti2007}: there are
 pairs of measurements whose outcomes cannot both be predicted with certainty,
 however carefully the system is prepared.
-First formulated for the position and momentum of a particle, it has since
-become a quantitative tool of quantum information science.
+This preparation uncertainty is distinct from measurement uncertainty, which
+limits how accurately incompatible observables can be measured
+jointly~\cite{BuschLahtiWerner2014}; we are concerned with the former.
+First formulated for the position and momentum of a particle, the principle
+has since become a quantitative tool of quantum information science.
 It underlies the security of quantum key
 distribution~\cite{BB84,Berta2010,TomamichelRenner2011}, provides
 experimentally accessible criteria for
@@ -103,7 +107,7 @@ requirements: its lower bound depends on the state, it can vanish even for
 incompatible observables, and variances are not natural when the outcomes are
 mere labels~\cite{Deutsch1983}.
 Entropies of the outcome distributions provide a
-remedy~\cite{BBM1975,Deutsch1983,Kraus1987}.
+remedy~\cite{Hirschman1957,Beckner1975,BBM1975,Deutsch1983,Kraus1987}.
 The best known entropic uncertainty relation, due to Maassen and
 Uffink~\cite{MaassenUffink1988}, bounds the sum of the Shannon entropies of the
 outcomes of two measurements by a quantity that depends only on the largest
@@ -117,8 +121,9 @@ experiments~\cite{Prevedel2011,LiXu2011}.
 Each such relation, however, constrains a single measure of uncertainty, while
 different tasks call for different measures: the Shannon entropy quantifies
 average information, the min-entropy governs guessing
-probabilities~\cite{KRS2009}, and the R\'enyi and Tsallis families interpolate
-between these and other extremes.
+probabilities~\cite{KRS2009}, the R\'enyi family interpolates between these
+and other extremes, and the Tsallis family generalizes the Shannon entropy in a
+different way.
 Majorization~\cite{MarshallOlkin2011}, the order that captures when one
 probability distribution is more disordered than another, makes it possible to
 treat all of them at once.
@@ -128,51 +133,85 @@ more generally, quantum resource
 theories~\cite{Gour2015,ChitambarGour2019}.
 In the context of uncertainty, the idea is to find a single probability vector,
 independent of the state, that majorizes the outcome statistics of every state;
-every uncertainty measure that respects majorization---the Shannon, R\'enyi
-and Tsallis entropies among many others---then obeys a bound determined by this
-one vector.
-This programme was initiated by Partovi~\cite{Partovi2011} and developed into
+every uncertainty measure that respects majorization then obeys a bound
+determined by this one vector. Depending on whether the two outcome
+distributions are combined by a direct sum or by a tensor product, such measures
+include the Shannon and Tsallis entropies or the Shannon and all R\'enyi
+entropies, among many others.
+This program was initiated by Partovi~\cite{Partovi2011} and developed into
 universal uncertainty relations by Friedland, Gheorghiu and Gour~\cite{FGG2013}
 and by Pucha{\l}a, Rudnicki and {\.Z}yczkowski~\cite{PRZ2013}; Rudnicki
 \emph{et al.} subsequently introduced a direct-sum formulation that yields
 stronger entropic bounds~\cite{RPZ2014}.
 Majorization uncertainty relations have since been extended to generalized
 measurements and quantum operations~\cite{RasteginZyczkowski2016,Baek2019},
-sharpened further~\cite{Li2016,Yuan2023}, in particular by exploiting the
-lattice structure of majorization, and verified experimentally~\cite{Yuan2023}.
+sharpened further~\cite{Li2016,LiQiao2019,XiaoFangGour2019,Yuan2023}, in
+particular by exploiting the lattice structure of majorization, and verified
+experimentally~\cite{Wang2020,Yuan2023}.
 
-The price of this universality is less clear.
-For a qubit measured in two bases---the setting of the BB84
-protocol~\cite{BB84} and of many experiments---entropy-specific relations can
-be optimized exactly: the optimal Shannon relation is
-known~\cite{SanchezRuiz1998,Ghirardi2003}, and so are optimal relations for
-R\'enyi entropies~\cite{BosykPortesiPlastino2012,ZozorBosykPortesi2013}.
-This raises a natural question: in the simplest setting, where both approaches
-can be carried out completely, what exactly does majorization gain, and what
-does it cost?
+The price of this universality is only partly understood.
+For a qubit measured in two bases---the setting of many experiments and, for
+mutually unbiased bases, of the BB84 protocol~\cite{BB84}---entropy-specific
+relations can be optimized: the optimal Shannon relation is
+known~\cite{SanchezRuiz1998,Ghirardi2003}, in closed form over part of the
+range and through a one-parameter minimization otherwise, and so are optimal
+relations for R\'enyi
+entropies~\cite{BosykPortesiPlastino2012,ZozorBosykPortesi2013}.
+Earlier majorization bounds have been compared with the Maassen--Uffink
+relation and with the optimal Shannon bound~\cite{KTW2014,Baek2019}, and the
+optimal direct-sum bound for two qubit bases has been identified in the
+majorization lattice~\cite{LiQiao2019}. Li and Qiao also observed that the
+partial sums of this bound are usually reached by different states and that, in
+examples, its Shannon entropy falls short of the optimal Shannon
+bound~\cite{LiQiao2018}.
+What is missing is a complete account of when such bounds are tight, why, and
+how this depends on the uncertainty measure. In the simplest setting, where
+both approaches can be carried out completely, what exactly does majorization
+gain, and what does it cost?
 
 In this paper we answer this question for pairs of binary (two-outcome)
-measurements.
-For two qubit bases, the relevant majorization bounds are special cases of the
-general constructions of Refs.~\cite{PRZ2013,FGG2013,RPZ2014}, and for unbiased
-unsharp qubit observables the direct-sum bound was evaluated in
+measurements, and the answer is simple to state.
+Unless the measurements commute, no state attains the optimal majorization
+bound, so every bound it implies for a strictly Schur-concave measure of
+uncertainty, such as the Shannon entropy, is strict; only the R\'enyi entropies
+of order zero and infinity are bounded tightly.
+The price is substantial: for two qubit bases the direct-sum Shannon bound
+falls short of the exact minimum by up to $22\%$. Even so, it outperforms the
+Maassen--Uffink relation unless the measurement axes on the Bloch sphere are
+within about nine degrees of orthogonal, i.e., unless the measurements are
+nearly mutually unbiased~\cite{Baek2019}, and its ratio to the exact minimum
+tends to one, though only logarithmically, as the measurements approach
+compatibility, where the Maassen--Uffink relation is weakest. For the Shannon
+entropy alone, a known closed-form bound~\cite{SanchezRuiz1998,KTW2014} is
+stronger than both at every angle; the case for majorization rests on its
+universality, not on its sharpness for any single measure.
+
+Several ingredients of this analysis are known.
+For two qubit bases the relevant majorization bounds are special cases of the
+general constructions of Refs.~\cite{PRZ2013,FGG2013,RPZ2014}; the optimality of
+the direct-sum bound and the states that saturate its partial sums were found
+in Ref.~\cite{LiQiao2019}; the expectation values that qubit states can reach
+are known to fill an ellipse~\cite{LiQiao2015,KTW2014,Abbott2016}; and for
+unbiased unsharp qubit observables the direct-sum bound was evaluated in
 Ref.~\cite{Baek2019}.
-Building on these results, we give a unified and self-contained treatment of
-the binary case.
-We show that the expectation values that qubit states can reach fill an
-ellipse, and use this geometry to derive both bounds, to prove that they cannot
-be improved, and to identify the states that come closest to them.
-No single state attains these bounds unless the measurements commute.
-Consequently, for non-commuting measurements the entropic bounds they imply are
-strict for the Shannon entropy, for the Tsallis entropies and for all R\'enyi
-entropies except those of order zero and infinity.
-We then compare the two types of majorization bound with each other, with the
-Maassen--Uffink relation and with the exact optimum across the whole R\'enyi
-family.
-Finally, we derive the optimal bound for arbitrary noisy and biased
-two-outcome qubit measurements, discuss its relation to joint measurability,
-and extend the results for projective measurements to binary measurements in
-any finite dimension.
+We give a unified and self-contained treatment that derives both bounds, their
+optimality and the states that saturate each of their partial sums from this
+ellipse.
+What is new is a proof of the non-attainment result for both bounds, which
+makes rigorous and general the observations of Ref.~\cite{LiQiao2018} on the
+direct-sum bound, and its consequence, the strictness of all induced bounds for
+strictly Schur-concave measures, with only R\'enyi orders zero and infinity
+tight; a quantitative account of the resulting gap; the comparison of both types
+of majorization bound with the Maassen--Uffink relation and with the exact
+optimum across the whole R\'enyi family, including an explicit counterexample to
+the direct-sum form at large orders, whose failure for $\alpha>1$ was stated
+without proof in Ref.~\cite{RPZ2014}; the optimal direct-sum bound
+for arbitrary noisy and biased two-outcome qubit measurements, the conditions
+under which it is attained, and its relation to joint measurability, including
+a trade-off of classical origin that bias creates between commuting
+measurements; and the extension to binary measurements in any finite
+dimension, with both bounds for projective measurements and the direct-sum
+bound for noisy and biased ones.
 
 The paper is organized as follows.
 Section~\ref{sec:prelim} introduces majorization, the uncertainty measures and
@@ -181,11 +220,14 @@ geometry of the achievable statistics.
 Section~\ref{sec:projective} derives the optimal bounds for projective qubit
 measurements, and Sec.~\ref{sec:entropic} discusses their entropic consequences
 and compares them with entropy-specific relations.
-Sections~\ref{sec:povm} and~\ref{sec:dimd} treat general two-outcome qubit
-measurements, described by positive operator-valued measures (POVMs), and
-binary projective measurements in arbitrary dimension, respectively, and
-Sec.~\ref{sec:discussion} concludes.
-All results are verified numerically (Appendix~\ref{app:numerics}).
+Section~\ref{sec:povm} treats general two-outcome qubit measurements, which
+may be noisy or biased and are described by positive operator-valued measures
+(POVMs), i.e., sets of positive operators that sum to the identity;
+Sec.~\ref{sec:dimd} treats binary measurements in arbitrary dimension.
+Section~\ref{sec:discussion} discusses the results, including their relation
+to quantum optics, and concludes.
+All analytical results were also checked numerically
+(Appendix~\ref{app:numerics}).
 
 % ===========================================================================
 \section{Preliminaries}
@@ -194,8 +236,10 @@ All results are verified numerically (Appendix~\ref{app:numerics}).
 
 \subsection{Majorization and uncertainty measures}
 
-For $x\in\mathbb{R}^d$ let $x^\downarrow$ denote its entries in non-increasing
-order and $L_k(x)=\sum_{i=1}^k x^\downarrow_i$ its Lorenz partial sums.
+For $x\in\mathbb{R}^n$ let $x^\downarrow$ denote its entries in non-increasing
+order and $L_k(x)=\sum_{i=1}^k x^\downarrow_i$ its Lorenz partial sums, with
+$L_0(x)=0$; the Lorenz curve of $x$ is the piecewise-linear interpolation of the
+points $(k,L_k(x))$, $k=0,\dots,n$.
 For $x,y$ with equal total, $x$ is \emph{majorized} by $y$, written $x\maj y$,
 if $L_k(x)\le L_k(y)$ for all $k$~\cite{MarshallOlkin2011}.
 A function $\Phi$ is Schur-concave if $x\maj y$ implies $\Phi(x)\ge\Phi(y)$,
@@ -208,18 +252,22 @@ The uncertainty measures used below are the R\'enyi~\cite{Renyi1961} and
 Tsallis~\cite{Tsallis1988} entropies
 \begin{equation}
   H_\alpha(p)=\frac{\log_2\sum_ip_i^\alpha}{1-\alpha},\qquad
-  T_q(p)=\frac{1-\sum_ip_i^q}{q-1},
+  T_\gamma(p)=\frac{1-\sum_ip_i^\gamma}{\gamma-1},
   \label{eq:entropies}
 \end{equation}
-with the Shannon entropy $H=H_1$ as the common limit ($T_q\to H\ln2$ as
-$q\to1$). The orders $\alpha=\infty$ and $\alpha=\frac12$ give the min-entropy
-$H_\infty(p)=-\log_2\max_ip_i$ and the max-entropy $H_{1/2}$, and $H_0$ is the
-logarithm of the number of non-zero entries.
+with $\alpha\in[0,\infty]$ and $\gamma>0$; the cases $\alpha\in\{0,1,\infty\}$ and
+$\gamma=1$ are defined by continuity, with the Shannon entropy $H=H_1$ as the
+common limit ($T_\gamma\to H\ln2$ as $\gamma\to1$). The orders $\alpha=\infty$ and
+$\alpha=\frac12$ give the min-entropy $H_\infty(p)=-\log_2\max_ip_i$ and the
+max-entropy $H_{1/2}$~\cite{KRS2009}, and $H_0$ is the logarithm of the number of
+non-zero entries.
 All of them are Schur-concave; $H_\alpha$ is strictly Schur-concave for
-$0<\alpha<\infty$ and $T_q$ for $q>0$, whereas $H_0$ and $H_\infty$ are not.
+$0<\alpha<\infty$ and $T_\gamma$ for all $\gamma>0$, whereas $H_0$ and $H_\infty$
+are not.
 
 Let $p(\rho)$ and $q(\rho)$ denote the outcome distributions of two
-measurements $M$ and $N$ on a state $\rho$. For measurements in orthonormal
+measurements $M$ and $N$ on a state $\rho$; we also write $H_\alpha(M)=H_\alpha(p)$
+and $H_\alpha(N)=H_\alpha(q)$. For measurements in orthonormal
 bases $\{\ket{m_i}\}$ and $\{\ket{n_j}\}$, the Maassen--Uffink (MU)
 relation~\cite{MaassenUffink1988} reads
 \begin{equation}
@@ -240,49 +288,64 @@ single state-independent vector $\omega$ such that
 We call these the direct-sum and the tensor-product form, respectively. Every
 Schur-concave function $\Phi$ then inherits the bound
 $\Phi(p\oplus q)\ge\Phi(\omega)$ or $\Phi(p\otimes q)\ge\Phi(\omega)$.
+Sums of Shannon or Tsallis entropies are Schur-concave functions of $p\oplus q$,
+since, the totals of $p$ and $q$ being fixed, they are sums of a concave
+function over all entries; sums of Shannon or R\'enyi entropies are
+Schur-concave functions of $p\otimes q$, since
+$H_\alpha(p\otimes q)=H_\alpha(p)+H_\alpha(q)$. The direct-sum form also yields
+bounds for R\'enyi entropies of order $\alpha\le1$, by a separate argument
+(Corollary~\ref{cor:direct}), but not for all orders
+(Proposition~\ref{prop:compare}).
 
-Restricted to non-increasing vectors of fixed total, $\maj$ is a partial order,
-and in fact a complete lattice~\cite{CicaleseVaccaro2002,Bosyk2019}.
+Restricted to non-negative, non-increasing vectors of fixed length and fixed
+total, $\maj$ is a partial order, and in fact a complete
+lattice~\cite{CicaleseVaccaro2002,Bosyk2019}.
 
 \begin{definition}
-Let $A$ be a set of vectors with common total. A vector $\omega$ is an
-\emph{optimal majorization bound} for $A$ if $a\maj\omega$ for all $a\in A$, and
-$\omega\maj\omega'$ for every other $\omega'$ with this property; i.e.,
-$\omega=\sup A$ in the majorization lattice.
+Let $\mathcal{A}$ be a set of non-negative vectors of common length and total.
+A vector $\omega$ is an
+\emph{optimal majorization bound} for $\mathcal{A}$ if $a\maj\omega$ for all
+$a\in\mathcal{A}$, and $\omega\maj\omega'$ for every $\omega'$ with this
+property; i.e., $\omega=\sup\mathcal{A}$ in the majorization lattice.
 \end{definition}
 
 \begin{lemma}[\cite{CicaleseVaccaro2002,Bosyk2019}]
 \label{lem:sup}
-Let $S_k=\sup_{a\in A}L_k(a)$. Then $\sup A$ is the vector whose Lorenz curve is
-the least concave majorant of $k\mapsto S_k$ (with $S_0=0$). In particular, if
-$\omega_k=S_k-S_{k-1}$ is already non-increasing, then $\omega=\sup A$.
+Let $S_k=\sup_{a\in\mathcal{A}}L_k(a)$. Then $\sup\mathcal{A}$ is the vector whose
+Lorenz curve is the least concave majorant of $k\mapsto S_k$ (with $S_0=0$). In
+particular, if $\omega_k=S_k-S_{k-1}$ is already non-increasing, then
+$\omega=\sup\mathcal{A}$.
 \end{lemma}
 
 In all cases treated below the second, simpler statement applies.
-The quantities $S_k$ have a transparent meaning: $S_k$ is the largest total
-probability that any state can concentrate on $k$ outcomes.
+The quantities $S_k$ have a transparent meaning: $S_k$ is the largest value that
+any state can give to a sum of $k$ entries, i.e., to the summed probabilities of
+$k$ outcomes.
 
 \subsection{Two-outcome qubit measurements}
 
 A qubit state is $\rho=\tfrac12(\mathds{1}+\vecr\cdot\vsigma)$ with $|\vecr|\le1$.
 A projective two-outcome measurement is $M=\{P_\pm\}$ with
-$P_\pm=\tfrac12(\mathds{1}\pm\mhat\cdot\vsigma)$, $|\mhat|=1$, and similarly
-$N=\{Q_\pm\}$ with axis $\nhat$.
+$P_\pm=\tfrac12(\mathds{1}\pm\mhat\cdot\vsigma)=\ket{m_\pm}\!\bra{m_\pm}$,
+$|\mhat|=1$, and similarly $N=\{Q_\pm\}$ with axis $\nhat$ and eigenvectors
+$\ket{n_\pm}$.
 The outcome distributions are
 \begin{equation}
-  p=\Bigl(\tfrac{1+x}{2},\tfrac{1-x}{2}\Bigr),\;
-  q=\Bigl(\tfrac{1+y}{2},\tfrac{1-y}{2}\Bigr),\quad
-  x=\mhat\cdot\vecr,\; y=\nhat\cdot\vecr .
+  p=\Bigl(\tfrac{1+x}{2},\tfrac{1-x}{2}\Bigr),\qquad
+  q=\Bigl(\tfrac{1+y}{2},\tfrac{1-y}{2}\Bigr),
   \label{eq:pq}
 \end{equation}
+where $x=\mhat\cdot\vecr$ and $y=\nhat\cdot\vecr$.
 The overlaps are $|\langle m_\pm|n_\pm\rangle|^2=\tfrac12(1+\mhat\cdot\nhat)$ and
 $|\langle m_\pm|n_\mp\rangle|^2=\tfrac12(1-\mhat\cdot\nhat)$, hence
 \begin{equation}
   c=\tfrac12\bigl(1+|\mhat\cdot\nhat|\bigr)=\cos^2\tfrac{\theta}{2},
-  \qquad \cos\theta=|\mhat\cdot\nhat|,\;\theta\in[0,\tfrac{\pi}{2}] .
+  \qquad \cos\theta=|\mhat\cdot\nhat|,
   \label{eq:c}
 \end{equation}
-Relabelling the outcomes of $N$ maps $\nhat\mapsto-\nhat$ and does not affect any
+where $\theta\in[0,\frac{\pi}{2}]$ is the (acute) Bloch angle between the two
+measurement axes.
+Relabeling the outcomes of $N$ maps $\nhat\mapsto-\nhat$ and does not affect any
 majorization statement, so we may and shall assume $\mhat\cdot\nhat=\cos\theta\ge0$.
 Note that $\tfrac12\le c\le1$ and $\sqc\ge1/\sqrt2>1-\sqc$.
 
@@ -292,7 +355,7 @@ A general two-outcome POVM $\{E_0,E_1=\mathds{1}-E_0\}$ can always be written as
   \qquad \eta\ge0,\;|\mu|+\eta\le1 ,
   \label{eq:povm}
 \end{equation}
-the constraint being equivalent to $0\le E_0\le\mathds{1}$.
+with $|\hat a|=1$, the constraint being equivalent to $0\le E_0\le\mathds{1}$.
 Here $\eta$ is the sharpness and $\mu$ the bias; rank-one projective
 measurements correspond to $\eta=1$, $\mu=0$.
 
@@ -303,7 +366,7 @@ measurements correspond to $\eta=1$, $\mu=0$.
 
 The statistics~\eqref{eq:pq} depend on $\vecr$ only through $(x,y)$.
 
-\begin{lemma}
+\begin{lemma}[\cite{LiQiao2015,KTW2014,Abbott2016}]
 \label{lem:ellipse}
 For non-parallel axes, the set $\{(\mhat\cdot\vecr,\nhat\cdot\vecr):|\vecr|\le1\}$ is the
 filled ellipse
@@ -311,9 +374,9 @@ filled ellipse
   \mathcal{E}_\theta=\bigl\{(x,y): x^2-2xy\cos\theta+y^2\le\sin^2\theta\bigr\}.
 \end{equation}
 Its boundary consists exactly of the images of the pure states whose Bloch
-vectors lie in $\mathrm{span}\{\mhat,\nhat\}$. Moreover, for all $\alpha,\beta\in\mathbb{R}$,
+vectors lie in $\mathrm{span}\{\mhat,\nhat\}$. Moreover, for all $s,t\in\mathbb{R}$,
 \begin{equation}
-  \max_{|\vecr|\le1}\,(\alpha x+\beta y)=|\alpha\mhat+\beta\nhat| .
+  \max_{|\vecr|\le1}\,(sx+ty)=|s\mhat+t\nhat| .
   \label{eq:support}
 \end{equation}
 \end{lemma}
@@ -324,19 +387,38 @@ Only $\vec r_\parallel$ contributes to $(x,y)$, and $(x,y)=G\,\xi$ where $\xi$ a
 coefficients of $\vec r_\parallel$ in the basis $\{\mhat,\nhat\}$ and
 $G=\bigl(\begin{smallmatrix}1&\cos\theta\\ \cos\theta&1\end{smallmatrix}\bigr)$
 is the Gram matrix. Then $|\vec r_\parallel|^2=\xi^TG\xi=(x,y)G^{-1}(x,y)^T\le1$,
-which is the stated inequality since $\det G=\sin^2\theta$. Equality holds iff
-$\vec r_\perp=0$ and $|\vecr|=1$. Eq.~\eqref{eq:support} is Cauchy--Schwarz:
-$\alpha x+\beta y=\vecr\cdot(\alpha\mhat+\beta\nhat)$.
+which is the stated inequality since $\det G=\sin^2\theta$; equality holds iff
+$\vec r_\perp=0$ and $|\vecr|=1$. Conversely, every $(x,y)\in\mathcal{E}_\theta$
+is attained by $\vecr=\xi_1\mhat+\xi_2\nhat$ with $\xi=G^{-1}(x,y)^T$, since then
+$|\vecr|^2=(x,y)G^{-1}(x,y)^T\le1$. Eq.~\eqref{eq:support} is Cauchy--Schwarz:
+$sx+ty=\vecr\cdot(s\mhat+t\nhat)$.
 \end{proof}
 
+Equivalently, $(x,y)\in\mathcal{E}_\theta$ if and only if the covariance matrix
+of the observables $A=\mhat\cdot\vsigma$ and $B=\nhat\cdot\vsigma$,
+\begin{equation}
+  \Gamma=\begin{pmatrix}1-x^2&\cos\theta-xy\\ \cos\theta-xy&1-y^2\end{pmatrix},
+  \label{eq:cov}
+\end{equation}
+is positive semidefinite, because
+$\det\Gamma=\sin^2\theta-(x^2-2xy\cos\theta+y^2)$. Its off-diagonal entry
+contains the anticommutator $\frac12\{A,B\}=\cos\theta\,\mathds{1}$, which does
+not depend on the state. The ellipse is a disk for mutually unbiased
+measurements ($\theta=\pi/2$) and degenerates into the segment $x=y$ as
+$\theta\to0$~\cite{Abbott2016}.
+
 Consequently the achievable set
-$\Ach(M,N)=\{p(\rho)\oplus q(\rho)\}\subset\mathbb{R}^4$ is the image of
+$\Ach_\oplus(M,N)=\{p(\rho)\oplus q(\rho)\}\subset\mathbb{R}^4$ is the image of
 $\mathcal{E}_\theta$ under the affine map
 $(x,y)\mapsto\tfrac12(1+x,1-x,1+y,1-y)$: it is convex and compact, and its
 extreme points are the statistics of pure states in the plane of the two axes
-(Fig.~\ref{fig:ellipse}). Any uncertainty measure that is concave in $(x,y)$,
-such as $H(p)+H(q)$, is therefore minimized on $\partial\mathcal{E}_\theta$, and
-the optimization problems below are effectively one-dimensional.
+(Fig.~\ref{fig:ellipse}). Since $\mathcal{E}_\theta$ is centered at the origin,
+moving a point radially outward to $\partial\mathcal{E}_\theta$ multiplies $|x|$
+and $|y|$ by the same factor, which makes both $p$ and $q$ more ordered. Every
+uncertainty measure of the form $\Phi(p)+\Psi(q)$ with $\Phi$ and $\Psi$
+Schur-concave, in particular every R\'enyi and Tsallis sum, is therefore
+minimized on $\partial\mathcal{E}_\theta$, and the optimization problems below
+are effectively one-dimensional.
 
 \begin{figure}[t]
   \centering
@@ -358,7 +440,7 @@ the optimization problems below are effectively one-dimensional.
 
 \subsection{Direct-sum bound}
 
-\begin{theorem}
+\begin{theorem}[\cite{RPZ2014,LiQiao2019}]
 \label{thm:direct}
 Let $M,N$ be projective qubit measurements with maximal overlap $c$. For every
 state $\rho$,
@@ -366,14 +448,15 @@ state $\rho$,
   p(\rho)\oplus q(\rho)\;\maj\;\omplus:=\bigl(1,\;\sqc,\;1-\sqc,\;0\bigr),
   \label{eq:omplus}
 \end{equation}
-and $\omplus$ is the optimal majorization bound for $\Ach(M,N)$.
+and $\omplus$ is the optimal majorization bound for $\Ach_\oplus(M,N)$.
 \end{theorem}
 
 The majorization relation~\eqref{eq:omplus} is the qubit case of the direct-sum
 relation $p\oplus q\maj\{1\}\oplus W$ of Rudnicki \emph{et al.}~\cite{RPZ2014}:
-for $d=2$ their vector $W=(s_1,s_2-s_1)$ has $s_1=\sqc$ and $s_2=1$. We give a
-short proof based on Lemma~\ref{lem:ellipse}, which also yields optimality and
-the maximizing states.
+for $d=2$ their vector $W=(s_1,s_2-s_1)$ has $s_1=\sqc$ and $s_2=1$. Its
+optimality, and the states that saturate its partial sums, were obtained by Li
+and Qiao in the majorization lattice~\cite{LiQiao2019}. We give a short proof
+based on Lemma~\ref{lem:ellipse}.
 
 \begin{proof}
 We compute $S_k=\max_\rho L_k(p\oplus q)$ for $k=1,\dots,4$.
@@ -398,57 +481,25 @@ give $\omplus$, which is non-increasing because $1\ge\sqc\ge1-\sqc\ge0$.
 Lemma~\ref{lem:sup} completes the proof.
 \end{proof}
 
-\begin{proposition}
-\label{prop:attain}
-There is a state with $(p\oplus q)^\downarrow=\omplus$ if and only if $c=1$,
-i.e., $M$ and $N$ commute. For $c<1$, the maxima $S_1,S_3$ are attained only by
-the eigenstates of $M$ and $N$, and $S_2$ only by the bisector states
-$\vecr=\pm(\mhat+\nhat)/|\mhat+\nhat|$ (for $\theta=\pi/2$ also by
-$\vecr=\pm(\mhat-\nhat)/|\mhat-\nhat|$).
-\end{proposition}
-
-\begin{proof}
-$(p\oplus q)^\downarrow_1=1$ forces $\rho$ to be an eigenstate of $M$ or $N$, say
-$\vecr=\pm\mhat$. Then $q=\bigl(\frac{1\pm\cos\theta}{2},\frac{1\mp\cos\theta}{2}\bigr)$ and
-$(p\oplus q)^\downarrow=(1,c,1-c,0)$, which equals $\omplus$ iff $c=\sqc$, i.e.,
-$c=1$. The statement about $S_2$ follows from the equality condition in
-Cauchy--Schwarz and from $|\mhat-\nhat|<|\mhat+\nhat|$ for $\theta<\pi/2$.
-\end{proof}
-
-Proposition~\ref{prop:attain} makes precise the sense in which $\omplus$ is a
-\emph{description} of the achievable set rather than the statistics of a
-particular state: it is the supremum of $\Ach(M,N)$ in the majorization
-lattice, and its partial sums are saturated by two disjoint families of states
-(Fig.~\ref{fig:lorenz}). The gap between
-$(1,c,1-c,0)$ and $\omplus$ quantifies the price one pays for demanding
-certainty about $M$.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\columnwidth]{lorenz.pdf}
-  \caption{Lorenz curves of $p\oplus q$ for $\theta=60^\circ$. Grey: 150 random
-  states. The optimal bound $\omplus$ (blue) is the upper envelope; it touches
-  the eigenstate curve at $k=1,3$ and the bisector-state curve at $k=2$, but no
-  single state reaches it.}
-  \label{fig:lorenz}
-\end{figure}
-
 \subsection{Tensor-product bound}
 
-\begin{theorem}
+\begin{theorem}[\cite{FGG2013,PRZ2013}]
 \label{thm:tensor}
-For every state $\rho$,
+Under the assumptions of Theorem~\ref{thm:direct}, for every state $\rho$,
 \begin{equation}
   p(\rho)\otimes q(\rho)\;\maj\;\omtimes:=\bigl(w,\;1-w,\;0,\;0\bigr),
   \label{eq:omtimes}
 \end{equation}
 where $w=\frac14\bigl(1+\sqc\bigr)^2$, and $\omtimes$ is the optimal
-majorization bound for $\{p(\rho)\otimes q(\rho)\}$.
+majorization bound for $\Ach_\otimes(M,N)=\{p(\rho)\otimes q(\rho)\}$.
 \end{theorem}
 
 The vector $\omtimes$ coincides with the vector $Q^{(1)}=(C^2,1-C^2,0,0)$,
 $C=(1+\sqc)/2$, of Pucha{\l}a \emph{et al.}~\cite{PRZ2013}, which for $d=2$
-exhausts their hierarchy of bounds; see also Ref.~\cite{FGG2013}.
+exhausts their hierarchy of bounds. It is also the vector of Friedland
+\emph{et al.}~\cite{FGG2013}, whose entries are the increments of the maximal
+partial sums $S_k$; for qubits these increments are non-increasing, so that
+$\omtimes$ is the least upper bound.
 
 \begin{proof}
 By the arithmetic--geometric mean inequality and Eq.~\eqref{eq:S2},
@@ -459,8 +510,55 @@ $S_2=S_3=S_4=1$. Since $\sqc\ge1/\sqrt2$ we have $w\ge\frac12$, so the increment
 $(w,1-w,0,0)$ are non-increasing, and Lemma~\ref{lem:sup} applies.
 \end{proof}
 
-As before, $\omtimes$ is not attained for $c<1$: equality in both steps of the
-proof forces a bisector state, at which $L_2(p\otimes q)=p_+=(1+\sqc)/2<1$.
+\subsection{Attainability}
+
+Neither optimal bound is the statistics of a state unless the measurements
+commute.
+
+\begin{proposition}
+\label{prop:attain}
+(i) There is a state with $(p\oplus q)^\downarrow=\omplus$ if and only if $c=1$,
+i.e., $M$ and $N$ commute. For $c<1$, the maxima $S_1,S_3$ are attained only by
+the eigenstates of $M$ and $N$, and $S_2$ only by the bisector states
+$\vecr=\pm(\mhat+\nhat)/|\mhat+\nhat|$ (for $\theta=\pi/2$ also by
+$\vecr=\pm(\mhat-\nhat)/|\mhat-\nhat|$).
+(ii) There is a state with $(p\otimes q)^\downarrow=\omtimes$ if and only if
+$c=1$.
+\end{proposition}
+
+\begin{proof}
+(i) $(p\oplus q)^\downarrow_1=1$ forces $\rho$ to be an eigenstate of $M$ or $N$, say
+$\vecr=\pm\mhat$. Then $q=\bigl(\frac{1\pm\cos\theta}{2},\frac{1\mp\cos\theta}{2}\bigr)$ and
+$(p\oplus q)^\downarrow=(1,c,1-c,0)$, which equals $\omplus$ iff $c=\sqc$, i.e.,
+$c=1$. The statement about $S_2$ follows from the equality condition in
+Cauchy--Schwarz and from $|\mhat-\nhat|<|\mhat+\nhat|$ for $\theta<\pi/2$.
+(ii) If $c=1$, a common eigenstate of $M$ and $N$ gives
+$p\otimes q=(1,0,0,0)=\omtimes$. If $c<1$, the largest entry of $p\otimes q$
+equals $w$ only if both inequalities in the proof of Theorem~\ref{thm:tensor}
+are equalities, i.e., $p_i=q_j$ and $p_i+q_j=1+\sqc$. The state then attains the
+direct-sum maximum $S_2=1+\sqc$, so by (i) it is one of the states listed there,
+and both of its outcome distributions are $(a,1-a)$ up to order, with
+$a=(1+\sqc)/2$. Hence $L_2(p\otimes q)=a^2+a(1-a)=a<1=L_2(\omtimes)$.
+\end{proof}
+
+Proposition~\ref{prop:attain} makes precise the sense in which $\omplus$ and
+$\omtimes$ are \emph{descriptions} of the achievable sets rather than the
+statistics of a particular state: each is a supremum in the majorization
+lattice, and the partial sums of $\omplus$ are saturated by two disjoint
+families of states (Fig.~\ref{fig:lorenz}). Demanding certainty about $M$
+lowers the largest attainable $L_2(p\oplus q)$ from $1+\sqc$ to $1+c$; this
+deficit, $\sqc(1-\sqc)$, vanishes only for commuting measurements.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{lorenz.pdf}
+  \caption{Lorenz curves of $p\oplus q$ for $\theta=60^\circ$. Grey: 150 random
+  states. The optimal bound $\omplus$ (blue) is the smallest concave curve above
+  all of them; it touches the eigenstate curve at $k=1,3$ and the bisector-state
+  curve at $k=2$, but no single state reaches it. A similar plot for
+  $\theta=90^\circ$ is Fig.~1(a) of Ref.~\cite{LiQiao2019}.}
+  \label{fig:lorenz}
+\end{figure}
 
 % ===========================================================================
 \section{Entropic uncertainty relations}
@@ -471,7 +569,7 @@ Let $h(t)=-t\log_2t-(1-t)\log_2(1-t)$ be the binary entropy.
 
 \subsection{Bounds for the R\'enyi and Tsallis families}
 
-\begin{corollary}
+\begin{corollary}[\cite{RPZ2014}]
 \label{cor:direct}
 For every concave $\phi$ on $[0,1]$,
 $\sum_i\phi(p_i)+\sum_j\phi(q_j)\ge\phi(1)+\phi(\sqc)+\phi(1-\sqc)+\phi(0)$.
@@ -479,7 +577,7 @@ In particular,
 \begin{align}
   H(p)+H(q)&\;\ge\;h(\sqc) ,
   \label{eq:Hdirect}\\
-  T_q(p)+T_q(q)&\;\ge\;\frac{1-c^{q/2}-(1-\sqc)^q}{q-1}\qquad(q>0),
+  T_\gamma(p)+T_\gamma(q)&\;\ge\;\frac{1-c^{\gamma/2}-(1-\sqc)^\gamma}{\gamma-1}\qquad(\gamma>0),
   \label{eq:Tdirect}
 \end{align}
 and, for $0<\alpha\le1$,
@@ -493,20 +591,20 @@ where $H_\alpha(\sqc,1-\sqc)=\log_2\bigl[c^{\alpha/2}+(1-\sqc)^\alpha\bigr]/(1-\
 \begin{proof}
 The first statement is Karamata's inequality applied to Theorem~\ref{thm:direct}.
 Eqs.~\eqref{eq:Hdirect} and~\eqref{eq:Tdirect} follow with $\phi(t)=-t\log_2t$
-and $\phi_q(t)=(t-t^q)/(q-1)$, since $\sum_ip_i=\sum_jq_j=1$ gives
-$T_q(p)+T_q(q)=\sum_k\phi_q\bigl((p\oplus q)_k\bigr)$.
+and $\phi_\gamma(t)=(t-t^\gamma)/(\gamma-1)$, since $\sum_ip_i=\sum_jq_j=1$ gives
+$T_\gamma(p)+T_\gamma(q)=\sum_k\phi_\gamma\bigl((p\oplus q)_k\bigr)$.
 Eq.~\eqref{eq:Rdirect} is the qubit case of Theorem~2 of Ref.~\cite{RPZ2014};
-we recall the short argument. For $\alpha<1$ write $\sum_ip_i^\alpha=1+A$ and
-$\sum_jq_j^\alpha=1+B$ with $A,B\ge0$. Then
+we recall the short argument. For $\alpha<1$ write $\sum_ip_i^\alpha=1+X$ and
+$\sum_jq_j^\alpha=1+Y$ with $X,Y\ge0$. Then
 \begin{align*}
-  H_\alpha(p)+H_\alpha(q)&=\frac{\log_2[(1+A)(1+B)]}{1-\alpha}\\
-  &\ge\frac{\log_2(1+A+B)}{1-\alpha},
+  H_\alpha(p)+H_\alpha(q)&=\frac{\log_2[(1+X)(1+Y)]}{1-\alpha}\\
+  &\ge\frac{\log_2(1+X+Y)}{1-\alpha},
 \end{align*}
-and $1+A+B=\sum_k(p\oplus q)_k^\alpha-1\ge\sum_k(\omplus)_k^\alpha-1=c^{\alpha/2}+(1-\sqc)^\alpha$
+and $1+X+Y=\sum_k(p\oplus q)_k^\alpha-1\ge\sum_k(\omplus)_k^\alpha-1=c^{\alpha/2}+(1-\sqc)^\alpha$
 by Schur-concavity of $v\mapsto\sum_kv_k^\alpha$.
 \end{proof}
 
-\begin{corollary}
+\begin{corollary}[\cite{FGG2013,PRZ2013}]
 \label{cor:tensor}
 For every $\alpha\in[0,\infty]$,
 \begin{equation}
@@ -519,11 +617,11 @@ state); since $H\ge H_\infty$, it contains Deutsch's Shannon
 bound~\cite{Deutsch1983}, which has the same right-hand side.
 \end{corollary}
 
-The two forms are natural for different families: Tsallis entropies are
-additive over direct sums, as used in the proof of Corollary~\ref{cor:direct},
-whereas R\'enyi entropies are additive over tensor products,
-$H_\alpha(p\otimes q)=H_\alpha(p)+H_\alpha(q)$. Where both forms apply, the
-direct sum is stronger, but it cannot be extended to all orders:
+As noted in Sec.~\ref{sec:prelim}, the two forms suit different families of
+entropies. Where both apply, the direct sum is stronger, but it cannot be
+extended to all orders. That the direct-sum R\'enyi relation does not hold for
+$\alpha>1$ was stated in Ref.~\cite{RPZ2014} (Sec.~III); part~(ii) below gives
+an explicit counterexample:
 
 \begin{proposition}
 \label{prop:compare}
@@ -562,10 +660,10 @@ states, respectively.
 \begin{proof}
 (i) The achievable statistics form a compact set, so the minimum of $\Phi$ is
 attained at some state $\rho^\ast$. By Theorem~\ref{thm:direct} and
-Proposition~\ref{prop:attain}, $p\oplus q(\rho^\ast)\maj\omplus$ with
+Proposition~\ref{prop:attain}(i), $p\oplus q(\rho^\ast)\maj\omplus$ with
 $(p\oplus q)^\downarrow\neq\omplus$, hence $\Phi(p\oplus q(\rho^\ast))>\Phi(\omplus)$.
-The tensor product is analogous, using the non-attainment of $\omtimes$ shown
-after Theorem~\ref{thm:tensor}. The Shannon and Tsallis sums are strictly
+The tensor product is analogous, by Theorem~\ref{thm:tensor} and
+Proposition~\ref{prop:attain}(ii). The Shannon and Tsallis sums are strictly
 Schur-concave functions of $p\oplus q$, and $H_\alpha(p)+H_\alpha(q)=H_\alpha(p\otimes q)$
 with $H_\alpha$ strictly Schur-concave for $0<\alpha<\infty$. For~\eqref{eq:Rdirect}
 with $\alpha<1$, apply the argument to $v\mapsto\sum_kv_k^\alpha$ in the proof of
@@ -573,6 +671,12 @@ Corollary~\ref{cor:direct}.
 (ii) An eigenstate of $M$ gives $H_0(p)+H_0(q)=0+1=H_0(\omtimes)$, and a bisector
 state gives $\max_ip_i\max_jq_j=w$.
 \end{proof}
+
+The proof of (i) uses only that the achievable statistics form a compact set
+whose least upper bound is not attained. It therefore applies whenever the
+optimal bound is not attained: to every pair of qubit POVMs whose effects do not
+commute (Proposition~\ref{prop:povm-attain}) and to both bounds for binary
+projective measurements in any dimension with $c<1$ (Theorem~\ref{thm:dimd}).
 
 Theorem~\ref{thm:tight} makes precise in what sense the majorization bounds are
 optimal. As majorization bounds they cannot be improved
@@ -587,22 +691,55 @@ it.
 
 Figure~\ref{fig:entropic} compares the Shannon bounds with MU and with the
 exact minimum of $H(p)+H(q)$, which is known for
-qubits~\cite{SanchezRuiz1998,Ghirardi2003}. By Lemma~\ref{lem:ellipse} the
+qubits~\cite{SanchezRuiz1998,Ghirardi2003}. By Sec.~\ref{sec:geometry} the
 minimum lies on the great circle through $\mhat$ and $\nhat$. For
 $\theta\le\bar\theta$ it is attained at the bisector states and equals
 $2h\bigl(\frac{1+\sqc}{2}\bigr)$~\cite{Ghirardi2003}. At $\bar\theta$ the
-bisector turns from a minimum into a saddle point along the circle; a
+bisector turns from a local minimum into a local maximum along the circle; a
 second-derivative test shows that this happens when
-$\sqrt{\bar c}\,\artanh\sqrt{\bar c}=1$, i.e., at $\bar c\approx0.6948$ and
+$\sqrt{\bar c}\,\artanh\sqrt{\bar c}=1$~\cite{Bosyk2011}, i.e., at $\bar c\approx0.6948$ and
 $\bar\theta\approx67.07^\circ$. For $\bar\theta<\theta<\pi/2$ the minimizers
 bifurcate and the minimum has to be computed numerically~\cite{Ghirardi2003}.
+As $\theta$ grows they move continuously towards the eigenstates of $M$ and
+$N$, which they reach at $\theta=\pi/2$, where MU is tight.
+
+The range in which the bisector is optimal depends on the uncertainty measure,
+as Zozor \emph{et al.} showed for R\'enyi entropies~\cite{ZozorBosykPortesi2013}.
+For $c>\frac12$ the eigenstates are optimal for $\alpha\le\frac12$, the
+bisector for $\alpha\ge\alpha^\star(c)$, and intermediate states in between,
+where $\alpha^\star$ decreases from $\alpha^\dagger\approx1.43$ as
+$c\to\frac12$ to $\frac12$ as $c\to1$; for mutually unbiased measurements the
+eigenstates remain optimal for all $\alpha<\alpha^\dagger$, and the bisector
+takes over at $\alpha^\dagger$. In terms of the Bloch angle, the bisector
+is optimal up to $43^\circ$ for $\alpha=3/4$, up to $\bar\theta\approx67^\circ$
+for the Shannon entropy and up to $80^\circ$ for $\alpha=1.2$, and at all angles
+for $\alpha\ge\alpha^\dagger$, in line with the tightness of the min-entropy
+bound. Here $\alpha^\dagger$ solves
+$2H_\alpha\bigl(\frac{2+\sqrt2}{4},\frac{2-\sqrt2}{4}\bigr)=1$, the condition for
+bisector and eigenstates to perform equally well when the measurements are
+mutually unbiased. For the max-entropy, for instance, the eigenstates give
+$\log_2(1+\sin\theta)$ and the bisector $2\log_2(1+\sin\frac\theta2)$.
 
 For mutually unbiased measurements ($\theta=90^\circ$, $c=\frac12$) MU is tight
 (1 bit), while $h(1/\sqrt2)\approx0.872$ and $h(w)\approx0.844$. As the
 measurements become more compatible, however, the majorization bounds take
 over: $h(\sqc)>-\log_2c$ for $\sqc>t^\ast\approx0.7585$, i.e., for Bloch angles
-$\theta<\theta^\ast\approx81.3^\circ$ (the tensor bound overtakes MU at $\theta<79.3^\circ$), in
-agreement with Ref.~\cite{Baek2019}.
+$\theta<\theta^\ast\approx81.3^\circ$ (the tensor bound overtakes MU at $\theta<79.3^\circ$), as
+reported numerically in Ref.~\cite{Baek2019}; earlier majorization
+bounds~\cite{FGG2013,PRZ2013} were compared with MU and with the optimal qubit
+bound in Ref.~\cite{KTW2014}.
+For the Shannon entropy alone, however, neither majorization bound is the best
+closed-form relation available. The bound
+\begin{equation}
+  H(p)+H(q)\;\ge\;h\Bigl(\frac{1+\sqrt{2c-1}}{2}\Bigr)
+  \label{eq:SR}
+\end{equation}
+of Refs.~\cite{SanchezRuiz1998,KTW2014} (see also Ref.~\cite{Coles2017}), where
+$2c-1=\cos\theta$, is stronger than both $h(\sqc)$ and MU at every angle, and it
+coincides with MU, and hence is tight, at $\theta=90^\circ$
+(Fig.~\ref{fig:entropic}); at $\theta=60^\circ$, for instance, it gives
+$0.601$~bit against $0.568$ for $h(\sqc)$. What majorization offers instead is a
+single bound for all Schur-concave measures at once.
 
 As $c\to1$ the advantage over MU becomes unbounded, and the direct-sum bound
 becomes tight in ratio. With $\varepsilon=1-\sqc\approx\theta^2/8$ one has
@@ -611,9 +748,22 @@ $h(\sqc)=h(\varepsilon)\approx\varepsilon\log_2(e/\varepsilon)$, whereas the
 exact minimum is $2h(\varepsilon/2)\approx\varepsilon\log_2(2e/\varepsilon)$.
 To leading order the ratio of the exact minimum to $h(\sqc)$ is therefore
 $1+1/\log_2(e/\varepsilon)$: it tends to $1$, but only logarithmically ($1.09$
-at $\theta=0.1$, $1.047$ at $\theta=0.003$), while the ratio to MU grows as
-$\frac12\ln(16e/\theta^2)$ ($4.2$ and $7.7$). The eigenstates of $M$, although
-they saturate $S_1$ and $S_3$, give $h(c)$, asymptotically twice the minimum.
+at $\theta=0.1$~rad, $1.047$ at $\theta=0.003$~rad), while the ratio of $h(\sqc)$ to MU
+grows as $\frac12\ln(8e/\theta^2)$ ($3.8$ and $7.3$). The eigenstates of $M$, although
+they saturate $S_1$ and $S_3$, give $h(c)$, asymptotically twice the minimum
+(the ratio approaches $2$ slowly; it is $1.67$ and $1.82$ at the same angles).
+
+Between these limits the strictness of Theorem~\ref{thm:tight} is far from
+marginal. Over all angles the direct-sum bound $h(\sqc)$ reaches at least
+$78\%$ of the exact minimum, the smallest ratio, $0.782$, occurring at
+$\theta\approx70^\circ$, just beyond $\bar\theta$, where the minimizer leaves the
+bisector; the absolute gap is largest, $0.196$~bit, at $\theta\approx74^\circ$,
+and the tensor-product bound $h(w)$ falls short by up to $0.217$~bit. At
+$\theta=90^\circ$, where MU is tight, $h(\sqc)$ still misses the exact value
+$1$~bit by $0.128$~bit. Wherever a single strictly Schur-concave measure is
+what matters, such as the Shannon entropy in the analysis of key distribution,
+this gap is the price of universality, and the entropy-specific optimum should
+be used.
 
 \begin{figure}[t]
   \centering
@@ -622,8 +772,11 @@ they saturate $S_1$ and $S_3$, give $h(c)$, asymptotically twice the minimum.
   $\theta$ ($c=\cos^2\frac\theta2$). Black: exact minimum, equal to
   $2h\bigl(\frac{1+\sqc}{2}\bigr)$ for $\theta\le\bar\theta\approx67.07^\circ$.
   Blue: direct-sum bound $h(\sqc)$. Green (dotted): tensor-product bound
-  $h(w)$. Orange (dashed): Maassen--Uffink. The direct-sum bound is stronger
-  than MU for $\theta<81.3^\circ$ (dotted vertical line).}
+  $h(w)$. Orange (dashed): Maassen--Uffink. Yellow (dash-dotted): the
+  closed-form Shannon bound~\eqref{eq:SR} of
+  Refs.~\cite{SanchezRuiz1998,KTW2014}, which is stronger than both $h(\sqc)$
+  and MU at every angle. The direct-sum bound is stronger than MU for
+  $\theta<81.3^\circ$ (dotted vertical line).}
   \label{fig:entropic}
 \end{figure}
 
@@ -648,8 +801,9 @@ Theorem~\ref{thm:tight} requires.
   \caption{Bounds on $H_\alpha(M)+H_\alpha(N)$ across the R\'enyi family for
   (a)~$\theta=60^\circ$ and (b)~$\theta=85^\circ$. Black: exact minimum.
   Blue: direct-sum bound $H_\alpha(\sqc,1-\sqc)$ of Corollary~\ref{cor:direct},
-  valid for $\alpha\le1$; its thin dashed continuation for $\alpha>1$ is not a
-  bound and eventually exceeds the exact minimum. Green (dotted):
+  valid for $\alpha\le1$; its thin dashed continuation for $\alpha>1$ is not
+  guaranteed to be a bound and exceeds the exact minimum above $\alpha\approx2.1$
+  in (a) and $\alpha\approx2.5$ in (b). Green (dotted):
   tensor-product bound $H_\alpha(\omtimes)$ of Corollary~\ref{cor:tensor}.
   Orange (dashed): MU, valid for $\alpha\le1$. The dotted vertical line marks
   the Shannon case $\alpha=1$.}
@@ -661,7 +815,9 @@ $1/\alpha+1/\beta=2$~\cite{MaassenUffink1988}, which includes the pair
 $H_\infty(p)+H_{1/2}(q)\ge-\log_2c$ of min- and max-entropy. Majorization
 relations of the form~\eqref{eq:maj-UR} are symmetric under the exchange of $p$
 and $q$ and therefore yield such mixed-order relations only indirectly, through
-the monotonicity of $H_\alpha$ in $\alpha$.
+the monotonicity of $H_\alpha$ in $\alpha$. Conditional majorization bounds,
+which constrain $q$ for a given $p$, yield them directly: for qubits they give
+the full uncertainty region of any pair $(H_\alpha,H_\beta)$~\cite{XiaoFangGour2019}.
 
 % ===========================================================================
 \section{General two-outcome qubit POVMs}
@@ -669,8 +825,8 @@ the monotonicity of $H_\alpha$ in $\alpha$.
 % ===========================================================================
 
 For POVMs, the partial sums of the direct-sum relation are largest eigenvalues
-of sums of effects, $S_k=\max_{|J|=k}\lambda_{\max}\bigl(\sum_{j\in J}F_j\bigr)$,
-where the $F_j$ run over the effects of both
+of sums of effects, $S_k=\max_{|J|=k}\lambda_{\max}\bigl(\sum_{j\in J}K_j\bigr)$,
+where the $K_j$ run over the effects of both
 measurements~\cite{Baek2019} (see also
 Refs.~\cite{RPZ2014,RasteginZyczkowski2016,Bosyk2014}); Baek \emph{et al.}
 evaluated them for unbiased unsharp qubit observables~\cite{Baek2019}. For
@@ -689,9 +845,9 @@ Define
   \kappa&=\max\{|\mu|+\eta,\;|\nu|+\zeta\},\\
   \Lambda&=\max_{s,t=\pm1}\bigl[s\mu+t\nu+|s\eta\,\hat a+t\zeta\,\hat b|\bigr].
 \end{align}
-Then $p(\rho)\oplus q(\rho)\maj\omplus$ for all $\rho$, where
+Then $p(\rho)\oplus q(\rho)\maj\omplus(M,N)$ for all $\rho$, where
 \begin{equation}
-  \omplus=\tfrac12\bigl(1+\kappa,\;1+\Lambda-\kappa,\;1+\kappa-\Lambda,\;1-\kappa\bigr)
+  \omplus(M,N)=\tfrac12\bigl(1+\kappa,\;1+\Lambda-\kappa,\;1+\kappa-\Lambda,\;1-\kappa\bigr)
   \label{eq:om-povm}
 \end{equation}
 is the optimal majorization bound.
@@ -702,12 +858,14 @@ The largest single outcome probability is
 $\max_\rho\frac12\bigl(1+|\mu+\eta\,\hat a\cdot\vecr|\bigr)=\frac12(1+|\mu|+\eta)$ for $M$,
 so $S_1=\frac12(1+\kappa)$; likewise the smallest is $\frac12(1-\kappa)$, so
 $S_3=2-\frac12(1-\kappa)$. For $S_2$, a pair within one distribution sums to $1$,
-while a cross pair gives, by Eq.~\eqref{eq:support},
+while a cross pair gives, by the Cauchy--Schwarz inequality as in
+Eq.~\eqref{eq:support},
 \begin{multline}
   \max_\rho\bigl[1+\tfrac12\bigl(s(\mu+\eta\,\hat a\cdot\vecr)+t(\nu+\zeta\,\hat b\cdot\vecr)\bigr)\bigr]\\
   =1+\tfrac12\bigl[s\mu+t\nu+|s\eta\hat a+t\zeta\hat b|\bigr].
 \end{multline}
-Choosing $s=\operatorname{sgn}\mu$, $t=\operatorname{sgn}\nu$ shows $\Lambda\ge0$,
+Choosing $s=\operatorname{sgn}\mu$ and $t=\operatorname{sgn}\nu$ (either sign if
+zero) shows $\Lambda\ge0$,
 so $S_2=1+\frac12\Lambda$. The increments of $(S_k)$ are the entries of
 Eq.~\eqref{eq:om-povm}. They are non-increasing iff $\kappa\le\Lambda\le2\kappa$.
 The upper inequality follows from the triangle inequality,
@@ -722,38 +880,95 @@ Eq.~\eqref{eq:om-povm} reduces to Eq.~\eqref{eq:omplus}. For unbiased
 measurements ($\mu=\nu=0$),
 $\Lambda=(\eta^2+\zeta^2+2\eta\zeta|\hat a\cdot\hat b|)^{1/2}$, in agreement with
 Ref.~\cite{Baek2019}. If moreover $\eta=\zeta$, then
-$\omplus=\eta\,(1,\sqc,1-\sqc,0)+\frac{1-\eta}{2}(1,1,1,1)$: such measurements
-are noisy versions of sharp ones~\cite{Busch1986,Baek2019}, and the achievable
-statistics, their supremum and the saturating states are those of the sharp case
-mixed with the uniform vector. For unequal sharpness or nonzero bias, $\omplus$
-is not of this form, and the relevant geometric quantities are the lengths
-$|\eta\hat a\pm\zeta\hat b|$ rather than the overlap $c$.
+$\omplus(M,N)=\eta\,\omplus+\frac{1-\eta}{2}(1,1,1,1)$, where $\omplus$ is the
+vector~\eqref{eq:omplus} of the sharp measurements along $\hat a$ and $\hat b$:
+such measurements are noisy versions of sharp ones~\cite{Busch1986,Baek2019}, and
+the achievable statistics, their supremum and the saturating states are those of
+the sharp case mixed with the uniform vector. For unequal sharpness or nonzero
+bias, $\omplus(M,N)$ is not of this form, and the relevant geometric quantities
+are the lengths $|\eta\hat a\pm\zeta\hat b|$ rather than the overlap $c$.
+
+As for projective measurements, the bound is not attained when the effects do
+not commute; with bias, it may not be attained even when they do.
+
+\begin{proposition}
+\label{prop:povm-attain}
+Let $M$ and $N$ be as in Theorem~\ref{thm:povm}.
+(i) If $E_0$ and $F_0$ do not commute, i.e., $\eta\zeta\,\hat a\times\hat b\neq0$,
+no state attains $\omplus(M,N)$.
+(ii) If $\mu=\nu=0$ and $E_0$ and $F_0$ commute, a state attains $\omplus(M,N)$.
+(iii) With bias, commuting effects need not attain it: for $\hat b=\hat a$,
+$(\mu,\eta)=(0.3,0.6)$ and $(\nu,\zeta)=(-0.8,0.15)$, $S_1$ is attained only at
+$\vecr=-\hat a$ and $S_2$ only at $\vecr=\hat a$.
+\end{proposition}
+
+\begin{proof}
+(i) Suppose a state attains $S_1=\frac12(1+\kappa)$ through an outcome of $M$,
+so that $\kappa=|\mu|+\eta$; the case of $N$ is symmetric. Since $\eta>0$, this
+forces $\vecr=s_0\hat a$ with $s_0\mu=|\mu|$. There the two largest entries of
+$p\oplus q$ sum to
+$1+\frac12\max_t\bigl[|\mu|+\eta+t\nu+ts_0\zeta\,\hat a\cdot\hat b\bigr]$,
+whereas the term $s=s_0$ of $\Lambda$ gives
+$S_2\ge1+\frac12\bigl[|\mu|+t\nu+|\eta\hat a+ts_0\zeta\hat b|\bigr]$ for each
+$t$. By Cauchy--Schwarz,
+$|\eta\hat a+ts_0\zeta\hat b|>\eta+ts_0\zeta\,\hat a\cdot\hat b$ unless
+$\zeta\hat b\parallel\hat a$, so no state attains both $S_1$ and $S_2$.
+(ii) If one measurement is trivial, say $\eta=0$, then $\Lambda=\kappa=\zeta$,
+and $\vecr=\hat b$ gives $(p\oplus q)^\downarrow=\frac12(1+\zeta,1,1,1-\zeta)
+=\omplus(M,N)$. Otherwise, up to relabeling the outcomes of $N$, $\hat b=\hat a$,
+so that $\Lambda=\eta+\zeta$ and $\kappa=\max\{\eta,\zeta\}$, and $\vecr=\hat a$
+gives $(p\oplus q)^\downarrow=\frac12(1+\kappa,1+\Lambda-\kappa,1+\kappa-\Lambda,
+1-\kappa)$.
+(iii) Here $\kappa=0.95$ is reached only by the second outcome of $N$ at
+$\vecr=-\hat a$, and $\Lambda=1.55$ only by $(s,t)=(1,-1)$ at $\vecr=\hat a$.
+\end{proof}
+
+Bias and unequal sharpness arise naturally in photon counting. If the two
+outputs of a polarizing beam splitter are monitored by detectors of
+efficiencies $\eta_H$ and $\eta_V$, and no-click events are assigned to either
+outcome at random, the effect of outcome $H$ has the form~\eqref{eq:povm} with
+$\hat a=\hat z$, $\mu=(\eta_H-\eta_V)/2$ and $\eta=(\eta_H+\eta_V)/2$. A
+mismatch of detection efficiencies, a known concern in quantum key
+distribution~\cite{Makarov2006}, thus appears as a bias. A single
+click/no-click detector behind a polarizer, with no-click events counted as the
+second outcome, gives $\mu=\eta_d-1$ and $\eta=\eta_d$, so that $|\mu|+\eta=1$.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{povm.pdf}
-  \caption{Unsharp measurements ($\mu=\nu=0$, $\eta=\zeta$): exact minimum of
-  $H(M)+H(N)$ (solid) and the bound from Theorem~\ref{thm:povm} (dashed) for
-  Bloch angles $90^\circ$ and $45^\circ$.}
+  \caption{Exact minimum of $H(M)+H(N)$ (solid) and the bound from
+  Theorem~\ref{thm:povm} (dashed) for Bloch angles $90^\circ$ and $45^\circ$.
+  (a)~Unbiased measurements of equal sharpness ($\mu=\nu=0$, $\eta=\zeta$).
+  (b)~$M$ with sharpness $\eta=\frac12$ and bias $\mu$; $N$ unbiased with
+  $\zeta=\frac12$.}
   \label{fig:povm}
 \end{figure}
 
 \emph{Uncertainty versus incompatibility.}---For unbiased POVMs the vectors
 $\eta\hat a\pm\zeta\hat b$ that determine $\Lambda$ also decide joint
 measurability: the pair is jointly measurable if and only if
-$|\eta\hat a+\zeta\hat b|+|\eta\hat a-\zeta\hat b|\le2$~\cite{Busch1986,HMZ2016}.
+$|\eta\hat a+\zeta\hat b|+|\eta\hat a-\zeta\hat b|\le2$~\cite{Busch1986,HMZ2016};
+for biased POVMs the criterion is more involved and no longer depends on these
+vectors alone~\cite{StanoReitznerHeinosaari2008,BuschSchmidt2010,Yu2010}.
 The two notions are nevertheless distinct. For orthogonal axes and
 $\eta=\zeta\le1/\sqrt2$ the measurements are jointly measurable, yet
 $S_2=1+\eta/\sqrt2$ stays below the value $1+\eta$ that would be reached if both
-outcome distributions could be sharpened at once, and $\omplus$ is not attained,
-being a noisy version of the sharp bound (Proposition~\ref{prop:attain}).
-Majorization uncertainty relations therefore quantify preparation uncertainty,
-which persists in the absence of measurement incompatibility.
+outcome distributions could be sharpened at once, and $\omplus(M,N)$ is not
+attained (Proposition~\ref{prop:povm-attain}). Attainment requires commuting
+effects, whether or not the pair is jointly measurable, and with bias even
+commuting effects need not attain the bound: in the example of
+Proposition~\ref{prop:povm-attain}(iii) the two readouts of the same axis favor
+opposite ends of it, a trade-off of classical origin. Majorization uncertainty
+relations therefore quantify preparation uncertainty, which persists in the
+absence of measurement incompatibility.
 
-As a corollary, $H(p)+H(q)\ge-\sum_k\omega_k\log_2\omega_k$ for all
-two-outcome qubit POVMs. Figure~\ref{fig:povm} shows that this bound tracks
-the exact minimum over the whole range of sharpness, becoming exact in the
-trivial limit $\eta\to0$.
+As a corollary, $H(p)+H(q)\ge-\sum_k\omega_k\log_2\omega_k$ with
+$\omega=\omplus(M,N)$ for all two-outcome qubit POVMs; by
+Proposition~\ref{prop:povm-attain} and Theorem~\ref{thm:tight} this bound is
+strict whenever $E_0$ and $F_0$ do not commute. Figure~\ref{fig:povm} shows that
+it tracks the exact minimum as a function of sharpness, becoming exact in the
+trivial limit $\eta\to0$, and of bias, where the gap grows with the bias at
+$45^\circ$ but not at $90^\circ$.
 
 % ===========================================================================
 \section{Binary projective measurements in dimension \texorpdfstring{$d$}{d}}
@@ -765,42 +980,91 @@ The qubit analysis already contains the general binary projective case.
 \begin{theorem}
 \label{thm:dimd}
 Let $M=\{P,\mathds{1}-P\}$ and $N=\{Q,\mathds{1}-Q\}$ be projective measurements on
-$\mathbb{C}^d$ and $c=\max_{i,j}\|P_iQ_j\|_\infty^2$. Then
-Theorems~\ref{thm:direct} and~\ref{thm:tensor} hold verbatim, and $\omplus$ is
-attained if and only if $c=1$.
+$\mathbb{C}^d$, write $P_1=P$, $P_2=\mathds{1}-P$, $Q_1=Q$, $Q_2=\mathds{1}-Q$, and
+let $c=\max_{i,j}\|P_iQ_j\|^2$, where $\|\cdot\|$ is the operator norm. Then
+Theorems~\ref{thm:direct} and~\ref{thm:tensor} hold verbatim, and $\omplus$ and
+$\omtimes$ are attained if and only if $c=1$.
 \end{theorem}
 
 \begin{proof}
-By Jordan's lemma~\cite{Halmos1969}, which is also the standard tool for
-entropic uncertainty relations of binary measurements~\cite{KTW2014},
-$\mathbb{C}^d$ decomposes into mutually orthogonal subspaces $\mathcal{H}_b$ of
-dimension one or two, each invariant under $P$ and $Q$. On a two-dimensional
-block, $P$ and $Q$ act as rank-one projectors, i.e., as a pair of qubit
-measurements with overlap $c_b$; on a one-dimensional block they have a common
-eigenvector, and we set $c_b=1$. Since $P$ and $Q$ are block diagonal,
-$p(\rho)\oplus q(\rho)=\sum_b\lambda_b\,p_b\oplus q_b$ with
-$\lambda_b=\tr(\rho\Pi_b)$ and $p_b,q_b$ the statistics of the normalized block
-state $\Pi_b\rho\Pi_b/\lambda_b$. Each $p_b\oplus q_b\maj\omplus(c_b)\maj\omplus(c)$,
-because $\omplus$ increases in the majorization order with $c$ and
-$c=\max_bc_b$. Since $\{v:v\maj\omega\}$ is convex, $p\oplus q\maj\omplus(c)$;
-optimality follows by embedding the maximizing qubit states of a block with
-$c_b=c$. For the tensor product, $p_iq_j\le(\frac{p_i+q_j}{2})^2$ with
-$p_i+q_j\le\lambda_{\max}(P_i+Q_j)=1+\|P_iQ_j\|\le1+\sqc$; $S_1=w$ is attained in
-a block with $c_b=c$, and $S_2=1$ by any state in the range of $P$. Finally, if
-$c<1$, a state with $L_1(p\oplus q)=1$ lies in the range of some $P_i$ (or
+By the eigenvalue formula of Sec.~\ref{sec:povm}, $S_k$ for the direct sum is
+the largest eigenvalue of a sum of $k$ of the four projectors. Hence $S_1=1$,
+$S_3=2$, since any three of them include $P_1+P_2=\mathds{1}$ or
+$Q_1+Q_2=\mathds{1}$, and $S_2=\max_{i,j}\lambda_{\max}(P_i+Q_j)=1+\sqc$, since
+$\lambda_{\max}(P+Q)=1+\|PQ\|$ for any two projectors~\cite{Halmos1969}.
+Moreover $c\ge\frac12$: if $Q_1\neq0$ and $\psi$ is a unit vector in its range,
+then $\|P_1\psi\|^2+\|P_2\psi\|^2=1$, so $\max_i\|P_iQ_1\|^2\ge\frac12$ (and if
+$Q_1=0$, then $Q_2=\mathds{1}$ and $c=1$). The increments therefore give
+$\omplus$, which is ordered because $1\ge\sqc\ge1-\sqc$, so
+Lemma~\ref{lem:sup} yields Theorem~\ref{thm:direct}. For the tensor product,
+$p_iq_j\le\bigl(\frac{p_i+q_j}{2}\bigr)^2\le w$, with equality at a top
+eigenvector of $P_i+Q_j$ with $\|P_iQ_j\|^2=c$. Indeed, by Jordan's
+lemma~\cite{Halmos1969}, which is also the standard tool for entropic
+uncertainty relations of binary measurements~\cite{KTW2014}, $\mathbb{C}^d$
+decomposes into mutually orthogonal subspaces of dimension one or two that are
+invariant under $P$ and $Q$; on a two-dimensional subspace with overlap $c$, the
+bisector state of the qubit measurements that $P$ and $Q$ induce there gives
+$p_i=q_j=(1+\sqc)/2$, and for $c=1$ a common eigenvector gives $p_i=q_j=1$.
+Hence $S_1=w$, while a state in the range of $P$ gives $S_2=S_3=S_4=1$; since
+$c\ge\frac12$ implies $w\ge\frac12$, the increments $(w,1-w,0,0)$ are ordered,
+and Theorem~\ref{thm:tensor} follows.
+
+If $c<1$, a state with $L_1(p\oplus q)=1$ lies in the range of some $P_i$ (or
 $Q_j$); then $q_j=\tr(\rho P_iQ_jP_i)\le\|P_iQ_j\|^2\le c$ for all $j$, so
-$L_2(p\oplus q)\le1+c<1+\sqc$ and $\omplus$ is not attained. If $c=1$, the
-ranges of some $P_i$ and $Q_j$ intersect and a common eigenvector attains
-$\omplus=(1,1,0,0)$.
+$L_2(p\oplus q)\le1+c<1+\sqc$ and $\omplus$ is not attained. Likewise,
+$L_2(p\otimes q)=1$ requires two vanishing entries of $p\otimes q$, hence such
+a state, at which $L_1(p\otimes q)\le c<w$, so $\omtimes$ is not attained
+either. If $c=1$, the ranges of some $P_i$ and $Q_j$ intersect, and a common
+eigenvector attains $\omplus=(1,1,0,0)$ and $\omtimes=(1,0,0,0)$.
 \end{proof}
 
 In particular, all bounds of Sec.~\ref{sec:entropic} hold for binary projective
-measurements in any dimension with $c=\max_{i,j}\|P_iQ_j\|^2$, and the
-min-entropy bound remains tight.
-For arbitrary POVMs in any dimension, the eigenvalue formula for $S_k$ quoted in
-Sec.~\ref{sec:povm}, together with Lemma~\ref{lem:sup}, gives an exact
-numerical procedure, which we use to verify Theorems~\ref{thm:povm}
-and~\ref{thm:dimd} independently (Appendix~\ref{app:numerics}).
+measurements in any dimension with $c=\max_{i,j}\|P_iQ_j\|^2$, the min-entropy
+bound remains tight, and for $c<1$ the bounds for strictly Schur-concave
+measures are strict (Theorem~\ref{thm:tight}).
+Equivalently, $c=\frac12+\frac14\|\{A,B\}\|$ with $A=2P-\mathds{1}$ and
+$B=2Q-\mathds{1}$. Indeed, on a two-dimensional block, where $P$ and $Q$ act as
+qubit projectors with axes $\mhat_b$ and $\nhat_b$,
+$\{A,B\}=2(\mhat_b\cdot\nhat_b)\mathds{1}$ and
+$c_b=\frac12(1+|\mhat_b\cdot\nhat_b|)$, while $\{A,B\}=\pm2$ on a
+one-dimensional block. For qubits this is the relation between the overlap and
+the effective anticommutator of Ref.~\cite{KTW2014}; it is closely
+related to the anticommutator norm formula
+$\|PQ+QP\|=\|PQ\|+\|PQ\|^2$~\cite{Walters2016}.
+
+The argument for the direct sum uses only the eigenvalue formula, so it carries
+over to binary POVMs in any dimension.
+
+\begin{corollary}
+\label{cor:binary-povm}
+Let $M=\{E_1,E_2\}$ and $N=\{F_1,F_2\}$ be two-outcome POVMs on $\mathbb{C}^d$, let
+$S_1$ be the largest eigenvalue of the four effects, and let
+$S_2=\max\{1,\max_{i,j}\lambda_{\max}(E_i+F_j)\}$. Then
+\begin{equation}
+  p(\rho)\oplus q(\rho)\;\maj\;\bigl(S_1,\;S_2-S_1,\;1+S_1-S_2,\;1-S_1\bigr)
+  \qquad\forall\rho,
+  \label{eq:om-binary}
+\end{equation}
+and this vector is the optimal majorization bound.
+\end{corollary}
+
+\begin{proof}
+By the eigenvalue formula, $S_1$ and $S_2$ are the maximal partial sums, and
+$S_3=1+S_1$, since any three effects include $E_1+E_2=\mathds{1}$ or
+$F_1+F_2=\mathds{1}$. The increments are non-increasing iff
+$S_1+\frac12\le S_2\le2S_1$. The upper inequality holds because $\lambda_{\max}$ is
+subadditive and $S_1\ge\frac12$. For the lower one, a top eigenvector of the
+effect that gives $S_1$ is a state at which the other measurement has an
+outcome of probability at least $\frac12$. Lemma~\ref{lem:sup} completes the
+proof.
+\end{proof}
+
+Theorem~\ref{thm:povm} is the qubit case, with $S_1=\frac12(1+\kappa)$ and
+$S_2=1+\frac12\Lambda$, and Theorem~\ref{thm:dimd} the projective case, with
+$S_1=1$ and $S_2=1+\sqc$. For arbitrary POVMs in any dimension, the eigenvalue
+formula together with Lemma~\ref{lem:sup} gives an exact numerical procedure,
+which we use to verify Theorems~\ref{thm:povm} and~\ref{thm:dimd} and
+Corollary~\ref{cor:binary-povm} independently (Appendix~\ref{app:numerics}).
 
 % ===========================================================================
 \section{Discussion}
@@ -808,12 +1072,15 @@ and~\ref{thm:dimd} independently (Appendix~\ref{app:numerics}).
 % ===========================================================================
 
 For binary measurements the majorization approach to uncertainty can be
-carried out completely. The achievable statistics form an affine image of an
-ellipse, and a single four-component vector, determined by the overlap $c$ (or,
-for POVMs, by $\kappa$ and $\Lambda$), is their least upper bound in the
-majorization lattice, for the direct sum as well as for the tensor product.
-This is the unified perspective that majorization offers: one vector controls
-every Schur-concave uncertainty measure at once.
+carried out in closed form. For a qubit the achievable statistics form an
+affine image of an ellipse, and a single four-component vector, determined by
+the overlap $c$, is their least upper bound in the majorization lattice, for the
+direct sum as well as for the tensor product. For POVMs the direct-sum bound is
+determined by $\kappa$ and $\Lambda$, and in any dimension by the largest
+eigenvalues of the effects and of their pairwise sums
+(Corollary~\ref{cor:binary-povm}). This is the unified perspective that
+majorization offers: one vector controls every Schur-concave uncertainty
+measure at once.
 
 The comparison with entropy-specific relations shows what this unification
 costs. Because the supremum is not the statistics of any state when the
@@ -834,24 +1101,119 @@ as the measurements approach compatibility, precisely where MU is weakest.
 Only in the narrow window $\theta^\ast<\theta\le90^\circ$ next to mutually
 unbiased measurements ($\theta=90^\circ$), for which MU is tight, does MU give
 the better bound; for the tensor-product bound the crossover lies at
-$79.3^\circ$. Among the two forms, the direct sum is preferable for
-$\alpha\le1$, while only the tensor product survives for large $\alpha$.
+$79.3^\circ$. For the Shannon entropy alone, the closed-form
+bound~\eqref{eq:SR} is stronger than both at every angle, and the exact
+minimum exceeds $h(\sqc)$ by up to $22\%$; the strength of the majorization
+bounds lies in their universality. Of the two forms, the direct sum is
+preferable for $\alpha\le1$, while only the tensor product survives for large
+$\alpha$.
+
+\emph{Relation to quantum optics.}---These results contrast instructively with
+the quadratures of a light mode. There, coherent and squeezed states are
+minimum-uncertainty states: for their principal quadratures they saturate both
+the Heisenberg relation and the entropic relation of Bia{\l}ynicki-Birula and
+Mycielski~\cite{BBM1975}; moreover, all pure Gaussian states are equivalent
+under continuous majorization in phase space and are conjectured to majorize
+every Wigner-positive state~\cite{VanHerstraeten2023}. For non-commuting binary
+measurements no such state exists (Propositions~\ref{prop:attain}
+and~\ref{prop:povm-attain}), and the optimal state depends on the uncertainty
+measure, in line with the finding of Korzekwa and
+Lostaglio~\cite{KorzekwaLostaglio2016} that no qubit state minimizes all
+information-theoretic uncertainty measures at once. The boundary of $\mathcal{E}_\theta$, traced by the pure states in the
+plane of the two axes, plays the role of the family of squeezed states, trading
+predictability of $N$ for that of $M$. The balanced bisector state, the analogue
+of a coherent state, minimizes the Shannon sum up to $\bar\theta\approx67^\circ$;
+for larger angles the minimizer moves towards an eigenstate of either
+measurement, the analogue of an infinitely squeezed state, and the range in
+which the balanced state is optimal shrinks for smaller R\'enyi orders and grows
+for larger ones (Sec.~\ref{sec:entropic} and Ref.~\cite{ZozorBosykPortesi2013}).
+The ellipse itself resembles the covariance ellipse of a squeezed vacuum only
+loosely: it describes the pair of measurements rather than a single state, and
+although it is a disk for mutually unbiased measurements and flattens as they
+become compatible, its area $\pi\sin\theta$ shrinks instead of being conserved.
+A single qubit cannot be squeezed in the usual sense~\cite{KitagawaUeda1993}, as
+all its pure states are spin coherent states; the essential difference is
+algebraic. For quadratures the commutator is a
+$c$-number, which makes the Heisenberg bound state independent. For binary
+observables it is the anticommutator that is, blockwise, a $c$-number
+[Eq.~\eqref{eq:cov}], and it fixes $c=\frac12+\frac14\|\{A,B\}\|$
+(Sec.~\ref{sec:dimd}). The Robertson bound
+$\Delta A\,\Delta B\ge|\langle(\mhat\times\nhat)\cdot\vsigma\rangle|$, by
+contrast, vanishes for every state whose Bloch vector lies in the plane of the
+two axes, which contains all optimal states. Commutator-based relations are
+therefore uninformative here, and state-independent descriptions are needed:
+tight variance relations~\cite{Abbott2016} or, for all Schur-concave measures
+at once, majorization. The information missing from the Robertson bound is
+carried by the anticommutator term of the Robertson--Schr\"odinger relation,
+$\det\Gamma\ge\langle(\mhat\times\nhat)\cdot\vsigma\rangle^2$ with $\Gamma$ from
+Eq.~\eqref{eq:cov}, which every pure state saturates; in the plane of the axes
+it reduces to $\det\Gamma=0$, the boundary of $\mathcal{E}_\theta$.
+
+The results apply directly to photonic qubits. Restricted to single photons,
+the Stokes operators of polarization are the Pauli matrices, and two linear
+polarization analyzers at a relative angle $\vartheta$ correspond to
+$\theta=2\vartheta$, so that $c=\cos^2\vartheta$ is Malus's law; the crossover
+with MU and the angle $\bar\theta$ correspond to $\vartheta\approx40.7^\circ$ and
+$\vartheta\approx33.5^\circ$, respectively. The optimal direct-sum bound has been
+tested in this setting with coherent light, the polarization state being
+reconstructed from measured Stokes parameters~\cite{Wang2020}. For many photons
+the Stokes operators form a collective spin that can be squeezed (polarization
+squeezing~\cite{Korolkova2002,Bowen2002}); for a single photon, which cannot be
+squeezed, only the trade-off along the boundary of $\mathcal{E}_\theta$
+remains. Imperfect detectors lead to the unsharp and biased measurements of
+Theorem~\ref{thm:povm}, with the bias set by the mismatch of detection
+efficiencies (Sec.~\ref{sec:povm}); by Proposition~\ref{prop:povm-attain}(iii),
+such biases can create a trade-off even between two measurements in the same
+polarization basis.
 
 Several questions remain open.
-(i) \emph{Tensor bounds for POVMs.} The AM--GM step of Theorem~\ref{thm:tensor}
-is no longer tight for biased or unequally sharp measurements; the optimal
-$\omtimes$ then requires maximizing products of affine functions over
-$\mathcal{E}_\theta$, and the least concave majorant in Lemma~\ref{lem:sup} may
-become non-trivial.
-(ii) \emph{Binary POVMs in dimension $d$.} Jordan's lemma does not apply to
-pairs of effects directly. A Naimark dilation~\cite{Peres1993} turns them into
-projectors, but only product inputs are allowed, so Theorem~\ref{thm:dimd} does
-not apply as it stands.
-(iii) \emph{More measurements.} For three or more binary measurements the
-partial sums involve signed sums of several Bloch vectors, and the lattice
-structure of the bound becomes genuinely relevant.
-(iv) \emph{Mixed orders.} It remains open whether majorization can be adapted
-to yield relations such as $H_\infty(p)+H_{1/2}(q)\ge-\log_2c$.
+(i) \emph{Tensor bounds for POVMs.} The optimal $\omtimes$ requires maximizing
+sums of products of affine functions over $\mathcal{E}_\theta$, and we have not
+found it for any noisy measurements. For unbiased measurements of equal
+sharpness the AM--GM step of Theorem~\ref{thm:tensor} still gives $S_1$, but
+$S_3$ is no longer attained at the states that saturate the projective bounds:
+numerically, for orthogonal axes and $\eta=\zeta=0.8$ it is attained neither by
+an eigenstate nor by a bisector state, and we have not derived it in closed
+form. For biased or unequally sharp measurements the AM--GM step itself is no
+longer tight, and the least concave majorant in Lemma~\ref{lem:sup} may become
+non-trivial.
+(ii) \emph{Binary POVMs in dimension $d$.} Corollary~\ref{cor:binary-povm} gives
+the optimal direct-sum bound in terms of $\lambda_{\max}(E_i+F_j)$. A closed form
+for this eigenvalue, analogous to $1+\|P_iQ_j\|$ for projectors, the conditions
+under which the bound is attained, and the tensor-product bound remain open.
+(iii) \emph{More measurements.} For qubit bases the eigenvalue formula gives
+$S_k=\frac k2+\frac12\max_J\bigl|\sum_{j\in J}\vec n_j\bigr|$, where $J$ runs
+over sets of $k$ outcomes and $\vec n_j$ is the Bloch vector of the projector
+of outcome $j$, and Li and Qiao obtained the optimal bound for $\sigma_x$,
+$\sigma_y$ and $\sigma_z$~\cite{LiQiao2019}. For random triples of bases we
+found the increments of $S_k$ always ordered, so that no flattening was needed;
+whether this holds in general, and what replaces it for POVMs and for the
+tensor product, is open.
+(iv) \emph{Mixed orders.} For qubits, conditional majorization bounds yield
+optimal relations for any pair of orders~\cite{XiaoFangGour2019}. Whether
+state-independent relations of the form~\eqref{eq:maj-UR} can reproduce
+mixed-order relations such as $H_\infty(p)+H_{1/2}(q)\ge-\log_2c$ remains
+open.
+(v) \emph{Binary measurements on light modes.} Which experimentally accessible
+binary measurements on a light mode have $c<1$, and what do the bounds of
+Sec.~\ref{sec:dimd} imply for them? In infinite dimension
+$c=\sup_{i,j}\|P_iQ_j\|^2$ can equal $1$ without a common eigenvector. For
+photon-number parity and displaced parity, whose expectation values sample the
+Wigner function~\cite{Royer1977}, increasingly squeezed vacua, which contain
+only even photon numbers, approach simultaneous eigenstates of both, so no
+non-trivial state-independent relation exists. Tests for coherent states,
+$\{\ket{\nu}\!\bra{\nu},\mathds{1}-\ket{\nu}\!\bra{\nu}\}$, realized by a
+displacement followed by on/off detection with no-click probability
+$\pi Q(\nu)=\bra{\nu}\rho\ket{\nu}$, with $Q$ the Husimi function, also have $c=1$,
+because all states orthogonal to both coherent states are common eigenvectors.
+Individual partial sums remain informative, however:
+$\pi[Q(\nu_1)+Q(\nu_2)]\le1+e^{-|\nu_1-\nu_2|^2/2}$, with equality for the
+superposition $\ket{\nu_1}+e^{-i\varphi}\ket{\nu_2}$ with
+$\varphi=\arg\langle\nu_1|\nu_2\rangle$, an optical cat
+state~\cite{Ourjoumtsev2007,Lewenstein2021} (the even cat state for
+$\nu_2=-\nu_1$), which thus plays the role of the bisector state. Non-trivial relations require $\|\{A,B\}\|<2$, as for
+the pseudospin operators of Ref.~\cite{Chen2002}, of which the squeezed vacuum
+is an eigenstate, or for polarization measurements on single photons.
 
 \begin{acknowledgments}
 R.~Z.\ and M.~F.~C.\ acknowledge support by the Quantum Science and
@@ -871,30 +1233,50 @@ No.~12574092).
 \label{app:numerics}
 % ===========================================================================
 
-All results were checked numerically. We evaluated Lorenz curves, the lattice
-supremum via least concave majorants~\cite{CicaleseVaccaro2002}, the analytic
-bounds of Theorems~\ref{thm:direct}, \ref{thm:tensor} and~\ref{thm:povm} and
+All analytical results were also checked numerically. We evaluated Lorenz
+curves, the lattice supremum via least concave
+majorants~\cite{CicaleseVaccaro2002}, the analytic bounds of
+Theorems~\ref{thm:direct}, \ref{thm:tensor} and~\ref{thm:povm} and
 Corollaries~\ref{cor:direct}--\ref{cor:tensor}, the eigenvalue characterization
-$S_k=\max_{|J|=k}\lambda_{\max}(\sum_{j\in J}F_j)$, and exact minima of R\'enyi
+$S_k=\max_{|J|=k}\lambda_{\max}(\sum_{j\in J}K_j)$, and exact minima of R\'enyi
 and Tsallis entropy sums.
 
 The closed forms were compared with (a) lattice suprema over $1.8\times10^5$
-grid states (maximal deviation $<10^{-4}$), and (b) the eigenvalue
+grid states, for 40 random pairs of qubit bases (Theorems~\ref{thm:direct}
+and~\ref{thm:tensor}) and 60 random pairs of qubit POVMs
+(Theorem~\ref{thm:povm}), with maximal deviation $<10^{-4}$, and (b) the eigenvalue
 characterization for 200 random qubit POVM pairs and for 150 random pairs of
 projectors of rank $d/2$ in dimensions $d=2,4,6$, all with $c<1$ (deviation
 $<10^{-14}$). Pairs with a common eigenvector, which always occur for odd $d$
-or unequal ranks, have $c=1$ and were checked separately. We also checked
-Propositions~\ref{prop:attain} and~\ref{prop:compare},
-Corollaries~\ref{cor:direct}--\ref{cor:tensor}, Theorem~\ref{thm:tight}, the
-critical angle $\bar\theta$, and the jointly measurable example of
-Sec.~\ref{sec:povm}.
+or unequal ranks, have $c=1$ and were checked separately; the anticommutator
+form of $c$ was checked for 300 random pairs of projectors of arbitrary rank in
+dimensions $d\le8$, the tensor-product part of Theorem~\ref{thm:dimd} for 50
+random pairs in $d=4,6$, and Corollary~\ref{cor:binary-povm} for 300 random
+pairs of binary POVMs in $d=2,\dots,6$. We also checked
+Propositions~\ref{prop:attain}--\ref{prop:povm-attain},
+Corollaries~\ref{cor:direct}--\ref{cor:tensor},
+Theorem~\ref{thm:tight}, the critical angle $\bar\theta$, the motion of the
+Shannon minimizer beyond $\bar\theta$, the range of R\'enyi orders in which the
+bisector or the eigenstates are optimal, the other values quoted in
+Sec.~\ref{sec:entropic}, the covariance form of Lemma~\ref{lem:ellipse}, the
+jointly measurable example, the detector model and the behavior of the gap in
+Fig.~\ref{fig:povm}(b) of Sec.~\ref{sec:povm}, the
+Robertson--Schr\"odinger statement of Sec.~\ref{sec:discussion}, and the
+numerical statements in open questions (i) and (iii), the latter for 300 random
+triples of qubit bases. The statements about light modes in
+Sec.~\ref{sec:discussion} were checked in a Fock space of dimension 600.
 
 The exact entropy minima are obtained by a dense grid over the great circle in
-$\mathrm{span}\{\mhat,\nhat\}$ refined by Nelder--Mead. This reduction is justified
-by Lemma~\ref{lem:ellipse}: the Shannon entropy is concave in $(x,y)$ and is
-therefore minimized on the boundary of $\mathcal{E}_\theta$. For unbiased
-measurements, moving $\vecr$ outwards makes both $p$ and $q$ more ordered, so the
-same holds for every R\'enyi and Tsallis entropy.
+$\mathrm{span}\{\mhat,\nhat\}$ refined by Nelder--Mead. For R\'enyi and Tsallis
+sums this reduction is justified by the radial argument of
+Sec.~\ref{sec:geometry}, which applies equally to unbiased unsharp
+measurements. For biased measurements we minimize only the Shannon sum, which
+is concave in $(x,y)$ and is therefore minimized on the boundary of
+$\mathcal{E}_\theta$ as well. To check that the eigenstates are optimal for
+$\alpha\le\frac12$, where the R\'enyi sums have a cusp at the eigenstates, we
+parametrize the circle by an angle $\varphi$ and write the outcome probabilities
+as $\cos^2(\varphi/2)$ and $\sin^2(\varphi/2)$, which avoids the loss of
+precision in $1-\cos\varphi$.
 
 \section*{Data Availability Statement}
 The data that support the findings of this study are available from the
