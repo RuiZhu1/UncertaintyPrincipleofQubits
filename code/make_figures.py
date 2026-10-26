@@ -59,7 +59,26 @@ mpl.rcParams.update({
     "savefig.bbox": "tight",
     "savefig.pad_inches": 0.02,
 })
-COL = 3.4  # single-column width (inches) for Phys. Rev. A
+COL = 3.4  # single-column width (inches)
+
+
+def _latex_has_type1ec() -> bool:
+    """Matplotlib's usetex needs type1ec.sty (cm-super); fall back to mathtext without it."""
+    import shutil
+    import subprocess
+    exe = shutil.which("kpsewhich")
+    if exe is None:
+        return False
+    out = subprocess.run([exe, "type1ec.sty"], capture_output=True, text=True)
+    return bool(out.stdout.strip())
+
+
+if not _latex_has_type1ec():
+    # Same Computer Modern look without a LaTeX run (figures with text-mode LaTeX
+    # such as accents should be regenerated on a machine with cm-super installed).
+    mpl.rcParams.update({"text.usetex": False, "mathtext.fontset": "cm",
+                         "font.serif": ["cmr10", "DejaVu Serif"],
+                         "axes.formatter.use_mathtext": True})
 
 
 def pair(theta: float):
@@ -240,10 +259,71 @@ def fig_povm():
     plt.close(fig)
 
 
+# ---------------------------------------------------------------------------
+# Fig. 6 - imperfect detectors: when do ideal-detector bounds survive?
+# ---------------------------------------------------------------------------
+def fig_detector_bias():
+    fig, (ax_a, ax_b) = plt.subplots(2, 1, figsize=(COL, 6.0),
+                                   gridspec_kw={"height_ratios": [1.25, 1.0]})
+    fig.subplots_adjust(hspace=0.62)
+
+    # (a) PBS with detector efficiencies (eta_H, eta_V), orthogonal axes (theta = 90 deg).
+    theta = np.pi / 2
+    sc = np.cos(theta / 2)
+    n = 241
+    eh = np.linspace(0.0, 1.0, n)
+    ev = np.linspace(0.0, 1.0, n)
+    EV, EH = np.meshgrid(ev, eh)
+    MU, ETA = 0.5 * (EH - EV), 0.5 * (EH + EV)
+    lp = np.abs(MU) > sc * (1 - ETA) + 1e-12          # Proposition 4(iii)
+    sh = np.zeros_like(lp)
+    for i in range(n):
+        for j in range(n):
+            sh[i, j] = mj.shannon_min_in_plane(theta, MU[i, j], ETA[i, j], num=2001) < 1 - 1e-9
+    ax_a.contourf(EV, EH, lp.astype(float), levels=[0.5, 1.5], colors=[C1], alpha=0.22)
+    ax_a.contourf(EV, EH, sh.astype(float), levels=[0.5, 1.5], colors=[C2], alpha=0.45)
+    ax_a.contour(EV, EH, lp.astype(float), levels=[0.5], colors=[C1], linewidths=1.0)
+    ax_a.plot([0, 1], [0, 1], color=INK2, lw=0.6, ls=":")
+    ax_a.fill([], [], color=C1, alpha=0.22, label=r"ideal relation $p\oplus q\prec\omega_\oplus$ violated ($\Lambda>2\sqrt{c}$)")
+    ax_a.fill([], [], color=C2, alpha=0.45, label=r"ideal Shannon bound (1 bit) violated")
+    ax_a.set_xlabel(r"efficiency $\eta_V$")
+    ax_a.set_ylabel(r"efficiency $\eta_H$")
+    ax_a.set_xlim(0, 1)
+    ax_a.set_ylim(0, 1)
+    ax_a.set_aspect("equal")
+    ax_a.text(0.5, 0.45, r"unbiased, $\eta_H=\eta_V$", fontsize=7, color=INK2, rotation=45,
+              ha="center", va="center")
+    ax_a.legend(loc="upper center", bbox_to_anchor=(0.5, -0.17), fontsize=6.8, handlelength=1.4)
+
+    # (b) click/no-click detector, outcome 0 = click: E_0 = eta_d P.
+    eds = np.linspace(0.3, 1.0, 71)
+    for deg, col in ((90, C1), (60, C2)):
+        th = np.radians(deg)
+        a, b = mj.axis_in_xz_plane(0), mj.axis_in_xz_plane(th)
+        true_min = [mj.shannon_min_in_plane(th, e - 1, e) for e in eds]
+        bound = [mj.shannon(mj.omega_direct_sum(mj.click_detector(a, e), mj.click_detector(b, e)))
+                 for e in eds]
+        ideal = mj.shannon_min_in_plane(th, 0.0, 1.0)
+        ax_b.plot(eds, true_min, color=col, label=rf"exact minimum, $\theta={deg}^\circ$")
+        ax_b.plot(eds, bound, color=col, ls=(0, (1.2, 1.2)), label=rf"$H(\omega_\oplus(M,N))$, $\theta={deg}^\circ$")
+        ax_b.axhline(ideal, color=col, lw=0.8, ls="--")
+        ax_b.text(0.32, ideal + 0.015, rf"ideal detectors, ${deg}^\circ$", fontsize=6.5, color=col, va="bottom")
+    ax_b.set_xlabel(r"detection efficiency $\eta_d$ (click/no-click)")
+    ax_b.set_ylabel(r"minimum of $H(M)+H(N)$ (bits)")
+    ax_b.set_xlim(0.3, 1.0)
+    ax_b.set_ylim(0.2, 1.08)
+    ax_b.legend(loc="lower right", fontsize=6.6)
+    for ax, tag in ((ax_a, "(a)"), (ax_b, "(b)")):
+        ax.text(-0.02, 1.04, tag, transform=ax.transAxes, ha="right", va="bottom", fontsize=8, color=INK2)
+    fig.savefig(OUT / "detector_bias.pdf")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     fig_achievable_set()
     fig_entropic_bounds()
     fig_lorenz()
     fig_renyi_family()
     fig_povm()
+    fig_detector_bias()
     print("figures written to", OUT)
