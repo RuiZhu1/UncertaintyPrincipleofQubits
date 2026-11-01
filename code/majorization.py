@@ -425,3 +425,54 @@ def max_overlap_projectors(P: np.ndarray, Q: np.ndarray) -> float:
     """c = max_{i,j} ||P_i Q_j||_inf^2 for the two-outcome measurements {P, I-P}, {Q, I-Q}."""
     I = np.eye(P.shape[0])
     return max(np.linalg.norm(a @ b, 2) ** 2 for a in (P, I - P) for b in (Q, I - Q))
+
+
+# ---------------------------------------------------------------------------
+# Imperfect detectors (Proposition 4 and Fig. 6 of the Communications Physics version)
+# ---------------------------------------------------------------------------
+
+
+def big_lambda(m: TwoOutcomePOVM, n: TwoOutcomePOVM) -> float:
+    """Lambda = max_{s,t} [s mu + t nu + |s eta a + t zeta b|] of Theorem 4 (S_2 = 1 + Lambda/2)."""
+    return max(
+        s * m.mu + t * n.mu + np.linalg.norm(s * m.eta * m.axis + t * n.eta * n.axis)
+        for s in (1, -1)
+        for t in (1, -1)
+    )
+
+
+def ideal_relation_holds(m: TwoOutcomePOVM, n: TwoOutcomePOVM, tol: float = 1e-12) -> bool:
+    """
+    Proposition 4(ii): p(rho) + q(rho) (direct sum) is majorized by the ideal vector
+    (1, sqrt c, 1 - sqrt c, 0) of the sharp measurements along the same axes, for every
+    state, iff Lambda <= 2 sqrt(c).
+    """
+    c = 0.5 * (1 + abs(float(m.axis @ n.axis)))
+    return big_lambda(m, n) <= 2 * np.sqrt(c) + tol
+
+
+def detector_pair(axis, eta_h: float, eta_v: float) -> TwoOutcomePOVM:
+    """Polarizing beam splitter with detectors of efficiencies (eta_h, eta_v); a no-click
+    event is assigned to either outcome with probability 1/2 (outcome 0 = 'H' detector)."""
+    return TwoOutcomePOVM(axis=axis, eta=0.5 * (eta_h + eta_v), mu=0.5 * (eta_h - eta_v))
+
+
+def click_detector(axis, eta_d: float) -> TwoOutcomePOVM:
+    """Single click/no-click detector behind a polarizer; outcome 0 = click, E_0 = eta_d P."""
+    return TwoOutcomePOVM(axis=axis, eta=eta_d, mu=eta_d - 1.0)
+
+
+def shannon_min_in_plane(theta: float, mu: float, eta: float, nu: float | None = None,
+                         zeta: float | None = None, num: int = 20001) -> float:
+    """
+    Vectorized exact minimum of H(p) + H(q) for two-outcome qubit POVMs along axes at Bloch
+    angle theta with parameters (mu, eta) and (nu, zeta).  The Shannon sum is concave in
+    (x, y), so the minimum lies on the great circle in the plane of the axes.
+    """
+    nu = mu if nu is None else nu
+    zeta = eta if zeta is None else zeta
+    phi = np.linspace(0, 2 * np.pi, num, endpoint=False)
+    x, y = np.cos(phi), np.cos(phi - theta)
+    p = 0.5 * (1 + mu + eta * x)
+    q = 0.5 * (1 + nu + zeta * y)
+    return float(np.min(binary_entropy(p) + binary_entropy(q)))
