@@ -58,24 +58,22 @@
 \date{\today}
 
 \begin{abstract}
-Making one quantum measurement more predictable can force another to become
-less so.
-Majorization expresses this trade-off with a single probability vector, valid
-for every state, that bounds a whole family of uncertainty measures at once.
-We study the simplest case: two measurements with two outcomes each.
-The optimal such vectors are known; we prove that no state attains them unless
-the measurements commute.
-Every bound they imply for a strictly Schur-concave measure, such as the
-Shannon entropy, is therefore strict; only the R\'enyi entropies of order zero
-and infinity are bounded tightly, and the direct-sum form fails at large
-orders.
-The Shannon bound still beats the Maassen--Uffink relation unless the
-measurements are nearly mutually unbiased, and becomes tight in ratio, though
-slowly, as they approach commuting ones.
-We also derive the optimal bound for noisy and biased measurements, show that
-detector bias, unlike detector noise, can invalidate ideal-detector uncertainty
-relations and the steering tests built on them, and extend the results to any
-finite dimension.
+Majorization uncertainty relations use a single state-independent probability
+vector to bound a whole family of Schur-concave uncertainty measures. We study
+two-outcome measurements and determine when their optimal bounds are attained.
+For noncommuting projective qubit measurements, neither the optimal direct-sum
+nor tensor-product vector is realized by any state, so every induced bound for a
+continuous strictly Schur-concave measure is strict; the tensor-product R\'enyi
+bounds are tight only at orders zero and infinity. For projective qubits, we also
+quantify the gap between universal and entropy-specific bounds. We derive the
+optimal direct-sum vector for arbitrary noisy and biased two-outcome qubit POVMs
+and characterize its attainability completely. Unbiased unsharpness preserves
+ideal-detector uncertainty relations, but bias can invalidate them and can
+produce spurious steering violations when ideal bounds are used. We give a
+necessary and sufficient condition for these relations to survive and illustrate
+the corrected steering criterion through a closed-form Werner-state analysis. We
+also extend both bounds to binary projective measurements in arbitrary finite
+dimension and the direct-sum bound to binary POVMs.
 \end{abstract}
 
 \maketitle
@@ -183,8 +181,8 @@ In this paper we answer this question for pairs of binary (two-outcome)
 measurements, and the answer is simple to state.
 Unless the measurements commute, no state attains the optimal majorization
 bound, so every bound it implies for a strictly Schur-concave measure of
-uncertainty, such as the Shannon entropy, is strict; only the R\'enyi entropies
-of order zero and infinity are bounded tightly.
+uncertainty, such as the Shannon entropy, is strict; for the tensor-product
+R\'enyi bounds, only orders zero and infinity are tight.
 The price is substantial: for two qubit bases the direct-sum Shannon bound
 falls short of the exact minimum by up to $22\%$. Even so, it outperforms the
 Maassen--Uffink relation unless the measurement axes on the Bloch sphere are
@@ -199,40 +197,47 @@ outside the ideal quantum set. A single inequality decides when relations
 derived for ideal detectors survive; when it fails, an uncertainty-based
 steering test can certify steering for a product state. For the Shannon
 entropy alone, a known closed-form bound~\cite{SanchezRuiz1998,KTW2014} is
-stronger than both at every angle; the case for majorization rests on its
+stronger than both at every noncommuting angle; the case for majorization rests on its
 universality, not on its sharpness for any single measure.
 
-Several ingredients of this analysis are known.
-For two qubit bases the relevant majorization bounds are special cases of the
-general constructions of Refs.~\cite{PRZ2013,FGG2013,RPZ2014}; the optimality of
-the direct-sum bound and the states that saturate its partial sums were found
-in Ref.~\cite{LiQiao2019}; the expectation values that qubit states can reach
-are known to fill an ellipse~\cite{LiQiao2015,KTW2014,Abbott2016}; and for
-unbiased unsharp qubit observables the direct-sum bound was evaluated in
-Ref.~\cite{Baek2019}; the optimality of the flattened direct-sum vector for
-general measurements was shown in Ref.~\cite{Yuan2023}; and the relation
-between the overlap and the anticommutator of two binary observables in any
-dimension is due to Kaniewski \emph{et al.}~\cite{KTW2014}.
-We give a unified and self-contained treatment that derives both bounds, their
-optimality and the states that saturate each of their partial sums from this
-ellipse.
-What is new is a proof of the non-attainment result for both bounds, which
-makes rigorous, for binary measurements, the general remark of
-Partovi~\cite{Partovi2011} and the observations of Ref.~\cite{LiQiao2018} on
-the direct-sum bound, and its consequence, the strictness of all induced bounds for
-strictly Schur-concave measures, with only R\'enyi orders zero and infinity
-tight; a quantitative account of the resulting gap; the comparison of both types
-of majorization bound with the Maassen--Uffink relation and with the exact
-optimum across the whole R\'enyi family, including an explicit counterexample to
-the direct-sum form at large orders, whose failure for $\alpha>1$ was stated
-without proof in Ref.~\cite{RPZ2014}; the optimal direct-sum bound
-for arbitrary noisy and biased two-outcome qubit measurements, the conditions
-under which it is attained, and its relation to joint measurability, including
-a trade-off of classical origin that bias creates between commuting
-measurements; a criterion for when ideal-detector uncertainty relations survive
-imperfect detection, with its consequence for steering tests; and the extension
-to binary measurements in any finite dimension, with both bounds for projective measurements and the direct-sum
-bound for noisy and biased ones.
+Several ingredients of our analysis are known. For two qubit bases, the
+direct-sum relation is a special case of the construction of Rudnicki
+\emph{et al.}~\cite{RPZ2014}, and its optimality and saturating states were
+obtained by Li and Qiao~\cite{LiQiao2019}. The tensor-product vector follows from
+the general construction of Friedland, Gheorghiu and Gour~\cite{FGG2013}, also
+for binary projective measurements in higher dimensions; for qubits it also
+coincides with the vector $Q^{(1)}$ of Pucha{\l}a \emph{et al.}~\cite{PRZ2013}.
+The ellipse of achievable qubit expectation
+values~\cite{LiQiao2015,KTW2014,Abbott2016}, the eigenvalue characterization of
+direct-sum partial sums~\cite{Baek2019}, and the optimality of the flattened
+direct-sum vector~\cite{Yuan2023} are likewise known.
+
+Our contributions are fourfold. First, we give a complete attainment analysis for
+two-outcome qubit measurements. For noncommuting projective measurements, we
+prove that neither optimal vector is realized by any state, making rigorous the
+general remark of Partovi~\cite{Partovi2011} and the observations of
+Ref.~\cite{LiQiao2018}. This implies strictness for every continuous strictly
+Schur-concave measure. For arbitrary two-outcome qubit POVMs, we combine the
+noncommuting obstruction with an explicit necessary and sufficient condition for
+attainment in the commuting case.
+
+Second, we evaluate the optimal direct-sum vector for arbitrary noisy and biased
+two-outcome qubit POVMs in closed form and clarify its relation to joint
+measurability. Third, we determine exactly when the ideal-detector relation
+survives imperfect detection: for qubits this reduces to $\Lambda\le2\sqc$. We
+show how detector bias can invalidate ideal steering tests and provide a
+corrected criterion, illustrated by a closed-form Werner-state analysis with
+efficiency threshold $\eta_*=(4+\sqrt2)/7$.
+
+Fourth, we specialize the general constructions to binary measurements in
+arbitrary finite dimension, show that the resulting vectors are already ordered,
+and determine attainment for binary projective measurements. Thus, the
+higher-dimensional tensor-product vector itself is not claimed as new; the new
+elements are its explicit binary evaluation, the observation that no flattening
+is required, and the attainment analysis. We also quantify the gap with
+Maassen--Uffink and entropy-specific optima and compare the bounds across the
+R\'enyi family, distinguishing analytical results from numerical observations
+throughout.
 
 The paper is organized as follows.
 Section~\ref{sec:prelim} introduces majorization, the uncertainty measures and
@@ -720,9 +725,9 @@ optimal. As majorization bounds they cannot be improved
 (Theorems~\ref{thm:direct} and~\ref{thm:tensor}); yet, because the supremum is
 not the statistics of any state, the bound it induces is strict for every
 strictly Schur-concave measure. For such measures the optimum has to be found
-measure by measure, which is what entropy-specific relations do; only at the
-extreme orders $\alpha=0$ and $\alpha=\infty$ does the majorization bound reach
-it.
+measure by measure, which is what entropy-specific relations do; for the
+tensor-product R\'enyi bounds, only at the extreme orders $\alpha=0$ and
+$\alpha=\infty$ is the majorization bound tight.
 
 \subsection{Comparison with the Maassen--Uffink relation and with the exact optimum}
 
@@ -776,8 +781,9 @@ closed-form relation available. The bound
   \label{eq:SR}
 \end{equation}
 of Refs.~\cite{SanchezRuiz1998,KTW2014} (see also Ref.~\cite{Coles2017}), where
-$2c-1=\cos\theta$, is strictly stronger than $h(\sqc)$ at every angle and at least
-as strong as MU, with which it coincides, and hence is tight, at $\theta=90^\circ$
+$2c-1=\cos\theta$, is strictly stronger than $h(\sqc)$ for every
+$0<\theta\le\pi/2$ and at least as strong as MU, with which it coincides, and
+hence is tight, at $\theta=90^\circ$
 (Fig.~\ref{fig:entropic}); at $\theta=60^\circ$, for instance, it gives
 $0.601$~bit against $0.568$ for $h(\sqc)$. What majorization offers instead is a
 single bound for all Schur-concave measures at once.
@@ -817,7 +823,7 @@ be used.
   $h(w)$. Orange (dashed): Maassen--Uffink. Yellow (dash-dotted): the
   closed-form Shannon bound~\eqref{eq:SR} of
   Refs.~\cite{SanchezRuiz1998,KTW2014}, which is strictly stronger than $h(\sqc)$
-  at every angle and at least as strong as MU. The direct-sum bound is stronger than MU for
+  at every noncommuting angle and at least as strong as MU. The direct-sum bound is stronger than MU for
   $\theta<81.3^\circ$ (dotted vertical line).}
   \label{fig:entropic}
 \end{figure}
@@ -829,13 +835,13 @@ majorization bounds beat MU for all $\alpha\le1$; at $\theta=85^\circ$, closer
 to mutual unbiasedness, they do so only for $\alpha<0.69$ (direct sum) and
 $\alpha<0.58$ (tensor product). For the max-entropy, $\alpha=\frac12$, the
 direct-sum bound reaches $83\%$ and $91\%$ of the exact minimum at the two
-angles. The expression $H_\alpha(\sqc,1-\sqc)$ remains a valid bound up to $\alpha=2$,
-as it does at every angle, but it fails above $\alpha\approx2.1$
-($\theta=60^\circ$) and $\alpha\approx2.5$ ($\theta=85^\circ$), in line with
-Proposition~\ref{prop:compare}(ii). For large $\alpha$ only the tensor-product
-bound remains, and it converges to the exact minimum as $\alpha\to\infty$. The
-majorization bounds thus become exact only at the two ends of the family, as
-Theorem~\ref{thm:tight} requires.
+angles. Numerically, the expression $H_\alpha(\sqc,1-\sqc)$ is observed to remain
+a valid bound throughout $1<\alpha\le2$ at every sampled angle, but it fails above
+$\alpha\approx2.1$ ($\theta=60^\circ$) and $\alpha\approx2.5$ ($\theta=85^\circ$),
+in line with Proposition~\ref{prop:compare}(ii). For large $\alpha$ only the
+tensor-product bound remains, and it converges to the exact minimum as
+$\alpha\to\infty$. The majorization bounds thus become exact only at the two ends
+of the family, as Theorem~\ref{thm:tight} requires.
 
 \begin{figure}[t]
   \centering
@@ -843,9 +849,9 @@ Theorem~\ref{thm:tight} requires.
   \caption{Bounds on $H_\alpha(M)+H_\alpha(N)$ across the R\'enyi family for
   (a)~$\theta=60^\circ$ and (b)~$\theta=85^\circ$. Black: exact minimum.
   Blue: direct-sum bound $H_\alpha(\sqc,1-\sqc)$ of Corollary~\ref{cor:direct},
-  proven for $\alpha\le1$; its thin dashed continuation for $\alpha>1$ remains a
-  bound up to $\alpha=2$ but exceeds the exact minimum above $\alpha\approx2.1$
-  in (a) and $\alpha\approx2.5$ in (b). Green (dotted):
+  proven for $\alpha\le1$; its thin dashed continuation for $\alpha>1$ is
+  numerically observed to remain a bound up to $\alpha=2$ but exceeds the exact
+  minimum above $\alpha\approx2.1$ in (a) and $\alpha\approx2.5$ in (b). Green (dotted):
   tensor-product bound $H_\alpha(\omtimes)$ of Corollary~\ref{cor:tensor}.
   Orange (dashed): MU, valid for $\alpha\le1$. The dotted vertical line marks
   the Shannon case $\alpha=1$.}
@@ -948,7 +954,22 @@ not commute; with bias, it may not be attained even when they do.
 Let $M$ and $N$ be as in Theorem~\ref{thm:povm}.
 (i) If $E_0$ and $F_0$ do not commute, i.e., $\eta\zeta\,\hat a\times\hat b\neq0$,
 no state attains $\omplus(M,N)$.
-(ii) If $\mu=\nu=0$ and $E_0$ and $F_0$ commute, a state attains $\omplus(M,N)$.
+(ii) If $E_0$ and $F_0$ commute, then, after relabeling outcomes and choosing axes
+for any trivial measurements so that $\hat b=\hat a$, define
+\begin{equation}
+  A_\varepsilon=\frac{1+|\mu+\varepsilon\eta|}{2},\qquad
+  B_\varepsilon=\frac{1+|\nu+\varepsilon\zeta|}{2}\qquad(\varepsilon=\pm1).
+  \label{eq:commuting-endpoints}
+\end{equation}
+A state attains $\omplus(M,N)$ if and only if some $\varepsilon$ satisfies both
+\begin{align}
+  \max\{A_\varepsilon,B_\varepsilon\}
+  &=\max_{\delta=\pm1}\max\{A_\delta,B_\delta\},\\
+  A_\varepsilon+B_\varepsilon
+  &=\max_{\delta=\pm1}(A_\delta+B_\delta).
+  \label{eq:commuting-attainment}
+\end{align}
+The attaining state is $\vecr=\varepsilon\hat a$.
 (iii) With bias, commuting effects need not attain it: for $\hat b=\hat a$,
 $(\mu,\eta)=(0.3,0.6)$ and $(\nu,\zeta)=(-0.8,0.15)$, $S_1$ is attained only at
 $\vecr=-\hat a$ and $S_2$ only at $\vecr=\hat a$.
@@ -966,12 +987,15 @@ $t$. By Cauchy--Schwarz,
 $|\eta\hat a+ts_0\zeta\hat b|>\eta+ts_0\zeta\,\hat a\cdot\hat b$ unless
 $\hat b=\pm\hat a$ (and $\eta\pm ts_0\zeta\ge0$), which is excluded when $E_0$ and
 $F_0$ do not commute, so no state attains both $S_1$ and $S_2$.
-(ii) If one measurement is trivial, say $\eta=0$, then $\Lambda=\kappa=\zeta$,
-and $\vecr=\hat b$ gives $(p\oplus q)^\downarrow=\frac12(1+\zeta,1,1,1-\zeta)
-=\omplus(M,N)$. Otherwise, up to relabeling the outcomes of $N$, $\hat b=\hat a$,
-so that $\Lambda=\eta+\zeta$ and $\kappa=\max\{\eta,\zeta\}$, and $\vecr=\hat a$
-gives $(p\oplus q)^\downarrow=\frac12(1+\kappa,1+\Lambda-\kappa,1+\kappa-\Lambda,
-1-\kappa)$.
+(ii) The statistics depend only on $z=\hat a\cdot\vecr\in[-1,1]$. The largest
+outcome probabilities of the two measurements are
+$A(z)=\frac12(1+|\mu+\eta z|)$ and $B(z)=\frac12(1+|\nu+\zeta z|)$, so
+$L_1=\max\{A(z),B(z)\}$ and $L_2=A(z)+B(z)$, because $A+B\ge1$. Both functions
+are convex, hence their maxima occur at endpoints, giving
+$S_1=\max_\varepsilon\max\{A_\varepsilon,B_\varepsilon\}$ and
+$S_2=\max_\varepsilon(A_\varepsilon+B_\varepsilon)$. Moreover, if $L_1=S_1$,
+the smallest outcome probability is $1-S_1$, so $L_3=1+S_1=S_3$ automatically.
+Thus the vector is attained iff one endpoint saturates both $S_1$ and $S_2$.
 (iii) Here $\kappa=0.95$ is reached only by the second outcome of $N$ at
 $\vecr=-\hat a$, and $\Lambda=1.55$ only by $(s,t)=(1,-1)$ at $\vecr=\hat a$.
 \end{proof}
@@ -1097,7 +1121,10 @@ $H(M)+H(N)=h(\eta_d/2)<1$. In all cases $H(\omplus(M,N))$ remains a valid bound.
 \end{figure}
 
 This matters for steering tests~\cite{Walborn2011,Schneeloch2013,Uola2020}, in
-which Bob trusts his measurements and Alice's are uncharacterized.
+which Bob trusts his measurements and Alice's are uncharacterized. Losses and
+measurement-setting errors have been addressed in other steering
+criteria~\cite{SkrzypczykCavalcanti2015,Rutkowski2017}; here we use the optimal
+majorization bound of the POVM actually performed.
 
 \begin{corollary}
 \label{cor:steering}
@@ -1129,6 +1156,31 @@ $H(N)=h(\eta_d/2)$, independent of Alice's outcomes. For unbiased measurements,
 Proposition~\ref{prop:detectors}(i) shows that the ideal minimum is a valid
 right-hand side.
 \end{proof}
+
+A closed-form Werner-state example illustrates the difference between the ideal
+and corrected tests. Let
+$\rho_w=w\ket{\Phi^+}\!\bra{\Phi^+}+(1-w)\mathds{1}_4/4$, let Alice use ideal
+$\sigma_z$ and $\sigma_x$ measurements, and let Bob use click/no-click detectors
+of efficiency $\eta_d$ along the same axes. Then
+\begin{align}
+  \mathcal S(w,\eta_d)&:=H(M|A_1)+H(N|A_2)\notag\\
+  &=h\!\left(\frac{\eta_d(1+w)}2\right)
+  +h\!\left(\frac{\eta_d(1-w)}2\right).
+  \label{eq:werner-steering}
+\end{align}
+For the orthogonal measurements, Theorem~\ref{thm:povm} gives
+$\omplus(M,N)=(1,t_{\eta_d},1-t_{\eta_d},0)$ with
+$t_{\eta_d}=1-\eta_d+\eta_d/\sqrt2$, so the corrected bound is
+$B(\eta_d)=h(t_{\eta_d})$. For the Bell state, $\mathcal S(1,\eta_d)=h(\eta_d)$,
+which violates $B(\eta_d)$ iff
+\begin{equation}
+  \eta_d>\eta_*:=\frac{4+\sqrt2}{7}\approx0.773459 .
+  \label{eq:steering-efficiency}
+\end{equation}
+Since $\mathcal S(w,\eta_d)$ decreases with $w$, sufficiently large $w$ gives a
+violation for $\eta_d>\eta_*$, whereas no Werner state is certified by this
+particular inequality for $\eta_d\le\eta_*$. Nonviolation of this sufficient
+witness does not, by itself, imply a local-hidden-state model.
 
 An uncertainty-based steering or entanglement test with biased trusted
 detectors must therefore use the bound of the measurements actually performed.
@@ -1189,10 +1241,12 @@ measurements in any dimension with $c=\max_{i,j}\|P_iQ_j\|^2$, the min-entropy
 bound remains tight, and for $c<1$ the bounds for strictly Schur-concave
 measures are strict (Theorem~\ref{thm:tight}).
 The direct-sum part of Theorem~\ref{thm:dimd} follows from the eigenvalue
-formula~\cite{Baek2019} and $\lambda_{\max}(P+Q)=1+\|PQ\|$~\cite{Halmos1969}, and
-the tensor part from the reduction to qubit blocks by Jordan's
-lemma~\cite{Halmos1969,KTW2014}; new are the tensor bound and the attainment
-conditions in dimension $d$.
+formula~\cite{Baek2019} and $\lambda_{\max}(P+Q)=1+\|PQ\|$~\cite{Halmos1969}.
+The tensor-product vector itself is the binary case of the general construction
+of Friedland \emph{et al.}~\cite{FGG2013}; here we evaluate its partial sums
+explicitly, show that it is already ordered, and reduce its attainment to qubit
+blocks by Jordan's lemma~\cite{Halmos1969,KTW2014}. The attainment conditions
+in dimension $d$ are new.
 Equivalently, $c=\frac12+\frac14\|\{A,B\}\|$ with $A=2P-\mathds{1}$ and
 $B=2Q-\mathds{1}$, as shown in any dimension by Kaniewski
 \emph{et al.}~\cite{KTW2014}. Indeed, on a two-dimensional block, where $P$ and $Q$ act as
@@ -1261,8 +1315,9 @@ measure at once.
 The comparison with entropy-specific relations shows what this unification
 costs. Because the supremum is not the statistics of any state when the
 measurements do not commute, the induced bound is strict for every strictly
-Schur-concave measure, and it becomes exact only at the extreme orders
-$\alpha=0$ and $\alpha=\infty$. Against a generic scalar relation such as MU,
+Schur-concave measure, and for the tensor-product R\'enyi bounds it becomes
+exact only at the extreme orders $\alpha=0$ and $\alpha=\infty$. Against a
+generic scalar relation such as MU,
 on the other hand, the majorization bounds are strong. For two projective qubit
 measurements, both Shannon bounds depend only on the Bloch angle $\theta$
 between the two measurement axes: the direct-sum bound is $h(\sqc)$ and MU
@@ -1282,8 +1337,8 @@ bound~\eqref{eq:SR} is at least as strong as both at every angle, and
 $h(\sqc)$ is never below $78\%$ of the exact minimum, which thus exceeds it by
 up to $28\%$; the strength of the majorization bounds lies in their
 universality. Of the two forms, the direct sum is
-preferable for $\alpha\le1$, and for qubits remains valid up to $\alpha=2$,
-while only the tensor product survives for large $\alpha$.
+preferable for $\alpha\le1$, and for qubits is numerically observed to remain
+valid up to $\alpha=2$, while only the tensor product survives for large $\alpha$.
 
 Majorization also makes the distinction between detector noise and detector
 bias sharp. Noise acts as a doubly stochastic map on the statistics and can
@@ -1343,8 +1398,9 @@ tight variance relations~\cite{Abbott2016} or, for all Schur-concave measures
 at once, majorization. The information missing from the Robertson bound is
 carried by the anticommutator term of the Robertson--Schr\"odinger relation,
 $\det\Gamma\ge\langle(\mhat\times\nhat)\cdot\vsigma\rangle^2$ with $\Gamma$ from
-Eq.~\eqref{eq:cov}, which every pure state saturates; in the plane of the axes
-it reduces to $\det\Gamma=0$, the boundary of $\mathcal{E}_\theta$.
+Eq.~\eqref{eq:cov}, which every pure qubit state saturates for these Pauli
+observables; in the plane of the axes it reduces to $\det\Gamma=0$, the boundary
+of $\mathcal{E}_\theta$.
 
 The results apply directly to photonic qubits. Restricted to single photons,
 the Stokes operators of polarization are the Pauli matrices, and two linear
@@ -1396,10 +1452,11 @@ open.
 binary measurements on a light mode have $c<1$, and what do the bounds of
 Sec.~\ref{sec:dimd} imply for them? In infinite dimension
 $c=\sup_{i,j}\|P_iQ_j\|^2$ can equal $1$ without a common eigenvector. For
-photon-number parity and displaced parity, whose expectation values sample the
-Wigner function~\cite{Royer1977}, increasingly squeezed vacua, which contain
-only even photon numbers, approach simultaneous eigenstates of both, so no
-non-trivial state-independent relation exists. Tests for coherent states,
+photon-number parity and a suitably displaced parity, whose expectation values
+sample the Wigner function~\cite{Royer1977}, increasingly squeezed vacua, which
+contain only even photon numbers, approach simultaneous eigenstates of both when
+the displacement is along the anti-squeezed quadrature, so no non-trivial
+state-independent relation exists. Tests for coherent states,
 $\{\ket{\nu}\!\bra{\nu},\mathds{1}-\ket{\nu}\!\bra{\nu}\}$, realized by a
 displacement followed by on/off detection with no-click probability
 $\pi Q(\nu)=\bra{\nu}\rho\ket{\nu}$, with $Q$ the Husimi function, also have $c=1$,
@@ -1436,8 +1493,8 @@ curves, the lattice supremum via least concave
 majorants~\cite{CicaleseVaccaro2002}, the analytic bounds of
 Theorems~\ref{thm:direct}, \ref{thm:tensor} and~\ref{thm:povm} and
 Corollaries~\ref{cor:direct}--\ref{cor:tensor}, the eigenvalue characterization
-$S_k=\max_{|J|=k}\lambda_{\max}(\sum_{j\in J}K_j)$, and exact minima of R\'enyi
-and Tsallis entropy sums.
+$S_k=\max_{|J|=k}\lambda_{\max}(\sum_{j\in J}K_j)$, and numerical minima of
+R\'enyi and Tsallis entropy sums.
 
 The closed forms were compared with (a) lattice suprema over $1.8\times10^5$
 grid states, for 40 random pairs of qubit bases (Theorems~\ref{thm:direct}
@@ -1461,16 +1518,20 @@ jointly measurable example, the detector model and the behavior of the gap in
 Fig.~\ref{fig:povm}(b) of Sec.~\ref{sec:povm}, the
 Robertson--Schr\"odinger statement of Sec.~\ref{sec:discussion}, and the
 numerical statements in open questions (i) and (iii), the latter for 300 random
-triples of qubit bases. Proposition~\ref{prop:detectors} was checked for 400
-random biased POVM pairs (the criterion $\Lambda\le2\sqc$ against the largest
-Landau--Pollak sum over $8\times10^3$ states), for 100 random unbiased pairs
-(state-by-state majorization) and for the detector models of
-Fig.~\ref{fig:detectors}; we also checked the validity of the direct-sum R\'enyi
-form up to $\alpha=2$, the order $\alpha_0(c)$, the tensor-product ratio and the
+triples of qubit bases. The commuting attainment criterion of
+Proposition~\ref{prop:povm-attain} was checked for 2000 random POVM pairs against
+direct evaluations of the endpoint statistics. Proposition~\ref{prop:detectors}
+was checked for 400 random biased POVM pairs (the criterion $\Lambda\le2\sqc$
+against the largest Landau--Pollak sum over $8\times10^3$ states), for 100 random
+unbiased pairs (state-by-state majorization) and for the detector models of
+Fig.~\ref{fig:detectors}. The Werner-state conditional entropy formula and the
+threshold $\eta_*$ were checked against Born-rule matrices and the analytic POVM
+bound. We also checked the validity of the direct-sum R\'enyi form up to
+$\alpha=2$, the order $\alpha_0(c)$, the tensor-product ratio and the
 fixed-spectrum bound of Sec.~\ref{sec:povm}. The statements about light modes in
 Sec.~\ref{sec:discussion} were checked in a Fock space of dimension 600.
 
-The exact entropy minima are obtained by a dense grid over the great circle in
+The numerical entropy minima are obtained by a dense grid over the great circle in
 $\mathrm{span}\{\mhat,\nhat\}$ refined by Nelder--Mead. For R\'enyi and Tsallis
 sums this reduction is justified by the radial argument of
 Sec.~\ref{sec:geometry}, which applies equally to unbiased unsharp
@@ -1483,8 +1544,10 @@ as $\cos^2(\varphi/2)$ and $\sin^2(\varphi/2)$, which avoids the loss of
 precision in $1-\cos\varphi$.
 
 \section*{Data Availability Statement}
-The data that support the findings of this study are available from the
-corresponding author upon reasonable request.
+The data and numerical code that support the findings of this study are
+available from the corresponding author upon reasonable request. The numerical
+code is also publicly hosted at
+\url{https://github.com/RuiZhu1/UncertaintyPrincipleofQubits}.
 
 \bibliography{references}
 

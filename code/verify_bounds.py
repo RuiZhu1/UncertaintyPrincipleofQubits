@@ -164,7 +164,7 @@ check("Thm 5, tensor product: S_1 = w is attained at a top eigenvector of P_i + 
       f"max deviation {worst:.1e}, largest p_i q_j - w over random states {excess:.1e}")
 
 
-# Corollary 3: binary POVMs in any dimension
+# Corollary 4: binary POVMs in any dimension
 def random_effect(dim: int, rng: np.random.Generator) -> np.ndarray:
     """Random effect 0 <= E <= 1: random eigenbasis, eigenvalues uniform in [0, 1]."""
     u, _ = np.linalg.qr(rng.normal(size=(dim, dim)) + 1j * rng.normal(size=(dim, dim)))
@@ -182,10 +182,10 @@ for _ in range(300):
     E, F = random_effect(dim, rng_b), random_effect(dim, rng_b)
     I = np.eye(dim)
     s1 = max(lam_max(K) for K in (E, I - E, F, I - F))
-    s2 = max(1.0, max(lam_max(Ei + Fj) for Ei in (E, I - E) for Fj in (F, I - F)))
+    s2 = max(lam_max(Ei + Fj) for Ei in (E, I - E) for Fj in (F, I - F))
     closed = np.array([s1, s2 - s1, 1 + s1 - s2, 1 - s1])
     worst = max(worst, np.abs(closed - mj.omega_direct_sum_operators([E, I - E], [F, I - F])).max())
-check("Cor. 3: binary POVMs in d = 2..6: omega_plus = (S_1, S_2 - S_1, 1 + S_1 - S_2, 1 - S_1), "
+check("Cor. 4: binary POVMs in d = 2..6: omega_plus = (S_1, S_2 - S_1, 1 + S_1 - S_2, 1 - S_1), "
       "already ordered", worst < 1e-10, f"max deviation {worst:.1e}")
 
 # --- 4. Non-attainability (Proposition 1) -----------------------------------
@@ -470,6 +470,36 @@ check("Prop 3: omega_plus(M, N) is never attained for non-commuting effects, is 
       "commuting unbiased ones, and is missed by a commuting biased pair", ok,
       f"biased example: min sup-distance {gap:.3f}")
 
+# Proposition 3(ii): complete attainment criterion for commuting biased POVMs
+rng_ca = np.random.default_rng(20261101)
+mismatches, attained = 0, 0
+for i in range(2000):
+    a = mj.unit(rng_ca.normal(size=3))
+    mode = i % 5
+    eta_m = 0.0 if mode >= 3 and rng_ca.random() < 0.25 else rng_ca.random()
+    eta_n = 0.0 if mode >= 3 and rng_ca.random() < 0.25 else rng_ca.random()
+    mu = (1 - eta_m) * rng_ca.uniform(-1, 1)
+    nu = (1 - eta_n) * rng_ca.uniform(-1, 1)
+    if mode == 0:
+        b = a.copy()
+    elif mode == 1:
+        b = -a.copy()
+    else:
+        b = mj.unit(rng_ca.normal(size=3)) if eta_m == 0 or eta_n == 0 else a.copy()
+    M = mj.TwoOutcomePOVM(a, eta=eta_m, mu=mu)
+    N = mj.TwoOutcomePOVM(b, eta=eta_n, mu=nu)
+    common = b if eta_m == 0 and eta_n > 0 else a
+    criterion = mj.commuting_attainment(M, N)
+    omega = mj.omega_direct_sum(M, N)
+    actual = any(np.allclose(mj.sort_desc(mj.direct_sum(M.probs(eps * common),
+                                                        N.probs(eps * common))),
+                             omega, atol=1e-11, rtol=0) for eps in (-1, 1))
+    attained += actual
+    mismatches += criterion != actual
+check("Prop 3(ii): same-endpoint criterion is necessary and sufficient for all commuting POVMs",
+      mismatches == 0,
+      f"2000 random pairs: {attained} attained, {2000-attained} not attained, {mismatches} mismatches")
+
 # Fig. 5(b): as the bias of M grows (eta = zeta = 1/2), the gap between the exact minimum and
 # H(omega_plus) grows at 45 deg; at 90 deg the minimum stays at the eigenstate of M and the gap
 # is constant, 1 - h((1 + (sqrt 2 - 1)/2)/2)
@@ -513,17 +543,17 @@ inside = x**2 - 2 * x * y * np.cos(theta) + y**2 <= np.sin(theta) ** 2
 gamma = np.stack([np.stack([1 - x * x, np.cos(theta) - x * y], -1),
                   np.stack([np.cos(theta) - x * y, 1 - y * y], -1)], -2)
 psd = np.linalg.eigvalsh(gamma)[:, 0] >= 0
-# Robertson-Schroedinger: det Gamma >= <(m x n).sigma>^2, with equality for every pure state
+# Robertson-Schroedinger: equality for every pure qubit state with these Pauli observables
 pure = mj.fibonacci_sphere(2000)
 xp, yp = pure @ M.axis, pure @ N.axis
 rs_gap = np.abs((1 - xp**2) * (1 - yp**2) - (np.cos(theta) - xp * yp) ** 2
                 - (pure @ np.cross(M.axis, N.axis)) ** 2).max()
 check("Sec. III: (x, y) in E_theta iff the covariance matrix is PSD; "
-      "Sec. VIII: the Robertson bound vanishes in the plane of the axes, and every pure state "
-      "saturates the Robertson-Schroedinger relation",
+      "Sec. VIII: the Robertson bound vanishes in the plane of the axes, and every pure qubit state "
+      "saturates the Robertson-Schroedinger relation for these Pauli observables",
       bool(np.array_equal(inside, psd)) and robertson < 1e-12 and rs_gap < 1e-12,
       f"max |<[A, B]>| over in-plane states {robertson:.1e}, "
-      f"Robertson-Schroedinger gap of pure states {rs_gap:.1e}")
+      f"Robertson-Schroedinger gap of pure qubit states {rs_gap:.1e}")
 
 NF = 600  # Fock-space truncation: photon numbers 0..599
 a_op = np.diag(np.sqrt(np.arange(1, NF)), 1).astype(complex)
@@ -542,14 +572,18 @@ def squeezed_vacuum(r: float) -> np.ndarray:
 
 
 D = displacement(1j)  # |beta| = 1 along the anti-squeezed axis
+D_x = displacement(1.0)  # orthogonal, squeezed direction: expectation tends to zero
 ok, vals = True, []
 for r in (0.0, 1.0, 2.0):
     psi = squeezed_vacuum(r)
     dpar = np.vdot(psi, D @ parity @ D.conj().T @ psi).real
+    dpar_x = np.vdot(psi, D_x @ parity @ D_x.conj().T @ psi).real
     ok &= (abs(np.vdot(psi, parity @ psi).real - 1) < 1e-8
-           and abs(dpar - np.exp(-2 * np.exp(-2 * r))) < 1e-8)
+           and abs(dpar - np.exp(-2 * np.exp(-2 * r))) < 1e-8
+           and abs(dpar_x - np.exp(-2 * np.exp(2 * r))) < 1e-8)
     vals.append(dpar)
-check("Sec. VIII (v): squeezed vacua approach simultaneous eigenstates of parity and displaced parity",
+check("Sec. VIII (v): squeezed vacua approach joint eigenstates only for displacement along the "
+      "anti-squeezed quadrature; the squeezed-direction expectation tends to zero",
       ok, "<D Pi D^+> = " + ", ".join(f"{v:.3f}" for v in vals) + " for r = 0, 1, 2")
 
 ok = True
@@ -682,6 +716,37 @@ for e in (0.3, 0.6, 0.9, 0.99):  # theta = 90 deg, dark eigenstate of M: H = 0 +
 check("Fig. 6(b): click/no-click detectors lower min H(M)+H(N) below the ideal minimum at 30, 60, "
       "90 deg for every eta_d < 1, and H(omega_plus(M, N)) remains a valid bound", bool(ok),
       f"largest (true - ideal) {worst:.1e}")
+
+# Corollary 3: closed-form Werner-state steering analysis
+ok = all(abs(mj.click_mub_bound(e)
+             - mj.shannon(mj.omega_direct_sum(mj.click_detector([0, 0, 1], e),
+                                              mj.click_detector([1, 0, 0], e)))) < 1e-12
+         for e in np.linspace(0.01, 1, 100))
+phi_plus = np.array([1, 0, 0, 1], complex) / np.sqrt(2)
+bell = np.outer(phi_plus, phi_plus.conj())
+I4, I2 = np.eye(4), np.eye(2)
+plus_z, plus_x = np.diag([1.0, 0.0]), np.array([[1.0, 1.0], [1.0, 1.0]]) / 2
+for axis in (plus_z, plus_x):
+    for w, e in ((0.8, 0.99), (0.6, 0.9), (1.0, 0.7), (0.0, 0.5)):
+        rho = w * bell + (1 - w) * I4 / 4
+        total = 0.0
+        for alice in (axis, I2 - axis):
+            pa = np.trace(rho @ np.kron(alice, I2)).real
+            conditional = [np.trace(rho @ np.kron(alice, bob)).real / pa
+                           for bob in (e * axis, I2 - e * axis)]
+            total += pa * mj.shannon(np.array(conditional))
+        ok &= abs(2 * total - mj.werner_conditional_entropy(w, e)) < 1e-12
+e_star = (4 + np.sqrt(2)) / 7
+ok &= abs(mj.werner_conditional_entropy(1, e_star) - mj.click_mub_bound(e_star)) < 1e-12
+ok &= (mj.werner_conditional_entropy(1, 0.9) < mj.click_mub_bound(0.9)
+       and mj.werner_conditional_entropy(1, 0.7) > mj.click_mub_bound(0.7))
+w_ideal = brentq(lambda w: mj.werner_conditional_entropy(w, 0.95) - 1, 0, 1)
+w_corrected = brentq(lambda w: mj.werner_conditional_entropy(w, 0.95)
+                     - mj.click_mub_bound(0.95), 0, 1)
+ok &= abs(w_ideal - 0.817782) < 1e-6 and abs(w_corrected - 0.865859) < 1e-6
+check("Cor. 3 (steering): Werner formula, click/no-click bound and efficiency threshold",
+      bool(ok), f"e_* = {e_star:.9f}; at e = 0.95, w_ideal = {w_ideal:.6f}, "
+      f"w_corrected = {w_corrected:.6f}")
 
 # Random no-click assignment: thresholds quoted in the text (theta = 90 deg)
 sc = np.cos(np.pi / 4)

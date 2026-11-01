@@ -59,3 +59,41 @@ Numbering: the new Proposition 4 follows Proposition 3. The steering corollary i
 - Gilad's affiliation and funding (TODOs in `main.tex`).
 - Marcelo's approval of the abstract, which now has one more sentence on detector bias.
 - Journal choice.
+
+# Revision of November 1: peer-review corrections and additions
+
+## Scientific corrections
+
+- Rewrote the abstract and the introduction's contribution statement to distinguish known constructions from the paper's actual contributions.
+- Corrected the higher-dimensional tensor-product attribution: the vector is the binary case of the general FGG construction. The new elements are its explicit evaluation, the observation that it is already ordered, and the attainment analysis.
+- Replaced Proposition 3(ii) with a necessary and sufficient attainment criterion for every commuting two-outcome qubit POVM. The same endpoint state must saturate both $S_1$ and $S_2$; attainment of $S_3$ then follows automatically.
+- Limited the direct-sum Rényi statement through $\alpha=2$ to numerical evidence, except for the analytical endpoint proof at $\alpha=2$.
+- Restricted the Sánchez-Ruiz–KTW strict comparison to noncommuting angles, the Robertson–Schrödinger equality to pure qubit states with these Pauli observables, and the squeezed-parity argument to displacement along the anti-squeezed quadrature.
+
+## Steering addition
+
+Added a closed-form Werner-state example with
+$\mathcal S(w,\eta_d)=h(\eta_d(1+w)/2)+h(\eta_d(1-w)/2)$ and corrected bound
+$B(\eta_d)=h(1-\eta_d+\eta_d/\sqrt2)$. The Bell-state violation threshold is
+$\eta_*=(4+\sqrt2)/7\approx0.773459$. The text explicitly states that nonviolation
+of this sufficient witness does not prove an LHS model. Added references on
+loss-tolerant and measurement-setting-error-tolerant steering.
+
+## Code and verification
+
+- Added `commuting_attainment`, `werner_conditional_entropy`, and `click_mub_bound` to `majorization.py`.
+- Added a 2000-pair random test of the commuting attainment criterion and Born-rule checks of the Werner formula and efficiency threshold to `verify_bounds.py`.
+- Added the squeezed-direction parity check to document why the displacement qualification is necessary.
+- Updated theorem numbering and numerical-minimum terminology in code and documentation.
+- The complete suite now has **48/48 PASS**. `main.pdf` was rebuilt successfully and checked visually. One non-fatal REVTeX float-placement warning remains, with all six figures present.
+
+## Submission target and remaining approvals
+
+The target venue is Communications Physics. Remaining author-side items include approval of the revised abstract, corresponding-author and code-availability decisions, and the previously noted affiliation and funding information.
+
+# Follow-up minor revision after the second peer review
+
+- Clarified in the introduction, tightness discussion, and conclusion that Rényi tightness at orders zero and infinity refers specifically to the tensor-product bounds.
+- Changed the appendix's remaining “exact minima” wording to “numerical minima”.
+- Corrected the README's Sánchez-Ruiz–KTW comparison and the binary-POVM roadmap label to Corollary 4, and added `detector_bias.pdf` to the figure list.
+- Added the public repository link to the Data Availability Statement while retaining the corresponding-author contact option. The current revision must be pushed before submission so that the public repository contains the new attainment and Werner checks.
