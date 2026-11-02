@@ -304,10 +304,9 @@ measurements.
   commit "Manuscript: address the abstract and appendix review").
 - Mark the corresponding author: both Rui and Marcelo give e-mail addresses,
   and the data statement refers to "the corresponding author".
-- Data availability: the manuscript now links to the public repository and also
-  retains the corresponding-author contact option. The current local revision
-  must be committed and pushed before submission so that the public version
-  includes the new attainment and Werner checks.
+- Data availability: the manuscript retains the original statement that the data
+  are available from the corresponding author upon reasonable request. No
+  repository link is included in the manuscript.
 
 ## License
 

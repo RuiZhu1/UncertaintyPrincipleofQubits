@@ -96,4 +96,4 @@ The target venue is Communications Physics. Remaining author-side items include 
 - Clarified in the introduction, tightness discussion, and conclusion that Rényi tightness at orders zero and infinity refers specifically to the tensor-product bounds.
 - Changed the appendix's remaining “exact minima” wording to “numerical minima”.
 - Corrected the README's Sánchez-Ruiz–KTW comparison and the binary-POVM roadmap label to Corollary 4, and added `detector_bias.pdf` to the figure list.
-- Added the public repository link to the Data Availability Statement while retaining the corresponding-author contact option. The current revision must be pushed before submission so that the public repository contains the new attainment and Werner checks.
+- Retained the original Data Availability Statement: the data are available from the corresponding author upon reasonable request. No repository link is included in the manuscript.
