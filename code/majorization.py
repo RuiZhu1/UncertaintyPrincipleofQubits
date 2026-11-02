@@ -340,20 +340,20 @@ def great_circle(m: TwoOutcomePOVM, n: TwoOutcomePOVM, num: int = 4001) -> np.nd
 
 def min_entropy_sum(m: TwoOutcomePOVM, n: TwoOutcomePOVM, alpha: float = 1.0,
                     num: int = 4001) -> tuple[float, np.ndarray]:
-    """Exact minimum of H_alpha(M) + H_alpha(N) over all qubit states (see `min_uncertainty`)."""
+    """Numerical minimum of H_alpha(M) + H_alpha(N) over all qubit states (see `min_uncertainty`)."""
     return min_uncertainty(m, n, lambda p, q: float(renyi(p, alpha) + renyi(q, alpha)), num)
 
 
 def min_tsallis_sum(m: TwoOutcomePOVM, n: TwoOutcomePOVM, q_order: float,
                     num: int = 4001) -> tuple[float, np.ndarray]:
-    """Exact minimum of T_q(M) + T_q(N) over all qubit states (see `min_uncertainty`)."""
+    """Numerical minimum of T_q(M) + T_q(N) over all qubit states (see `min_uncertainty`)."""
     return min_uncertainty(m, n, lambda p, q: float(tsallis(p, q_order) + tsallis(q, q_order)), num)
 
 
 def min_uncertainty(m: TwoOutcomePOVM, n: TwoOutcomePOVM, func,
                     num: int = 4001) -> tuple[float, np.ndarray]:
     """
-    Exact minimum of func(p, q) over all qubit states.
+    Numerical minimum of func(p, q) over all qubit states.
 
     The outcome statistics depend on r only through (x, y) = (a.r, b.r), whose
     range is an ellipse E.  (i) If func is concave in (x, y), e.g. the Shannon
@@ -462,10 +462,41 @@ def click_detector(axis, eta_d: float) -> TwoOutcomePOVM:
     return TwoOutcomePOVM(axis=axis, eta=eta_d, mu=eta_d - 1.0)
 
 
+def commuting_attainment(m: TwoOutcomePOVM, n: TwoOutcomePOVM, tol: float = 1e-12) -> bool:
+    """
+    Whether the optimal direct-sum vector is attained for a commuting POVM pair.
+
+    After aligning the axes and relabeling N if necessary, attainment requires one
+    endpoint to maximize both the largest single outcome probability and the sum
+    of the two largest outcome probabilities. Trivial measurements may have any axis.
+    """
+    if m.eta * n.eta > 0 and np.linalg.norm(np.cross(m.axis, n.axis)) > 1e-10:
+        raise ValueError("commuting_attainment requires commuting effects")
+    nu = -n.mu if m.eta * n.eta > 0 and float(m.axis @ n.axis) < 0 else n.mu
+    eps = np.array([-1.0, 1.0])
+    a = 0.5 * (1 + np.abs(m.mu + eps * m.eta))
+    b = 0.5 * (1 + np.abs(nu + eps * n.eta))
+    s1 = np.max(np.maximum(a, b))
+    s2 = np.max(a + b)
+    return bool(np.any((np.abs(np.maximum(a, b) - s1) <= tol)
+                       & (np.abs(a + b - s2) <= tol)))
+
+
+def werner_conditional_entropy(w: float, efficiency: float) -> float:
+    """Two-setting conditional entropy sum for a Werner state and click/no-click Bob."""
+    return float(binary_entropy(efficiency * (1 + w) / 2)
+                 + binary_entropy(efficiency * (1 - w) / 2))
+
+
+def click_mub_bound(efficiency: float) -> float:
+    """H(omega_plus) for two orthogonal click/no-click qubit measurements."""
+    return float(binary_entropy(1 - efficiency + efficiency / np.sqrt(2)))
+
+
 def shannon_min_in_plane(theta: float, mu: float, eta: float, nu: float | None = None,
                          zeta: float | None = None, num: int = 20001) -> float:
     """
-    Vectorized exact minimum of H(p) + H(q) for two-outcome qubit POVMs along axes at Bloch
+    Vectorized numerical minimum of H(p) + H(q) for two-outcome qubit POVMs along axes at Bloch
     angle theta with parameters (mu, eta) and (nu, zeta).  The Shannon sum is concave in
     (x, y), so the minimum lies on the great circle in the plane of the axes.
     """
