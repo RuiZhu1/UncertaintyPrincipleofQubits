@@ -184,7 +184,7 @@ bound, so every bound it implies for a strictly Schur-concave measure of
 uncertainty, such as the Shannon entropy, is strict; for the tensor-product
 R\'enyi bounds, only orders zero and infinity are tight.
 The price is substantial: for two qubit bases the direct-sum Shannon bound
-falls short of the exact minimum by up to $22\%$. Even so, it outperforms the
+is never below about $78\%$ of the exact minimum. Even so, it outperforms the
 Maassen--Uffink relation unless the measurement axes on the Bloch sphere are
 within about nine degrees of orthogonal, i.e., unless the measurements are
 nearly mutually unbiased~\cite{Baek2019}, and its ratio to the exact minimum
@@ -969,7 +969,10 @@ A state attains $\omplus(M,N)$ if and only if some $\varepsilon$ satisfies both
   &=\max_{\delta=\pm1}(A_\delta+B_\delta).
   \label{eq:commuting-attainment}
 \end{align}
-The attaining state is $\vecr=\varepsilon\hat a$.
+The attaining state is $\vecr=\varepsilon\hat a$. Geometrically, the same
+extremal state must simultaneously maximize the largest single outcome
+probability and the largest cross-pair probability sum; with bias, these maxima
+can occur at opposite endpoints.
 (iii) With bias, commuting effects need not attain it: for $\hat b=\hat a$,
 $(\mu,\eta)=(0.3,0.6)$ and $(\nu,\zeta)=(-0.8,0.15)$, $S_1$ is attained only at
 $\vecr=-\hat a$ and $S_2$ only at $\vecr=\hat a$.
@@ -1180,7 +1183,9 @@ which violates $B(\eta_d)$ iff
 Since $\mathcal S(w,\eta_d)$ decreases with $w$, sufficiently large $w$ gives a
 violation for $\eta_d>\eta_*$, whereas no Werner state is certified by this
 particular inequality for $\eta_d\le\eta_*$. Nonviolation of this sufficient
-witness does not, by itself, imply a local-hidden-state model.
+witness does not, by itself, imply a local-hidden-state model: $\eta_*$ is a
+limitation of the present witness, not a fundamental steering threshold for
+Werner states.
 
 An uncertainty-based steering or entanglement test with biased trusted
 detectors must therefore use the bound of the measurements actually performed.
@@ -1334,8 +1339,9 @@ unbiased measurements ($\theta=90^\circ$), for which MU is tight, does MU give
 the better bound; for the tensor-product bound the crossover lies at
 $79.3^\circ$. For the Shannon entropy alone, the closed-form
 bound~\eqref{eq:SR} is at least as strong as both at every angle, and
-$h(\sqc)$ is never below $78\%$ of the exact minimum, which thus exceeds it by
-up to $28\%$; the strength of the majorization bounds lies in their
+$h(\sqc)$ is never below $78\%$ of the exact minimum; the exact minimum thus
+exceeds it by up to about $28\%$ when the deficit is measured relative to the
+bound itself. The strength of the majorization bounds lies in their
 universality. Of the two forms, the direct sum is
 preferable for $\alpha\le1$, and for qubits is numerically observed to remain
 valid up to $\alpha=2$, while only the tensor product survives for large $\alpha$.
