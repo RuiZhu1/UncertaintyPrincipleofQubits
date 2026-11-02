@@ -97,3 +97,11 @@ The target venue is Communications Physics. Remaining author-side items include 
 - Changed the appendix's remaining “exact minima” wording to “numerical minima”.
 - Corrected the README's Sánchez-Ruiz–KTW comparison and the binary-POVM roadmap label to Corollary 4, and added `detector_bias.pdf` to the figure list.
 - Retained the original Data Availability Statement: the data are available from the corresponding author upon reasonable request. No repository link is included in the manuscript.
+
+# Clarifications following review of the merged revision
+
+- Unified the introduction's Shannon-gap statement to the ratio of the direct-sum bound to the exact minimum (about 78%), and explicitly identified the bound itself as the denominator when the Discussion quotes the approximately 28% excess.
+- Clarified that $\eta_*=(4+\sqrt2)/7$ is a limitation of the present steering witness, not a fundamental steering threshold for Werner states.
+- Added the geometric interpretation of the commuting attainment criterion: one extremal state must simultaneously maximize the largest single outcome probability and the largest cross-pair sum, whereas biased measurements can attain these maxima at opposite endpoints.
+
+These changes affect presentation only; no analytical result or numerical code is changed.
