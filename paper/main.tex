@@ -70,8 +70,10 @@ optimal direct-sum vector for arbitrary noisy and biased two-outcome qubit POVMs
 and characterize its attainability completely. Unbiased unsharpness preserves
 ideal-detector uncertainty relations, but bias can invalidate them and can
 produce spurious steering violations when ideal bounds are used. We give a
-necessary and sufficient condition for these relations to survive and illustrate
-the corrected steering criterion through a closed-form Werner-state analysis. We
+necessary and sufficient condition for the ideal direct-sum majorization relation
+to survive, although individual entropic bounds can survive beyond it, and
+compare exact Shannon and majorization steering criteria through a Werner-state
+analysis. We
 also extend both bounds to binary projective measurements in arbitrary finite
 dimension and the direct-sum bound to binary POVMs.
 \end{abstract}
@@ -193,9 +195,11 @@ compatibility, where the Maassen--Uffink relation is weakest. The optimal bound
 for noisy and biased measurements also has a practical consequence: detector
 noise can only increase uncertainty, but detector bias, produced for instance by
 mismatched efficiencies or click/no-click detection, can push the statistics
-outside the ideal quantum set. A single inequality decides when relations
-derived for ideal detectors survive; when it fails, using the ideal-detector
-bound can spuriously certify steering for a product state. For the Shannon
+outside the ideal quantum set. A single inequality decides whether the ideal
+direct-sum majorization relation survives, although individual entropic bounds
+can survive beyond it. Using an ideal-detector entropic bound outside its actual
+range of validity can spuriously certify steering for a product state. For the
+Shannon
 entropy alone, a known closed-form bound~\cite{SanchezRuiz1998,KTW2014} is
 stronger than both at every noncommuting angle; the case for majorization rests on its
 universality, not on its sharpness for any single measure.
@@ -223,11 +227,13 @@ attainment in the commuting case.
 
 Second, we evaluate the optimal direct-sum vector for arbitrary noisy and biased
 two-outcome qubit POVMs in closed form and clarify its relation to joint
-measurability. Third, we determine exactly when the ideal-detector relation
-survives imperfect detection: for qubits this reduces to $\Lambda\le2\sqc$. We
-show how detector bias can invalidate ideal steering tests and provide a
-corrected criterion, illustrated by a closed-form Werner-state analysis with
-efficiency threshold $\eta_*=(4+\sqrt2)/7$.
+measurability. Third, we determine exactly when the ideal direct-sum
+majorization relation survives imperfect detection: for qubits this reduces to
+$\Lambda\le2\sqc$. We show how detector bias can invalidate ideal steering tests
+and compare the corrected majorization and exact Shannon criteria in a
+Werner-state analysis, with majorization-witness threshold
+$\eta_*=(4+\sqrt2)/7$ and numerical exact-Shannon threshold
+$\eta_{\rm S}\approx0.680568$.
 
 Fourth, we specialize the general constructions to binary measurements in
 arbitrary finite dimension, show that the resulting vectors are already ordered,
@@ -1006,7 +1012,8 @@ $\vecr=-\hat a$, and $\Lambda=1.55$ only by $(s,t)=(1,-1)$ at $\vecr=\hat a$.
 Bias and unequal sharpness arise naturally in photon counting. If the two
 outputs of a polarizing beam splitter are monitored by detectors of
 efficiencies $\eta_H$ and $\eta_V$, and no-click events are assigned to either
-outcome at random, the effect of outcome $H$ has the form~\eqref{eq:povm} with
+outcome with probability $1/2$ each, the effect of outcome $H$ has the
+form~\eqref{eq:povm} with
 $\hat a=\hat z$, $\mu=(\eta_H-\eta_V)/2$ and $\eta=(\eta_H+\eta_V)/2$. A
 mismatch of detection efficiencies, a known concern in quantum key
 distribution~\cite{Makarov2006}, thus appears as a bias. A single
@@ -1039,8 +1046,11 @@ effects, whether or not the pair is jointly measurable, and with bias even
 commuting effects need not attain the bound: in the example of
 Proposition~\ref{prop:povm-attain}(iii) the two readouts of the same axis favor
 opposite ends of it, a trade-off of classical origin. Majorization uncertainty
-relations therefore quantify preparation uncertainty, which persists in the
-absence of measurement incompatibility.
+relations therefore capture state-dependent trade-offs that can persist even
+without measurement incompatibility. The absolute entropy floor can additionally
+include randomness intrinsic to unsharp POVMs or classical no-click
+post-processing, and should not be attributed solely to preparation
+complementarity.
 
 As a corollary, $H(p)+H(q)\ge-\sum_k\omega_k\log_2\omega_k$ with
 $\omega=\omplus(M,N)$ for all two-outcome qubit POVMs; by
@@ -1098,8 +1108,8 @@ Noise only blurs the statistics towards the uniform distribution, but bias
 shifts the image of $\mathcal{E}_\theta$, and the shifted ellipse can leave the
 ideal one. Whether a particular entropic bound is violated depends on the
 measure: the Shannon minimum is more forgiving than the Landau--Pollak sum, but
-not immune (Fig.~\ref{fig:detectors}). For orthogonal axes and random no-click
-assignment, an efficiency $\eta_H=0.99$ violates the ideal relation for
+not immune (Fig.~\ref{fig:detectors}). For orthogonal axes and equal-probability
+no-click assignment, an efficiency $\eta_H=0.99$ violates the ideal relation for
 $\eta_V<0.942$ and the ideal Shannon bound of one bit for $\eta_V<0.578$; for
 $\eta_H=0.95$ the thresholds are $0.708$ and $0.211$. These thresholds refer to
 the lower-$\eta_V$ branch. For $\eta_H=0.9$, no Shannon violation is found for
@@ -1115,7 +1125,7 @@ $H(M)+H(N)=h(\eta_d/2)<1$. In all cases $H(\omplus(M,N))$ remains a valid bound.
   \centering
   \includegraphics[width=\columnwidth]{detector_bias.pdf}
   \caption{(a)~Polarizing beam splitter with detectors of efficiencies
-  $(\eta_H,\eta_V)$ and random assignment of no-click events, for measurements
+  $(\eta_H,\eta_V)$ and equal-probability assignment of no-click events, for measurements
   along orthogonal axes read out by the same detectors. Blue: the ideal relation
   $p\oplus q\maj\omplus$ fails ($\Lambda>2\sqc$, Proposition~\ref{prop:detectors});
   orange: the ideal Shannon bound of one bit fails. Unbiased detectors
@@ -1176,19 +1186,30 @@ of efficiency $\eta_d$ along the same axes. Then
 \end{align}
 For the orthogonal measurements, Theorem~\ref{thm:povm} gives
 $\omplus(M,N)=(1,t_{\eta_d},1-t_{\eta_d},0)$ with
-$t_{\eta_d}=1-\eta_d+\eta_d/\sqrt2$, so the corrected bound is
-$B(\eta_d)=h(t_{\eta_d})$. For the Bell state, $\mathcal S(1,\eta_d)=h(\eta_d)$,
-which violates $B(\eta_d)$ iff
+$t_{\eta_d}=1-\eta_d+\eta_d/\sqrt2$, so the corrected majorization bound is
+$B_{\rm maj}(\eta_d)=h(t_{\eta_d})$. For the Bell state,
+$\mathcal S(1,\eta_d)=h(\eta_d)$, which violates $B_{\rm maj}(\eta_d)$ iff
 \begin{equation}
   \eta_d>\eta_*:=\frac{4+\sqrt2}{7}\approx0.773459 .
   \label{eq:steering-efficiency}
 \end{equation}
-Since $\mathcal S(w,\eta_d)$ decreases with $w$, sufficiently large $w$ gives a
-violation for $\eta_d>\eta_*$, whereas no Werner state is certified by this
-particular inequality for $\eta_d\le\eta_*$. Nonviolation of this sufficient
-witness does not, by itself, imply a local-hidden-state model: $\eta_*$ is a
-limitation of the present witness, not a fundamental steering threshold for
-Werner states.
+The first bound in Eq.~\eqref{eq:steering} is stronger for Shannon entropy: it
+uses the exact minimum
+\begin{equation}
+  E(\eta_d)=\min_{x^2+y^2=1}\left[h\!\left(\frac{\eta_d(1+x)}2\right)
+  +h\!\left(\frac{\eta_d(1+y)}2\right)\right].
+  \label{eq:steering-exact}
+\end{equation}
+For the Bell state, this bound is violated when $h(\eta_d)<E(\eta_d)$, which
+numerically gives $\eta_d>\eta_{\rm S}\approx0.680568$. Thus $\eta_*$ is
+specifically the majorization-witness threshold: for
+$\eta_{\rm S}<\eta_d\le\eta_*$, the exact Shannon witness certifies the Bell
+state while the majorization witness does not. Since $\mathcal S(w,\eta_d)$
+decreases with $w$, sufficiently large $w$ gives a violation above either
+threshold, whereas no Werner state is certified by the majorization inequality
+for $\eta_d\le\eta_*$. Nonviolation of either sufficient witness does not imply a
+local-hidden-state model, and neither threshold is a fundamental steering limit
+for Werner states.
 
 An uncertainty-based steering or entanglement test with biased trusted
 detectors must therefore use the bound of the measurements actually performed.
@@ -1220,7 +1241,8 @@ By the eigenvalue formula of Sec.~\ref{sec:povm}, $S_k$ for the direct sum is
 the largest eigenvalue of a sum of $k$ of the four projectors. Hence $S_1=1$,
 $S_3=2$, since any three of them include $P_1+P_2=\mathds{1}$ or
 $Q_1+Q_2=\mathds{1}$, and $S_2=\max_{i,j}\lambda_{\max}(P_i+Q_j)=1+\sqc$, since
-$\lambda_{\max}(P+Q)=1+\|PQ\|$ for any two projectors~\cite{Halmos1969}.
+$\lambda_{\max}(P+Q)=1+\|PQ\|$ for any two projectors not both
+zero~\cite{Halmos1969}; the pair $P=Q=0$ does not affect the maxima.
 Moreover $c\ge\frac12$: if $Q_1\neq0$ and $\psi$ is a unit vector in its range,
 then $\|P_1\psi\|^2+\|P_2\psi\|^2=1$, so $\max_i\|P_iQ_1\|^2\ge\frac12$ (and if
 $Q_1=0$, then $Q_2=\mathds{1}$ and $c=1$). The increments therefore give
@@ -1358,9 +1380,11 @@ valid up to $\alpha=2$, while only the tensor product survives for large $\alpha
 Majorization also makes the distinction between detector noise and detector
 bias sharp. Noise acts as a doubly stochastic map on the statistics and can
 only increase every measure of uncertainty, whereas bias moves the achievable
-set. Whether relations derived for ideal detectors survive is decided by one
-partial sum, $S_2$, that is, by $\Lambda\le2\sqc$ for qubits
-(Proposition~\ref{prop:detectors}). Uncertainty-based tests of entanglement and
+set. Whether the ideal direct-sum majorization relation survives is decided by
+one partial sum, $S_2$, that is, by $\Lambda\le2\sqc$ for qubits
+(Proposition~\ref{prop:detectors}). This condition is sufficient for every bound
+inherited from that relation, but is generally not necessary for an individual
+entropic bound. Uncertainty-based tests of entanglement and
 steering with trusted detectors must therefore account for detector bias
 explicitly; the closed-form bound of Theorem~\ref{thm:povm} does so for all
 Schur-concave measures simultaneously. Non-attainment is itself testable:
