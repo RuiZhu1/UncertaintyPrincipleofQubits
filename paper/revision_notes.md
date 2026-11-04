@@ -105,3 +105,13 @@ The target venue is Communications Physics. Remaining author-side items include 
 - Added the geometric interpretation of the commuting attainment criterion: one extremal state must simultaneously maximize the largest single outcome probability and the largest cross-pair sum, whereas biased measurements can attain these maxima at opposite endpoints.
 
 These changes affect presentation only; no analytical result or numerical code is changed.
+
+# Scope corrections following the external review
+
+- Corrected the Discussion's non-attainment statement: noncommutation is not sufficient in arbitrary finite dimension. The text now covers noncommuting projective qubit measurements and, more generally, binary projective measurements with $c<1$.
+- Limited the direct-sum Rényi validity statement to sampled angles and sampled orders.
+- Changed “The attaining state” to “An attaining state” in Proposition 3(ii) to allow degenerate alternatives.
+- Described the closest-state Lorenz distance as experimentally accessible through optimized state preparation and outcome-statistics estimation, rather than as a single directly measurable observable, and noted finite sampling and precision.
+- Stated the steering model's calibration assumptions: efficiencies, biases, and no-click assignment rules must be independently characterized and fixed across Alice's settings; dark counts, drift, and setting-dependent losses require an extended model.
+
+No theorem formula or numerical code is changed.

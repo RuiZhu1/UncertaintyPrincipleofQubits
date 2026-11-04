@@ -670,7 +670,7 @@ for $t<1$; the minimum is the tight bound of Corollary~\ref{cor:tensor}.
 \end{proof}
 
 The failure, however, sets in only beyond $\alpha=2$. Numerically, for qubits
-$H_\alpha(\sqc,1-\sqc)$ is a valid bound for every $\alpha\le2$ at every angle,
+$H_\alpha(\sqc,1-\sqc)$ is a valid bound for every sampled $\alpha\le2$ at every sampled angle,
 and it fails above an angle-dependent order between $2.00$ ($\theta\to0$) and
 $2.58$ ($\theta\to90^\circ$). At $\alpha=2$ the bisector state is optimal at
 every angle~\cite{ZozorBosykPortesi2013}, and with $s=\sqc$ and
@@ -969,7 +969,7 @@ A state attains $\omplus(M,N)$ if and only if some $\varepsilon$ satisfies both
   &=\max_{\delta=\pm1}(A_\delta+B_\delta).
   \label{eq:commuting-attainment}
 \end{align}
-The attaining state is $\vecr=\varepsilon\hat a$. Geometrically, the same
+An attaining state is $\vecr=\varepsilon\hat a$. Geometrically, the same
 extremal state must simultaneously maximize the largest single outcome
 probability and the largest cross-pair probability sum; with bias, these maxima
 can occur at opposite endpoints.
@@ -1191,7 +1191,10 @@ An uncertainty-based steering or entanglement test with biased trusted
 detectors must therefore use the bound of the measurements actually performed.
 Theorem~\ref{thm:povm} provides it in closed form, for every Schur-concave
 measure at once, and Proposition~\ref{prop:detectors} tells when the ideal bound
-can be kept.
+can be kept. These criteria assume that detection efficiencies, biases, and
+no-click assignment rules have been independently calibrated and remain fixed
+across Alice's settings; dark counts, efficiency drift, and setting-dependent
+losses require an appropriately extended model.
 
 % ===========================================================================
 \section{Binary projective measurements in dimension \texorpdfstring{$d$}{d}}
@@ -1318,11 +1321,12 @@ majorization offers: one vector controls every Schur-concave uncertainty
 measure at once.
 
 The comparison with entropy-specific relations shows what this unification
-costs. Because the supremum is not the statistics of any state when the
-measurements do not commute, the induced bound is strict for every strictly
-Schur-concave measure, and for the tensor-product R\'enyi bounds it becomes
-exact only at the extreme orders $\alpha=0$ and $\alpha=\infty$. Against a
-generic scalar relation such as MU,
+costs. For noncommuting projective qubit measurements---and, more generally, for
+binary projective measurements with $c<1$---the supremum is not the statistics of
+any state, so every induced bound for a continuous strictly Schur-concave measure
+is strict; for the tensor-product R\'enyi bounds, exactness survives only at the
+extreme orders $\alpha=0$ and $\alpha=\infty$. Against a generic scalar relation
+such as MU,
 on the other hand, the majorization bounds are strong. For two projective qubit
 measurements, both Shannon bounds depend only on the Bloch angle $\theta$
 between the two measurement axes: the direct-sum bound is $h(\sqc)$ and MU
@@ -1358,8 +1362,11 @@ Schur-concave measures simultaneously. Non-attainment is itself testable:
 experiments have reported Lorenz curves that touch the optimal
 bound~\cite{Wang2020}, which by Proposition~\ref{prop:attain} can only happen
 for individual partial sums, and the distance
-$\min_\rho\max_k[S_k-L_k(p\oplus q)]$ between the bound and the closest state is a
-directly measurable quantity. A test with deliberately mismatched detectors,
+$\min_\rho\max_k[S_k-L_k(p\oplus q)]$ between the bound and the closest state is
+experimentally accessible in principle through optimized state preparation and
+outcome-statistics estimation. Finite experiments estimate this distance only for
+a sampled family of states and with finite statistical precision. A test with
+deliberately mismatched detectors,
 in the coherent-light~\cite{Wang2020} or photonic~\cite{Yuan2023} settings in
 which optimal majorization bounds have already been probed, would probe
 Proposition~\ref{prop:detectors} directly.
