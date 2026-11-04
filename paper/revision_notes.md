@@ -115,3 +115,15 @@ These changes affect presentation only; no analytical result or numerical code i
 - Stated the steering model's calibration assumptions: efficiencies, biases, and no-click assignment rules must be independently characterized and fixed across Alice's settings; dark counts, drift, and setting-dependent losses require an extended model.
 
 No theorem formula or numerical code is changed.
+
+# Counterexample-driven corrections and regression coverage
+
+- Corrected the remaining quantum-optics statement: nonattainment is now claimed for noncommuting two-outcome qubit measurements and for binary projective measurements with $c<1$; the optimal state can, rather than must, depend on the uncertainty measure.
+- Corrected the Fig. 6(a) discussion. The quoted thresholds refer to the lower-$\eta_V$ branch. At $(\eta_H,\eta_V)=(0.9,1)$, the state $-\hat a$ gives $H(M)+H(N)=h(0.475)=0.998196<1$, so the previous whole-square “never violated” claim was false.
+- Expanded the Fig. 6 verification to an $81\times81$ grid over the full efficiency square, including detector-label symmetry, validity of the corrected bound, the explicit counterexample, and the high-efficiency branch. For $\eta_H=0.9$, the high branch begins at $\eta_V\approx0.999671$ in the current numerical optimization.
+- Added a noncommuting rank-two projector regression in $d=3$ with $c=1$ and both optimal vectors attained.
+- Replaced “all bounds of Sec. V” with the explicit direct-sum, tensor-product, strictness, and tightness results proved in that dimension.
+- Reworded the Rényi statement so that validity through $\alpha=2$ and the earliest failure beyond it are explicitly numerical observations over sampled angles and orders.
+- Changed Proposition 3(ii) to “An attaining state can be chosen as ...” and the introduction to “spuriously certify steering”.
+
+The Data Availability Statement remains unchanged.

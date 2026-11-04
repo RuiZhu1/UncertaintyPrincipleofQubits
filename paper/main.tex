@@ -194,8 +194,8 @@ for noisy and biased measurements also has a practical consequence: detector
 noise can only increase uncertainty, but detector bias, produced for instance by
 mismatched efficiencies or click/no-click detection, can push the statistics
 outside the ideal quantum set. A single inequality decides when relations
-derived for ideal detectors survive; when it fails, an uncertainty-based
-steering test can certify steering for a product state. For the Shannon
+derived for ideal detectors survive; when it fails, using the ideal-detector
+bound can spuriously certify steering for a product state. For the Shannon
 entropy alone, a known closed-form bound~\cite{SanchezRuiz1998,KTW2014} is
 stronger than both at every noncommuting angle; the case for majorization rests on its
 universality, not on its sharpness for any single measure.
@@ -669,10 +669,10 @@ in any dimension is proven in Ref.~\cite{RPZ2014}.
 for $t<1$; the minimum is the tight bound of Corollary~\ref{cor:tensor}.
 \end{proof}
 
-The failure, however, sets in only beyond $\alpha=2$. Numerically, for qubits
-$H_\alpha(\sqc,1-\sqc)$ is a valid bound for every sampled $\alpha\le2$ at every sampled angle,
-and it fails above an angle-dependent order between $2.00$ ($\theta\to0$) and
-$2.58$ ($\theta\to90^\circ$). At $\alpha=2$ the bisector state is optimal at
+Numerically, for qubits $H_\alpha(\sqc,1-\sqc)$ is observed to remain a valid
+bound for every sampled order $0<\alpha\le2$ at every sampled angle; the earliest
+observed failure occurs beyond $\alpha=2$, at an angle-dependent order between
+$2.00$ ($\theta\to0$) and $2.58$ ($\theta\to90^\circ$). At $\alpha=2$ the bisector state is optimal at
 every angle~\cite{ZozorBosykPortesi2013}, and with $s=\sqc$ and
 $a=\frac{1+s}{2}$ the exact minimum is
 $-2\log_2[a^2+(1-a)^2]=-2\log_2\frac{1+s^2}{2}$, whereas
@@ -969,7 +969,7 @@ A state attains $\omplus(M,N)$ if and only if some $\varepsilon$ satisfies both
   &=\max_{\delta=\pm1}(A_\delta+B_\delta).
   \label{eq:commuting-attainment}
 \end{align}
-An attaining state is $\vecr=\varepsilon\hat a$. Geometrically, the same
+An attaining state can be chosen as $\vecr=\varepsilon\hat a$. Geometrically, the same
 extremal state must simultaneously maximize the largest single outcome
 probability and the largest cross-pair probability sum; with bias, these maxima
 can occur at opposite endpoints.
@@ -1101,8 +1101,11 @@ measure: the Shannon minimum is more forgiving than the Landau--Pollak sum, but
 not immune (Fig.~\ref{fig:detectors}). For orthogonal axes and random no-click
 assignment, an efficiency $\eta_H=0.99$ violates the ideal relation for
 $\eta_V<0.942$ and the ideal Shannon bound of one bit for $\eta_V<0.578$; for
-$\eta_H=0.95$ the thresholds are $0.708$ and $0.211$, and for $\eta_H=0.9$ the
-Shannon bound is never violated, although the ideal relation still is for
+$\eta_H=0.95$ the thresholds are $0.708$ and $0.211$. These thresholds refer to
+the lower-$\eta_V$ branch. For $\eta_H=0.9$, no Shannon violation is found for
+$\eta_V\le\eta_H$, but the full square is not violation-free: at
+$(\eta_H,\eta_V)=(0.9,1)$, the state $\vecr=-\hat a$ gives
+$H(M)+H(N)=h(0.475)=0.998196<1$. The ideal relation also fails for
 $\eta_V<0.417$. Click/no-click detectors lower the Shannon minimum below its
 ideal value at all efficiencies and angles we examined; for orthogonal axes this
 holds for every $\eta_d<1$, since the eigenstate of the dark outcome of $M$ gives
@@ -1244,10 +1247,12 @@ either. If $c=1$, the ranges of some $P_i$ and $Q_j$ intersect, and a common
 eigenvector attains $\omplus=(1,1,0,0)$ and $\omtimes=(1,0,0,0)$.
 \end{proof}
 
-In particular, all bounds of Sec.~\ref{sec:entropic} hold for binary projective
-measurements in any dimension with $c=\max_{i,j}\|P_iQ_j\|^2$, the min-entropy
-bound remains tight, and for $c<1$ the bounds for strictly Schur-concave
-measures are strict (Theorem~\ref{thm:tight}).
+In particular, the direct-sum bounds of Corollary~\ref{cor:direct}, the
+tensor-product bounds of Corollary~\ref{cor:tensor}, and the strictness and
+tightness conclusions of Theorem~\ref{thm:tight} hold for binary projective
+measurements in any dimension with $c=\max_{i,j}\|P_iQ_j\|^2$. The min-entropy
+bound remains tight, and for $c<1$ the bounds for continuous strictly
+Schur-concave measures are strict.
 The direct-sum part of Theorem~\ref{thm:dimd} follows from the eigenvalue
 formula~\cite{Baek2019} and $\lambda_{\max}(P+Q)=1+\|PQ\|$~\cite{Halmos1969}.
 The tensor-product vector itself is the binary case of the general construction
@@ -1377,10 +1382,11 @@ minimum-uncertainty states: for their principal quadratures they saturate both
 the Heisenberg relation and the entropic relation of Bia{\l}ynicki-Birula and
 Mycielski~\cite{BBM1975}; moreover, all pure Gaussian states are equivalent
 under continuous majorization in phase space and are conjectured to majorize
-every Wigner-positive state~\cite{VanHerstraeten2023}. For non-commuting binary
-measurements no such state exists (Propositions~\ref{prop:attain}
-and~\ref{prop:povm-attain}), and the optimal state depends on the uncertainty
-measure, in line with the finding of Korzekwa and
+every Wigner-positive state~\cite{VanHerstraeten2023}. For noncommuting
+two-outcome qubit measurements, and for binary projective measurements with
+$c<1$, no such state exists (Propositions~\ref{prop:attain}
+and~\ref{prop:povm-attain}), and in these cases the optimal state can depend on
+the uncertainty measure, in line with the finding of Korzekwa and
 Lostaglio~\cite{KorzekwaLostaglio2016} that no qubit state minimizes all
 information-theoretic uncertainty measures at once, and with the
 measure dependence of qubit uncertainty discussed in

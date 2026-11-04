@@ -123,8 +123,21 @@ for _ in range(50):
     I = np.eye(dim)
     w = mj.omega_direct_sum_operators([P, I - P], [Q, I - Q])
     worst = max(worst, abs(mj.max_overlap_projectors(P, Q) - 1), np.abs(w - [1, 1, 0, 0]).max())
-check("Thm 5, degenerate case: common eigenvector => c = 1 and omega_plus = (1, 1, 0, 0)",
-      worst < 1e-8, f"max deviation {worst:.1e}")
+# Regression: noncommuting rank-two projectors can nevertheless have c = 1 and attain both bounds.
+P0 = np.diag([1.0, 1.0, 0.0])
+psi0 = np.array([0.0, 1.0, 1.0]) / np.sqrt(2)
+Q0 = np.diag([1.0, 0.0, 0.0]) + np.outer(psi0, psi0)
+comm0 = np.linalg.norm(P0 @ Q0 - Q0 @ P0)
+c0 = mj.max_overlap_projectors(P0, Q0)
+r0 = np.array([1.0, 0.0, 0.0])
+p0 = np.array([np.vdot(r0, P0 @ r0).real, np.vdot(r0, (np.eye(3) - P0) @ r0).real])
+q0 = np.array([np.vdot(r0, Q0 @ r0).real, np.vdot(r0, (np.eye(3) - Q0) @ r0).real])
+worst = max(worst, abs(c0 - 1),
+            np.max(np.abs(mj.sort_desc(mj.direct_sum(p0, q0)) - mj.omega_direct_sum_projective(c0))),
+            np.max(np.abs(mj.sort_desc(mj.tensor(p0, q0)) - mj.omega_tensor_projective(c0))))
+check("Thm 5, degenerate case: common eigenvector => c = 1 and both optimal vectors are attained, "
+      "including a noncommuting rank-two pair", worst < 1e-8 and comm0 > 1e-8,
+      f"max deviation {worst:.1e}, noncommuting example ||[P,Q]|| = {comm0:.3f}")
 
 # c from the anticommutator of the reflections A = 2P - 1 and B = 2Q - 1
 rng_ac = np.random.default_rng(5)  # separate stream: the numbers printed below stay unchanged
@@ -748,22 +761,44 @@ check("Cor. 3 (steering): Werner formula, click/no-click bound and efficiency th
       bool(ok), f"e_* = {e_star:.9f}; at e = 0.95, w_ideal = {w_ideal:.6f}, "
       f"w_corrected = {w_corrected:.6f}")
 
-# Random no-click assignment: thresholds quoted in the text (theta = 90 deg)
+# Random no-click assignment: both low- and high-efficiency branches over the full square
+def pbs_shannon_min(eh, ev, num=4001):
+    return mj.shannon_min_in_plane(np.pi / 2, (eh - ev) / 2, (eh + ev) / 2, num=num)
+
+
 sc = np.cos(np.pi / 4)
 thr = lambda eh: (eh * (1 + sc) - 2 * sc) / (1 - sc)
 sh_thr = {}
 for eh in (0.99, 0.95):
     evs = np.linspace(0, eh, 4001)
-    bad = [ev for ev in evs if mj.shannon_min_in_plane(np.pi / 2, (eh - ev) / 2, (eh + ev) / 2,
-                                                       num=4001) < 1 - 1e-9]
+    bad = [ev for ev in evs if pbs_shannon_min(eh, ev) < 1 - 1e-9]
     sh_thr[eh] = max(bad)
 ok = (abs(thr(0.99) - 0.942) < 1e-3 and abs(thr(0.95) - 0.708) < 1e-3
       and abs(sh_thr[0.99] - 0.578) < 2e-3 and abs(sh_thr[0.95] - 0.211) < 2e-3)
-ok &= all(mj.shannon_min_in_plane(np.pi / 2, (eh - ev) / 2, (eh + ev) / 2) >= 1 - 1e-9
-          for eh in (0.9, 0.8) for ev in np.linspace(0, eh, 41))
-check("Sec. on detectors: eta_H = 0.99 (0.95) violates the ideal relation for eta_V < 0.942 (0.708) "
-      "and the 1-bit Shannon bound for eta_V < 0.578 (0.211); not at all for eta_H <= 0.9", bool(ok),
-      f"Shannon thresholds {sh_thr[0.99]:.3f}, {sh_thr[0.95]:.3f}")
+ok &= all(pbs_shannon_min(0.9, ev) >= 1 - 1e-9 for ev in np.linspace(0, 0.9, 181))
+
+# Explicit counterexample to the previous whole-square "never violated" claim.
+a0, b0 = np.array([0.0, 0.0, 1.0]), np.array([1.0, 0.0, 0.0])
+M0, N0 = mj.detector_pair(a0, 0.9, 1.0), mj.detector_pair(b0, 0.9, 1.0)
+p0, q0 = M0.probs(-a0), N0.probs(-a0)
+H_counter = float(mj.shannon(p0) + mj.shannon(q0))
+ok &= (np.allclose(p0, [0, 1]) and np.allclose(q0, [0.475, 0.525])
+       and abs(H_counter - mj.binary_entropy(0.475)) < 1e-12 and H_counter < 1)
+high_09 = brentq(lambda ev: pbs_shannon_min(0.9, ev, num=20001) - 1, 0.99, 1)
+ok &= abs(high_09 - 0.999671) < 2e-4
+
+# Check the corrected bound and detector-label symmetry on the full [0,1]^2 grid.
+grid = np.linspace(0, 1, 81)
+mins = np.empty((81, 81))
+for i, eh in enumerate(grid):
+    for j, ev in enumerate(grid):
+        mins[i, j] = pbs_shannon_min(eh, ev, num=2001)
+        M, N = mj.detector_pair(a0, eh, ev), mj.detector_pair(b0, eh, ev)
+        ok &= mj.shannon(mj.omega_direct_sum(M, N)) <= mins[i, j] + 1e-8
+ok &= np.allclose(mins, mins.T, atol=1e-7)
+check("Fig. 6(a): low-eta_V thresholds, full-square checks and high-eta_V counterexample", bool(ok),
+      f"low thresholds {sh_thr[0.99]:.3f}, {sh_thr[0.95]:.3f}; H(0.9,1) = {H_counter:.9f}; "
+      f"high branch starts at {high_09:.6f}; full grid 81 x 81")
 
 # --- 12. Renyi refinements (review): validity of the direct-sum form up to alpha = 2 and the
 #         range in which the eigenstates are optimal ----------------------------------------
