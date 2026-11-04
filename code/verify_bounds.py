@@ -434,9 +434,15 @@ check("Thm 3: all bounds strict for 0 < alpha < inf and gamma > 0; tight at alph
 ok = True
 for _ in range(200):
     M, N = random_povm(rng), random_povm(rng)
+    omega = mj.omega_direct_sum(M, N)
     exact, _ = mj.min_entropy_sum(M, N, num=801)
-    ok &= exact >= mj.shannon(mj.omega_direct_sum(M, N)) - 1e-8
-check("Thm 4: H(M)+H(N) >= H(omega_plus) for random unsharp/biased POVMs", ok)
+    ok &= exact >= mj.shannon(omega) - 1e-8
+    p, q = M.probs(RANDOM[:2000]), N.probs(RANDOM[:2000])
+    for gamma in (0.3, 0.5, 2.0, 3.0):
+        actual = mj.tsallis(p, gamma) + mj.tsallis(q, gamma)
+        bound = (2 - np.sum(omega**gamma)) / (gamma - 1)
+        ok &= bool(np.all(actual >= bound - 1e-12))
+check("Thm 4: Shannon and Tsallis bounds hold for random unsharp/biased POVMs", ok)
 
 eta = 0.7  # orthogonal axes, eta = zeta <= 1/sqrt(2): jointly measurable
 M, N = pair(np.pi / 2, eta)
