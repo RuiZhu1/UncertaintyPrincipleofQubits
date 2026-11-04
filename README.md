@@ -194,7 +194,7 @@ referee revision (48 checks in all).
 [PASS] Thm 4: POVM formula matches lattice supremum (and is already ordered)  (max deviation 3.82e-05)
 [PASS] Thm 4 == eigenvalue formula S_k = max lambda_max(sum of k effects)  (max deviation 1.7e-15)
 [PASS] Thm 5: omega_plus in d = 2, 4, 6 with c = max||P_i Q_j||^2 (all 150 instances have c < 1)  (max deviation 3.8e-15, c in [0.505, 0.999])
-[PASS] Thm 5, degenerate case: common eigenvector => c = 1 and omega_plus = (1, 1, 0, 0)  (max deviation 2.7e-15)
+[PASS] Thm 5, degenerate case: common eigenvector => c = 1 and both optimal vectors are attained, including a noncommuting rank-two pair  (max deviation 2.7e-15, noncommuting example ||[P,Q]|| = 0.707)
 [PASS] Thm 5 remark: c = 1/2 + ||{A, B}||/4 with A = 2P - 1, B = 2Q - 1 (d = 2..8, all ranks)  (max deviation 1.3e-15)
 [PASS] Thm 5, tensor product: S_1 = w is attained at a top eigenvector of P_i + Q_j (d = 4, 6) and never exceeded by random states  (max deviation 2.4e-15, largest p_i q_j - w over random states -2.0e-02)
 [PASS] Cor. 4: binary POVMs in d = 2..6: omega_plus = (S_1, S_2 - S_1, 1 + S_1 - S_2, 1 - S_1), already ordered  (max deviation 1.6e-15)
@@ -224,6 +224,7 @@ referee revision (48 checks in all).
 [PASS] Sec. VIII (iii): three qubit bases: S_k = k/2 + max|sum n_j|/2, sigma_x,y,z give the Li-Qiao vector, and the increments are ordered for 300 random triples
 [PASS] Sec. VIII (i): unbiased POVMs with eta = zeta = 0.8, orthogonal axes: S_1 is the AM-GM value, but S_3 is attained neither by an eigenstate nor by a bisector state  (S_3 >= 0.9550, eigenstate 0.9500, bisector 0.9528)
 [PASS] Cor. 3 (steering): Werner formula, click/no-click bound and efficiency threshold  (e_* = 0.773459080; at e = 0.95, w_ideal = 0.817782, w_corrected = 0.865859)
+[PASS] Fig. 6(a): low-eta_V thresholds, full-square checks and high-eta_V counterexample  (low thresholds 0.578, 0.211; H(0.9,1) = 0.998195879; high branch starts at 0.999671; full grid 81 x 81)
 ```
 
 The grid-based deviations (about $10^{-5}$) come from discretizing the state
