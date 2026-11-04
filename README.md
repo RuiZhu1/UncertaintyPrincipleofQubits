@@ -323,4 +323,4 @@ manuscript and the other documents in this repository are not covered by it.
 
 ## Contact
 
-Rui Zhu, ruizhu2025@gmail.com
+Rui Zhu, rui.zhu@gtiit.edu.cn
