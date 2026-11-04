@@ -757,9 +757,21 @@ w_ideal = brentq(lambda w: mj.werner_conditional_entropy(w, 0.95) - 1, 0, 1)
 w_corrected = brentq(lambda w: mj.werner_conditional_entropy(w, 0.95)
                      - mj.click_mub_bound(0.95), 0, 1)
 ok &= abs(w_ideal - 0.817782) < 1e-6 and abs(w_corrected - 0.865859) < 1e-6
-check("Cor. 3 (steering): Werner formula, click/no-click bound and efficiency threshold",
-      bool(ok), f"e_* = {e_star:.9f}; at e = 0.95, w_ideal = {w_ideal:.6f}, "
-      f"w_corrected = {w_corrected:.6f}")
+
+
+def exact_click_bound(e, num=100001):
+    return mj.shannon_min_in_plane(np.pi / 2, e - 1, e, num=num)
+
+
+eta_shannon = brentq(lambda e: mj.binary_entropy(e) - exact_click_bound(e), 0.6, 0.75)
+ok &= abs(eta_shannon - 0.680568418556) < 1e-9
+ok &= abs(exact_click_bound(e_star) - 0.9525819632) < 1e-8
+ok &= (eta_shannon < e_star
+       and mj.werner_conditional_entropy(1, 0.72) < exact_click_bound(0.72)
+       and mj.werner_conditional_entropy(1, 0.72) > mj.click_mub_bound(0.72))
+check("Cor. 3 (steering): Werner formula and exact/majorization efficiency thresholds",
+      bool(ok), f"eta_S = {eta_shannon:.9f}, eta_maj = {e_star:.9f}; "
+      f"at e = 0.95, w_ideal = {w_ideal:.6f}, w_corrected = {w_corrected:.6f}")
 
 # Random no-click assignment: both low- and high-efficiency branches over the full square
 def pbs_shannon_min(eh, ev, num=4001):

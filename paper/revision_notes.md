@@ -127,3 +127,12 @@ No theorem formula or numerical code is changed.
 - Changed Proposition 3(ii) to “An attaining state can be chosen as ...” and the introduction to “spuriously certify steering”.
 
 The Data Availability Statement remains unchanged.
+
+# Steering optimality and scope refinements
+
+- Added the exact Shannon bound $E(\eta_d)$ from the first inequality of the steering corollary and compared it with the majorization bound. The Bell-state threshold is $\eta_{\rm S}\approx0.680568$ for the exact Shannon witness, whereas $\eta_*=(4+\sqrt2)/7\approx0.773459$ is specifically the majorization-witness threshold. For $\eta_{\rm S}<\eta_d\le\eta_*$, the exact Shannon witness certifies the Bell state while the majorization witness does not.
+- Added numerical verification of the exact threshold and the two thresholds' relative positions to `verify_bounds.py`; the total remains 48 checks.
+- Limited the $\Lambda\le2\sqrt c$ necessity claim to the ideal direct-sum majorization relation. It is sufficient for bounds inherited from that relation but generally not necessary for an individual entropic bound.
+- Distinguished state-dependent preparation trade-offs from randomness intrinsic to unsharp POVMs or classical no-click post-processing.
+- Specified probability $1/2$ for each no-click assignment and excluded the jointly zero projector pair from $\lambda_{\max}(P+Q)=1+\|PQ\|$, which does not affect the maxima.
+- Updated the abstract, introduction, Discussion, README, and numerical verification accordingly. The Data Availability Statement remains unchanged.
