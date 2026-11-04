@@ -136,3 +136,13 @@ The Data Availability Statement remains unchanged.
 - Distinguished state-dependent preparation trade-offs from randomness intrinsic to unsharp POVMs or classical no-click post-processing.
 - Specified probability $1/2$ for each no-click assignment and excluded the jointly zero projector pair from $\lambda_{\max}(P+Q)=1+\|PQ\|$, which does not affect the maxima.
 - Updated the abstract, introduction, Discussion, README, and numerical verification accordingly. The Data Availability Statement remains unchanged.
+
+# Tsallis application and optics clarifications
+
+- Added a concise non-Shannon application: for every Tsallis order $\gamma>0$, the calibrated POVM bound gives $T_\gamma(p)+T_\gamma(q)\ge(2-\sum_k\omega_k^\gamma)/(\gamma-1)$. Random biased-POVM checks were added to the existing Theorem 4 verification; the suite remains at 48 checks.
+- Replaced the qualitative squeezed-parity statement with the explicit approximate common-eigenstate sequence: for fixed $\alpha=i\alpha_p$ along the anti-squeezed quadrature, $\langle\Pi\rangle=1$ and $\langle D(\alpha)\Pi D^\dagger(\alpha)\rangle=e^{-2\alpha_p^2e^{-2r}}\to1$.
+- Clarified that the coherent-light reference tests polarization-ensemble statistics via Stokes reconstruction, not the single-photon biased-POVM or steering tests introduced here.
+- Compressed the cat-state explanation into the analytic identity $\lambda_{\max}(|\nu_1\rangle\langle\nu_1|+|\nu_2\rangle\langle\nu_2|)=1+|\langle\nu_1|\nu_2\rangle|$, from which the quoted partial-sum bound follows. The existing coherent-state common-eigenvector argument is retained.
+- Added an explicit theorem-by-theorem literature-map explanation to README, distinguishing known formulas and optimality from new proofs, attainment criteria, closed-form evaluations, and physical applications.
+
+No data-availability text or repository disclosure is changed. No dark-count, efficiency-drift, or setting-dependent-loss model is added, and the existing 78%/28% presentation is retained.

@@ -1060,6 +1060,17 @@ it tracks the exact minimum as a function of sharpness, becoming exact in the
 trivial limit $\eta\to0$, and of bias, where the gap grows with the bias at
 $45^\circ$ but not at $90^\circ$.
 
+The same vector also gives a non-Shannon application. For every Tsallis order
+$\gamma>0$,
+\begin{equation}
+  T_\gamma(p)+T_\gamma(q)\ge
+  \frac{2-\sum_k\omega_k^\gamma}{\gamma-1},
+  \qquad \omega=\omplus(M,N).
+  \label{eq:tsallis-povm}
+\end{equation}
+Thus one calibrated biased POVM pair yields bounds for the entire Tsallis family
+at once, rather than only for the Shannon entropy.
+
 \emph{Imperfect detectors and uncertainty-based tests.}---Experiments that
 test uncertainty relations, or use them to certify entanglement or steering,
 usually compare their data with the bound for ideal measurements. With the
@@ -1450,9 +1461,10 @@ the Stokes operators of polarization are the Pauli matrices, and two linear
 polarization analyzers at a relative angle $\vartheta$ correspond to
 $\theta=2\vartheta$, so that $c=\cos^2\vartheta$ is Malus's law; the crossover
 with MU and the angle $\bar\theta$ correspond to $\vartheta\approx40.7^\circ$ and
-$\vartheta\approx33.5^\circ$, respectively. The optimal direct-sum bound has been
-tested in this setting with coherent light, the polarization state being
-reconstructed from measured Stokes parameters~\cite{Wang2020}. For many photons
+$\vartheta\approx33.5^\circ$, respectively. Coherent-light experiments have
+tested the corresponding polarization-ensemble statistics, with the state
+reconstructed from measured Stokes parameters~\cite{Wang2020}, rather than the
+single-photon biased-POVM or steering tests introduced here. For many photons
 the Stokes operators form a collective spin that can be squeezed (polarization
 squeezing~\cite{Korolkova2002,Bowen2002}); for a single photon, which cannot be
 squeezed, only the trade-off along the boundary of $\mathcal{E}_\theta$
@@ -1494,22 +1506,32 @@ open.
 (v) \emph{Binary measurements on light modes.} Which experimentally accessible
 binary measurements on a light mode have $c<1$, and what do the bounds of
 Sec.~\ref{sec:dimd} imply for them? In infinite dimension
-$c=\sup_{i,j}\|P_iQ_j\|^2$ can equal $1$ without a common eigenvector. For
-photon-number parity and a suitably displaced parity, whose expectation values
-sample the Wigner function~\cite{Royer1977}, increasingly squeezed vacua, which
-contain only even photon numbers, approach simultaneous eigenstates of both when
-the displacement is along the anti-squeezed quadrature, so no non-trivial
-state-independent relation exists. Tests for coherent states,
+$c=\sup_{i,j}\|P_iQ_j\|^2$ can equal $1$ without a common eigenvector. For the
+photon-number parity operator $\Pi$ and its suitably displaced counterpart, whose
+expectation values
+sample the Wigner function~\cite{Royer1977}, the squeezed vacua $\ket{\psi_r}$
+contain only even photon numbers. For a fixed displacement $D(\alpha)$ with
+$\alpha=i\alpha_p$ along the anti-squeezed quadrature,
+\begin{align}
+  \bra{\psi_r}\Pi\ket{\psi_r}&=1,\notag\\
+  \bra{\psi_r}D(\alpha)\Pi D^\dagger(\alpha)\ket{\psi_r}
+  &=e^{-2\alpha_p^2e^{-2r}}\longrightarrow1,
+  \label{eq:parity-sequence}
+\end{align}
+so these states form an approximate common-eigenstate sequence, and no
+non-trivial state-independent relation exists. Tests for coherent states,
 $\{\ket{\nu}\!\bra{\nu},\mathds{1}-\ket{\nu}\!\bra{\nu}\}$, realized by a
 displacement followed by on/off detection with no-click probability
 $\pi Q(\nu)=\bra{\nu}\rho\ket{\nu}$, with $Q$ the Husimi function, also have $c=1$,
 because all states orthogonal to both coherent states are common eigenvectors.
-Individual partial sums remain informative, however:
+Individual partial sums remain informative: the identity
+$\lambda_{\max}(\ket{\nu_1}\!\bra{\nu_1}+\ket{\nu_2}\!\bra{\nu_2})
+=1+|\langle\nu_1|\nu_2\rangle|$ gives
 $\pi[Q(\nu_1)+Q(\nu_2)]\le1+e^{-|\nu_1-\nu_2|^2/2}$, with equality for the
-superposition $\ket{\nu_1}+e^{-i\varphi}\ket{\nu_2}$ with
-$\varphi=\arg\langle\nu_1|\nu_2\rangle$, an optical cat
-state~\cite{Ourjoumtsev2007,Lewenstein2021} (the even cat state for
-$\nu_2=-\nu_1$), which thus plays the role of the bisector state. Non-trivial relations require $\|\{A,B\}\|<2$, as for
+phase-aligned optical cat state $\ket{\nu_1}+e^{-i\varphi}\ket{\nu_2}$,
+$\varphi=\arg\langle\nu_1|\nu_2\rangle$~\cite{Ourjoumtsev2007,Lewenstein2021}
+(the even cat state for $\nu_2=-\nu_1$), which thus plays the role of the
+bisector state. Non-trivial relations require $\|\{A,B\}\|<2$, as for
 the pseudospin operators of Ref.~\cite{Chen2002}, or for polarization
 measurements on single photons.
 
