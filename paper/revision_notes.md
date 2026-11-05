@@ -146,3 +146,13 @@ The Data Availability Statement remains unchanged.
 - Added an explicit theorem-by-theorem literature-map explanation to README, distinguishing known formulas and optimality from new proofs, attainment criteria, closed-form evaluations, and physical applications.
 
 No data-availability text or repository disclosure is changed. No dark-count, efficiency-drift, or setting-dependent-loss model is added, and the existing 78%/28% presentation is retained.
+
+# Focused Discussion and Fig. 6 layout
+
+- Moved the Fig. 6(b) legend below the axes in a two-column layout so that it no longer overlaps the curves, and regenerated `figures/detector_bias.pdf`.
+- Removed the in-plot “ideal detectors” text annotations after visual review. The y-axis now marks $60^\circ$ and $90^\circ$ at the corresponding horizontal dashed-line heights, with matching colors.
+- Removed the italic “Relation to quantum optics” heading and substantially compressed the material. The Discussion now contains one photonic-qubit paragraph covering Malus's law, coherent-light polarization-ensemble tests, and detector-efficiency mismatch.
+- Deleted the former open question (v) on binary measurements on light modes.
+- Removed the Robertson–Schrödinger and Fock-space statements from the numerical appendix, including the statement about a Fock space of dimension 600. Updated the Werner appendix sentence to mention both $\eta_*$ and $\eta_{\rm S}$.
+- Preserved the removed quantum-optics discussion, extended photonic context, former open question (v), and numerical-methods notes in `paper/quantum_optics_future.md` for a future article. The associated Fock-space checks remain in the code for that future work, but are not presented as evidence for the focused manuscript.
+- Synchronized README's Discussion summary, repository layout, and roadmap. No data-availability wording is changed.
