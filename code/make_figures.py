@@ -312,7 +312,8 @@ def fig_detector_bias():
     ax_b.set_ylabel(r"minimum of $H(M)+H(N)$ (bits)")
     ax_b.set_xlim(0.3, 1.0)
     ax_b.set_ylim(0.2, 1.08)
-    ax_b.legend(loc="lower right", fontsize=6.6)
+    ax_b.legend(loc="upper center", bbox_to_anchor=(0.5, -0.18), fontsize=6.6,
+                ncol=2, handlelength=2.0, columnspacing=1.2)
     for ax, tag in ((ax_a, "(a)"), (ax_b, "(b)")):
         ax.text(-0.02, 1.04, tag, transform=ax.transAxes, ha="right", va="bottom", fontsize=8, color=INK2)
     fig.savefig(OUT / "detector_bias.pdf")
