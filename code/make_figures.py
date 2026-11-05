@@ -307,7 +307,10 @@ def fig_detector_bias():
         ax_b.plot(eds, true_min, color=col, label=rf"exact minimum, $\theta={deg}^\circ$")
         ax_b.plot(eds, bound, color=col, ls=(0, (1.2, 1.2)), label=rf"$H(\omega_\oplus(M,N))$, $\theta={deg}^\circ$")
         ax_b.axhline(ideal, color=col, lw=0.8, ls="--")
-        ax_b.text(0.32, ideal + 0.015, rf"ideal detectors, ${deg}^\circ$", fontsize=6.5, color=col, va="bottom")
+        label_x = 0.32 if deg == 90 else 0.56
+        label_y = ideal + 0.045 if deg == 90 else 0.235
+        ax_b.text(label_x, label_y, rf"ideal detectors, ${deg}^\circ$",
+                  fontsize=6.5, color=col, va="bottom")
     ax_b.set_xlabel(r"detection efficiency $\eta_d$ (click/no-click)")
     ax_b.set_ylabel(r"minimum of $H(M)+H(N)$ (bits)")
     ax_b.set_xlim(0.3, 1.0)
