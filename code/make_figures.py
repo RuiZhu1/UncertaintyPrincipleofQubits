@@ -307,14 +307,16 @@ def fig_detector_bias():
         ax_b.plot(eds, true_min, color=col, label=rf"exact minimum, $\theta={deg}^\circ$")
         ax_b.plot(eds, bound, color=col, ls=(0, (1.2, 1.2)), label=rf"$H(\omega_\oplus(M,N))$, $\theta={deg}^\circ$")
         ax_b.axhline(ideal, color=col, lw=0.8, ls="--")
-        label_x = 0.32 if deg == 90 else 0.56
-        label_y = ideal + 0.045 if deg == 90 else 0.235
-        ax_b.text(label_x, label_y, rf"ideal detectors, ${deg}^\circ$",
-                  fontsize=6.5, color=col, va="bottom")
     ax_b.set_xlabel(r"detection efficiency $\eta_d$ (click/no-click)")
     ax_b.set_ylabel(r"minimum of $H(M)+H(N)$ (bits)")
     ax_b.set_xlim(0.3, 1.0)
     ax_b.set_ylim(0.2, 1.08)
+    ideal_60 = mj.shannon_min_in_plane(np.radians(60), 0.0, 1.0)
+    ideal_90 = mj.shannon_min_in_plane(np.pi / 2, 0.0, 1.0)
+    ax_b.set_yticks([0.2, 0.4, 0.6, ideal_60, 0.8, ideal_90])
+    ax_b.set_yticklabels(["0.2", "0.4", "0.6", r"$60^\circ$", "0.8", r"$90^\circ$"])
+    for tick_label, col in zip(ax_b.get_yticklabels(), (INK, INK, INK, C2, INK, C1)):
+        tick_label.set_color(col)
     ax_b.legend(loc="upper center", bbox_to_anchor=(0.5, -0.18), fontsize=6.6,
                 ncol=2, handlelength=2.0, columnspacing=1.2)
     for ax, tag in ((ax_a, "(a)"), (ax_b, "(b)")):

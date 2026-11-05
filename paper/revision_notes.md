@@ -150,7 +150,7 @@ No data-availability text or repository disclosure is changed. No dark-count, ef
 # Focused Discussion and Fig. 6 layout
 
 - Moved the Fig. 6(b) legend below the axes in a two-column layout so that it no longer overlaps the curves, and regenerated `figures/detector_bias.pdf`.
-- Repositioned the ideal-detector annotations after visual review: the 90° label sits above the top dashed line, while the 60° label uses the empty lower-right region instead of lying close to the curves.
+- Removed the in-plot “ideal detectors” text annotations after visual review. The y-axis now marks $60^\circ$ and $90^\circ$ at the corresponding horizontal dashed-line heights, with matching colors.
 - Removed the italic “Relation to quantum optics” heading and substantially compressed the material. The Discussion now contains one photonic-qubit paragraph covering Malus's law, coherent-light polarization-ensemble tests, and detector-efficiency mismatch.
 - Deleted the former open question (v) on binary measurements on light modes.
 - Removed the Robertson–Schrödinger and Fock-space statements from the numerical appendix, including the statement about a Fock space of dimension 600. Updated the Werner appendix sentence to mention both $\eta_*$ and $\eta_{\rm S}$.
