@@ -156,3 +156,42 @@ No data-availability text or repository disclosure is changed. No dark-count, ef
 - Removed the Robertson–Schrödinger and Fock-space statements from the numerical appendix, including the statement about a Fock space of dimension 600. Updated the Werner appendix sentence to mention both $\eta_*$ and $\eta_{\rm S}$.
 - Preserved the removed quantum-optics discussion, extended photonic context, former open question (v), and numerical-methods notes in `paper/quantum_optics_future.md` for a future article. The associated Fock-space checks remain in the code for that future work, but are not presented as evidence for the focused manuscript.
 - Synchronized README's Discussion summary, repository layout, and roadmap. No data-availability wording is changed.
+
+# Five-point mathematical review (November 9)
+
+## 1. Rényi minimizers and numerical stability
+
+- Replaced the former angle-dependent eigenstate threshold $\alpha_0(c)$ and its numerical values by the sharp threshold $\alpha=1/2$ for every non-MUB angle. For $\alpha>1/2$, the small-rotation expansion $F_\alpha(\varphi)-F_\alpha(0)=-f'_\alpha(\theta)\varphi+o(\varphi)$ proves that an eigenstate cannot remain a minimizer. The MUB exception remains separate.
+- Replaced the old grid-based threshold check with stable $\sin^2(\varphi/2)$ probabilities and logarithmically spaced small rotations. The alpha-star (bisector threshold) analysis is unchanged.
+- Retained the numerical, rather than certified-global, status of the quoted direct-sum ratios and failure orders.
+
+## 2. Literature and novelty positioning
+
+- Added Yang–Qiao, *Geometric Optimization over Quantum State Spaces: Tight Uncertainty Relations and Resource Certification*, Phys. Rev. Lett. **137**, 160201 (2026), and contrasted its certified support-function outer approximation with the present closed-form binary vectors and attainment criteria.
+- Added Tavakoli (2024) and Svegborn et al. (2025) to the discussion of steering with imperfect trusted measurements. The theorem-by-theorem literature map now includes the new results.
+
+## 3. Direct-sum Rényi bounds for all orders above one
+
+- Added the induced bound $H_\alpha(p)+H_\alpha(q)\ge[2/(1-\alpha)]\log_2[(\sum_k\omega_{\oplus,k}^\alpha)/2]$ for $\alpha>1$, with the AM–GM argument and attribution to Baek–Nha–Son (2019), Cor. 1.
+- Stated its applicability to arbitrary biased two-outcome qubit POVMs through Theorem 4. Replaced claims that only the tensor product remains at large orders: it is the particular expression $H_\alpha(\sqrt c,1-\sqrt c)$ that fails, not all direct-sum Rényi consequences.
+- Added projective and random biased-POVM validity checks to the existing corollary and Theorem 4 checks.
+
+## 4. Calibrated steering benchmark
+
+- Retained the exact-Shannon and majorization thresholds $\eta_{\rm S}\approx0.680568$ and $\eta_*=(4+\sqrt2)/7$, and added the calibrated linear two-setting witness for click/no-click detection.
+- For the Werner family, the calibrated linear expression is $2w$ independently of efficiency, so exact-statistics detection gives $w>1/\sqrt2$ for every $\eta_d>0$. This is explicitly a comparison of witnesses, not a fundamental steering boundary.
+- Added explicit Born-rule matrix checks of the linear expression at several Werner parameters and efficiencies.
+
+## 5. Results replacing parts of the former open questions
+
+- Added Proposition 5 for unbiased equal-sharpness qubit POVMs: $S_1=(1+\eta s)^2/4$, $S_2=(1+\eta)/2$, $S_3=1-m_\eta(s)$, and $S_4=1$, where $m_\eta(s)=(1-\eta s)^2/4$ for $\eta\le s$ and $(1-s^2)(1-\eta^2)/4$ for $\eta\ge s$. The proof uses AM–GM, the exact $S_2$ ordering, and a quadratic minimization on the ellipse. The ordered increments require no flattening.
+- Added Proposition 6: for binary POVMs in any dimension, optimal direct-sum attainment is equivalent to nonzero intersection of the top eigenspaces of a maximizing effect and a maximizing cross-sum.
+- Narrowed the open questions to biased/unequal-sharpness tensor products, more explicit higher-dimensional spectral characterizations and tensor products, and the remaining multi-measurement and mixed-order problems.
+- Added 70 grid/random comparisons for Proposition 5, branch-continuity checks, the explicit $S_3=0.955$ example, and trivial/MUB regressions for Proposition 6.
+
+## Author information and scope
+
+- Added Gilad Gour's e-mail and his Technion Faculty of Mathematics / Helen Diller Quantum Center and GTIIT Mathematics with Computer Science Program affiliations. Only his funding acknowledgement remains open.
+- No dark-count, drift, or setting-dependent-loss model is added. The Data Availability Statement remains unchanged and contains no repository link.
+
+Final verification for this revision: all 48 checks pass. `main.pdf` was rebuilt and visually checked (17 pages), with no unresolved references or overfull boxes; the existing REVTeX float-placement warnings remain.

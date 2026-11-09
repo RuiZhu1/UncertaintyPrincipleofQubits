@@ -229,6 +229,17 @@ def omega_tensor_projective(c: float) -> np.ndarray:
     return np.array([w, 1 - w, 0.0, 0.0])
 
 
+def omega_tensor_unbiased_equal(c: float, eta: float) -> np.ndarray:
+    """Optimal tensor-product vector for unbiased qubit POVMs of equal sharpness eta."""
+    s = np.sqrt(c)
+    if eta <= s:
+        m = 0.25 * (1 - eta * s) ** 2
+    else:
+        m = 0.25 * (1 - s**2) * (1 - eta**2)
+    partial = np.array([0.25 * (1 + eta * s) ** 2, 0.5 * (1 + eta), 1 - m, 1.0])
+    return np.diff(np.concatenate([[0.0], partial]))
+
+
 def maassen_uffink(c: float) -> float:
     """Maassen-Uffink bound H(M) + H(N) >= -log2 c (also valid for H_alpha with alpha <= 1)."""
     return -np.log2(c)
@@ -252,6 +263,13 @@ def renyi_direct_sum_bound(c: float, alpha: float) -> float:
     """
     t = np.sqrt(c)
     return float(renyi(np.array([t, 1 - t]), alpha))
+
+
+def renyi_direct_sum_induced_bound(omega: np.ndarray, alpha: float) -> float:
+    """Direct-sum induced Renyi bound for alpha > 1 (Baek et al., 2019, Cor. 1)."""
+    if alpha <= 1:
+        raise ValueError("the AM-GM induced form is stated for alpha > 1")
+    return float(2 / (1 - alpha) * np.log2(np.sum(np.asarray(omega) ** alpha) / 2))
 
 
 def renyi_tensor_bound(c: float, alpha: float) -> float:

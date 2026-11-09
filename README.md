@@ -78,6 +78,17 @@ squeezed-parity statements, and adds a closed-form Werner steering analysis
 with $\eta_*=(4+\sqrt2)/7$. The verification suite now contains 48 checks,
 including independent tests of the new attainment and steering formulas.
 
+**Five-point mathematical review (November 9):** the sharp Rényi eigenstate
+threshold is now $\alpha=1/2$ for non-MUB angles, with a small-rotation proof and
+stable numerical regression. The direct-sum Rényi discussion includes the
+induced bound valid for every $\alpha>1$, including biased POVMs. The steering
+comparison cites Yang–Qiao, Tavakoli, and Svegborn et al. and adds a calibrated
+linear witness. Proposition 5 closes the unbiased equal-sharpness tensor-product
+problem, and Proposition 6 gives the arbitrary-dimensional top-eigenspace
+attainment criterion. Gilad Gour's affiliations and e-mail are now included.
+The verification suite retains 48 checks, with these additions folded into the
+existing theorem checks. See `paper/revision_notes.md`.
+
 The applicant's letter of intent is in
 [`GTIIT_Letter_of_Intent_Research_Statement.pdf`](GTIIT_Letter_of_Intent_Research_Statement.pdf).
 
@@ -118,15 +129,17 @@ the explicit ordered binary form, not the general flattened-vector construction.
 | Theorem 1 | $p\oplus q\prec\omega_\oplus=(1,\sqrt c,1-\sqrt c,0)$, and $\omega_\oplus$ is the lattice supremum. | The relation is the $d=2$ case of Rudnicki–Puchała–Życzkowski, PRA 89, 052115 (2014). Optimality and the saturating states: Li–Qiao, Ann. Phys. (Berlin) 531, 1900143 (2019), App. B.1. New here: only the derivation from the ellipse. |
 | Theorem 2 | $p\otimes q\prec\omega_\otimes=(w,1-w,0,0)$, $w=(1+\sqrt c)^2/4$, also the supremum. | The vector is $Q^{(1)}$ of Puchała–Rudnicki–Życzkowski, J. Phys. A 46, 272002 (2013), and the vector of Friedland–Gheorghiu–Gour, PRL 111, 230401 (2013), built from the maximal partial sums. New here: only the observation that it is ordered, hence the supremum. |
 | Proposition 1 | (i) No state attains $\omega_\oplus$ unless $[M,N]=0$. Eigenstates saturate $k=1,3$; bisector states saturate $k=2$. (ii) No state attains $\omega_\otimes$ unless $[M,N]=0$. | New as a proof. Li–Qiao, arXiv:1802.04933 (2018), already remarked informally that the partial sums of $\omega_\oplus$ are reached by different states; the tensor part was not found earlier. |
-| Corollaries 1–2 | Shannon $h(\sqrt c)$, Tsallis ($\gamma>0$) and Rényi ($\alpha\le1$) bounds from the direct sum; Rényi bounds for all $\alpha$ from the tensor product. | RPZ 2014 (direct sum), PRZ/FGG 2013 (tensor) |
+| Corollaries 1–2 | Shannon $h(\sqrt c)$, Tsallis ($\gamma>0$) and Rényi ($\alpha\le1$) bounds from the direct sum; Rényi bounds for all $\alpha$ from the tensor product. The induced direct-sum Rényi bound is $[2/(1-\alpha)]\log_2[(\sum_k\omega_k^\alpha)/2]$ for $\alpha>1$, including biased POVMs. | RPZ 2014 (direct sum), PRZ/FGG 2013 (tensor), and Baek–Nha–Son (2019), Cor. 1 (induced direct-sum Rényi bound). |
 | Proposition 2 | For $\alpha\le1$ the direct sum beats the tensor product; the direct-sum form fails at $\alpha=\infty$. | (i) is RPZ 2014, App. B; (ii): failure for $\alpha>1$ stated without proof in RPZ 2014, Sec. III; the explicit counterexample is new |
-| **Theorem 3** | For $c<1$, every bound for a continuous strictly Schur-concave measure is strict. The tensor-product Rényi bounds are tight only at orders $0$ and $\infty$. | New in this generality. Shannon non-optimality of $H(\omega_\oplus)$ was shown numerically by Li–Qiao, arXiv:1802.04933. Size of the gap: $h(\sqrt c)\ge0.782\times$ exact minimum (worst near $70^\circ$), largest absolute gap $0.196$ bit near $74^\circ$. |
+| **Theorem 3** | For $c<1$, every bound for a continuous strictly Schur-concave measure is strict. The tensor-product Rényi bounds are tight only at orders $0$ and $\infty$. | New in this generality. Shannon non-optimality of $H(\omega_\oplus)$ was shown numerically by Li–Qiao, arXiv:1802.04933. Numerical gap estimate: $h(\sqrt c)\ge0.782\times$ exact minimum over the sampled angles (worst near $70^\circ$), largest absolute gap $0.196$ bit near $74^\circ$. |
 | Sec. V C | Comparison across the Rényi family with MU and the exact optimum. The exact Shannon minimum is $2h((1+\sqrt c)/2)$ for $\theta\le\bar\theta$, where $\sqrt{\bar c}\,\mathrm{artanh}\sqrt{\bar c}=1$, i.e. $\bar\theta\approx67.07^\circ$. Beyond $\bar\theta$ the minimiser moves continuously to an eigenstate, reached at $90^\circ$. The bisector is optimal up to $43^\circ$ ($\alpha=3/4$) and $80^\circ$ ($\alpha=1.2$), at all angles iff $\alpha\ge\alpha^\dagger\approx1.43$, and at no angle for $\alpha\le1/2$. | Exact qubit minimum: Ghirardi et al., PLA 317, 32 (2003). Crossover with MU at $81.3^\circ$: already reported numerically by Baek et al. (2019). The artanh condition for $\bar c$: Bosyk et al., PRA 84, 056101 (2011). The closed-form Shannon bound $h((1+\sqrt{2c-1})/2)$ (Sánchez-Ruiz 1998; KTW 2014) is strictly stronger than $h(\sqrt c)$ at every noncommuting angle and at least as strong as MU. $\alpha$-dependence of the minimiser: Zozor–Bosyk–Portesi (2013). The direct-sum Rényi expression is analytically established at $\alpha=2$ and otherwise reported as a numerical observation through $\alpha\le2$. Mixed orders via conditional majorization: Xiao–Fang–Gour, arXiv:1908.07694 (2019). |
 | Theorem 4 | Closed-form optimal direct-sum bound $\omega_\oplus(M,N)$ for arbitrary unsharp **and biased** two-outcome qubit POVMs. State-dependent trade-offs can persist for jointly measurable pairs, while absolute entropy floors can also include measurement or classical post-processing randomness. The same calibrated vector yields bounds for the entire Tsallis family as a non-Shannon application. | Unbiased case: Baek–Nha–Son, Entropy 21, 270 (2019). New: bias, ordering (optimality), joint-measurability remark. |
 | Proposition 3 | Complete qubit-POVM attainment criterion: never for non-commuting effects; for commuting effects, the same endpoint state must saturate both $S_1$ and $S_2$. Biased commuting effects can therefore still miss the bound. | New: the general commuting criterion and its proof; the biased counterexample illustrates the classical trade-off. |
-| Proposition 4 and Corollary 3 | The ideal direct-sum majorization relation survives iff $\Lambda\le2\sqrt c$; this is generally not necessary for an individual entropic bound. The Werner analysis compares the exact Shannon threshold $\eta_{\rm S}\approx0.680568$ with the majorization-witness threshold $\eta_*=(4+\sqrt2)/7$. | New here; related loss-tolerant and setting-error-tolerant steering criteria are cited separately. Nonviolation of either sufficient witness is not presented as an LHS proof. |
+| Proposition 4 and Corollary 3 | The ideal direct-sum majorization relation survives iff $\Lambda\le2\sqrt c$; this is generally not necessary for an individual entropic bound. The Werner analysis compares the exact Shannon threshold $\eta_{\rm S}\approx0.680568$ with the majorization-witness threshold $\eta_*=(4+\sqrt2)/7$ and with a calibrated linear witness detecting $w>1/\sqrt2$ for every nonzero efficiency in the exact-statistics limit. | New here; related loss-tolerant, imprecise-measurement, and setting-error-tolerant steering criteria are cited separately. Nonviolation of either sufficient entropic witness is not presented as an LHS proof. |
+| Proposition 5 | Optimal tensor-product vector for unbiased qubit POVMs of equal sharpness: $S_1=(1+\eta\sqrt c)^2/4$, $S_2=(1+\eta)/2$, and $S_3=1-m_\eta(\sqrt c)$, with two analytical branches. The increments are already ordered. | New closed form and partial-sum maximizers for a case previously left open. |
 | Theorem 5 | Theorems 1–2 hold for binary projective measurements on $\mathbb C^d$ with $c=\max\lVert P_iQ_j\rVert^2$, and $\omega_\oplus$ and $\omega_\otimes$ are attained iff $c=1$. Equivalently $c=\tfrac12+\tfrac14\lVert\{A,B\}\rVert$ with $A=2P-1$, $B=2Q-1$. | The direct sum follows from Baek et al. (2019) and $\lambda_{\max}(P+Q)=1+\lVert PQ\rVert$. The tensor-product vector itself is the binary case of the general FGG construction; new here are its explicit evaluation, the observation that it is already ordered, and the attainment analysis. Jordan's lemma gives the direct proof. The anticommutator form is related to Walters' formula $\lVert PQ+QP\rVert=\lVert PQ\rVert+\lVert PQ\rVert^2$ (arXiv:1604.00699). |
 | Corollary 4 | Binary POVMs in any dimension: $\omega_\oplus=(S_1,S_2-S_1,1+S_1-S_2,1-S_1)$ with $S_1$ the largest eigenvalue of the four effects and $S_2=\max_{i,j}\lambda_{\max}(E_i+F_j)$; always ordered, hence optimal. Contains Theorems 4 and 5. | Follows from the eigenvalue formula of Baek et al. (2019); the explicit binary form is new. |
+| Proposition 6 | The optimal direct-sum vector for binary POVMs in any dimension is attained iff a maximizing effect and maximizing cross-sum have intersecting top eigenspaces. | New necessary and sufficient spectral criterion. |
 | Sec. VIII | Focused Discussion with one paragraph on photonic qubits, Malus's law, coherent-light polarization-ensemble tests, and detector-efficiency mismatch. The extended quantum-optics discussion and the former open question on light modes are preserved separately for future work. | See `paper/quantum_optics_future.md`. The current numerical appendix no longer reports light-mode or Robertson–Schrödinger simulations. |
 
 ## Repository layout
@@ -158,7 +171,8 @@ the explicit ordered binary form, not the general flattened-vector construction.
 | `lorenz`, `is_majorized` | Lorenz partial sums and majorization test |
 | `least_concave_majorant`, `lattice_supremum` | Supremum of a set of vectors in the majorization lattice |
 | `omega_direct_sum_projective`, `omega_tensor_projective`, `omega_direct_sum` | Closed-form bounds (Theorems 1, 2 and 4) |
-| `renyi_direct_sum_bound`, `renyi_tensor_bound`, `tsallis_direct_sum_bound` | Entropic bounds (Corollaries 1–2) |
+| `omega_tensor_unbiased_equal` | Closed-form equal-sharpness noisy tensor-product vector (Proposition 5) |
+| `renyi_direct_sum_bound`, `renyi_direct_sum_induced_bound`, `renyi_tensor_bound`, `tsallis_direct_sum_bound` | Entropic bounds, including the induced direct-sum Rényi bound for $\alpha>1$ |
 | `omega_direct_sum_operators` | Exact optimal direct-sum bound for **any** POVMs in **any** dimension, computed as $S_k=\max_{\lvert J\rvert=k}\lambda_{\max}(\sum_{j\in J}K_j)$ |
 | `min_entropy_sum`, `min_tsallis_sum`, `min_uncertainty` | Numerical minima of Rényi and Tsallis entropy sums over all qubit states, using a dense boundary grid and local refinement |
 | `sanchez_ruiz_ktw` | Closed-form Shannon bound $h((1+\sqrt{2c-1})/2)$ (Sánchez-Ruiz 1998; KTW 2014), plotted in Fig. 3 |
@@ -206,7 +220,7 @@ referee revision (48 checks in all).
 [PASS] Thm 5, degenerate case: common eigenvector => c = 1 and both optimal vectors are attained, including a noncommuting rank-two pair  (max deviation 2.7e-15, noncommuting example ||[P,Q]|| = 0.707)
 [PASS] Thm 5 remark: c = 1/2 + ||{A, B}||/4 with A = 2P - 1, B = 2Q - 1 (d = 2..8, all ranks)  (max deviation 1.3e-15)
 [PASS] Thm 5, tensor product: S_1 = w is attained at a top eigenvector of P_i + Q_j (d = 4, 6) and never exceeded by random states  (max deviation 2.4e-15, largest p_i q_j - w over random states -2.0e-02)
-[PASS] Cor. 4: binary POVMs in d = 2..6: omega_plus = (S_1, S_2 - S_1, 1 + S_1 - S_2, 1 - S_1), already ordered  (max deviation 1.6e-15)
+[PASS] Cor. 4 and Prop. 6: binary POVMs in d = 2..6: ordered direct-sum vector; top-eigenspace intersection criterion tested for trivial and MUB POVMs  (max deviation 1.6e-15)
 [PASS] Prop 1(i): no state attains omega_plus for non-commuting M, N  (min sup-distance 0.016)
 [PASS] Prop 1(ii): no state attains omega_times for non-commuting M, N  (min sup-distance 0.021)
 [PASS] Cor. 1-2: Shannon bounds are valid; H_inf bound -2 log2((1+sqrt c)/2) is tight
@@ -220,7 +234,7 @@ referee revision (48 checks in all).
 [PASS] Prop 2(i): direct-sum Renyi bound >= tensor bound for alpha <= 1
 [PASS] Prop 2(ii): the direct-sum form fails at alpha = inf
 [PASS] Thm 3: all bounds strict for 0 < alpha < inf and gamma > 0; tight at alpha = 0 and inf  (smallest gap 9.0e-04, largest deviation at alpha in {0, inf}: 3.1e-16)
-[PASS] Thm 4: Shannon and Tsallis bounds hold for random unsharp/biased POVMs
+[PASS] Thm 4: Shannon, Tsallis and induced Renyi bounds hold for random unsharp/biased POVMs
 [PASS] Sec. VI: jointly measurable pair still has S_2 < 1 + eta and an unattained bound  (Busch sum 1.980 <= 2, S_2 = 1.495 < 1.7, min sup-distance 0.022)
 [PASS] Prop 3: omega_plus(M, N) is never attained for non-commuting effects, is attained for commuting unbiased ones, and is missed by a commuting biased pair  (biased example: min sup-distance 0.025)
 [PASS] Prop 3(ii): same-endpoint criterion is necessary and sufficient for all commuting POVMs  (2000 random pairs: 1585 attained, 415 not attained, 0 mismatches)
@@ -231,8 +245,8 @@ referee revision (48 checks in all).
 [PASS] Sec. VIII (v): pi[Q(a) + Q(-a)] <= 1 + exp(-2|a|^2), with equality for the even cat state
 [PASS] Sec. VIII (v): pseudospin operators obey the Pauli algebra; the squeezed vacuum is an s_z eigenstate
 [PASS] Sec. VIII (iii): three qubit bases: S_k = k/2 + max|sum n_j|/2, sigma_x,y,z give the Li-Qiao vector, and the increments are ordered for 300 random triples
-[PASS] Sec. VIII (i): unbiased POVMs with eta = zeta = 0.8, orthogonal axes: S_1 is the AM-GM value, but S_3 is attained neither by an eigenstate nor by a bisector state  (S_3 >= 0.9550, eigenstate 0.9500, bisector 0.9528)
-[PASS] Cor. 3 (steering): Werner formula and exact/majorization efficiency thresholds  (eta_S = 0.680568419, eta_maj = 0.773459080; at e = 0.95, w_ideal = 0.817782, w_corrected = 0.865859)
+[PASS] Prop. 5 and Sec. VIII (i): closed-form equal-sharpness tensor vector matches the numerical supremum; S_3 = 0.955 at 90 deg, eta = 0.8 and exceeds the eigenstate/bisector values  (S_3 = 0.9550, eigenstate 0.9500, bisector 0.9528; 70 grid/random cases, max deviation 5.5e-08, max adjacent rise 0.0e+00)
+[PASS] Cor. 3 (steering): exact/majorization thresholds and calibrated linear benchmark  (eta_S = 0.680568419, eta_maj = 0.773459080; linear Werner expression = 2w for every tested efficiency)
 [PASS] Fig. 6(a): low-eta_V thresholds, full-square checks and high-eta_V counterexample  (low thresholds 0.578, 0.211; H(0.9,1) = 0.998195879; high branch starts at 0.999671; full grid 81 x 81)
 ```
 
@@ -292,17 +306,18 @@ measurements.
 - [x] When the bounds are tight (Theorem 3) and comparison with entropy-specific relations
 - [x] General two-outcome qubit POVMs (direct sum), relation to joint measurability
 - [x] Binary projective measurements in dimension $d$
-- [x] Binary POVMs in dimension $d$, direct sum (Corollary 4)
-- [ ] Optimal tensor-product bound for general qubit POVMs
-- [ ] Binary POVMs in dimension $d$: closed form for $\lambda_{\max}(E_i+F_j)$, attainment, tensor product
+- [x] Binary POVMs in dimension $d$, direct sum (Corollary 4) and spectral attainment criterion (Proposition 6)
+- [x] Optimal tensor-product bound for unbiased equal-sharpness qubit POVMs (Proposition 5)
+- [ ] Optimal tensor-product bound for biased or unequally sharp qubit POVMs
+- [ ] Binary POVMs in dimension $d$: simpler closed form for $\lambda_{\max}(E_i+F_j)$ and tensor product
 - [ ] More than two measurements (qubit bases: $S_k$ explicit; ordering of the increments unproven)
 - [ ] Quantum-optics extensions (reserved in `paper/quantum_optics_future.md` for a future article)
 - [ ] Thesis write-up; preprint (arXiv), targeting Communications Physics
 
 ## Open items before submission
 
-- Get Gilad's affiliation(s), e-mail address and funding acknowledgement. There
-  are TODOs for these in `paper/main.tex`.
+- Get Gilad's funding acknowledgement; a TODO remains in `paper/main.tex`.
+  His Technion and GTIIT affiliations and e-mail address are now included.
 - Decide with the supervisors whether the theorem/proof presentation should be
   restructured for Communications Physics.
 - Proofread the bibliography formatting. The entries were checked against the
