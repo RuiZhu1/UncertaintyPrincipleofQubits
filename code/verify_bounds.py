@@ -198,8 +198,35 @@ for _ in range(300):
     s2 = max(lam_max(Ei + Fj) for Ei in (E, I - E) for Fj in (F, I - F))
     closed = np.array([s1, s2 - s1, 1 + s1 - s2, 1 - s1])
     worst = max(worst, np.abs(closed - mj.omega_direct_sum_operators([E, I - E], [F, I - F])).max())
-check("Cor. 4: binary POVMs in d = 2..6: omega_plus = (S_1, S_2 - S_1, 1 + S_1 - S_2, 1 - S_1), "
-      "already ordered", worst < 1e-10, f"max deviation {worst:.1e}")
+
+
+def top_eigenspace(operator: np.ndarray) -> np.ndarray:
+    values, vectors = np.linalg.eigh(operator)
+    return vectors[:, np.isclose(values, values[-1], atol=1e-10, rtol=0)]
+
+
+def top_spaces_intersect(a: np.ndarray, b: np.ndarray) -> bool:
+    # The largest canonical correlation is one iff the two subspaces intersect.
+    return np.linalg.svd(a.conj().T @ b, compute_uv=False)[0] > 1 - 1e-10
+
+
+trivial = [0.6 * np.eye(2), 0.4 * np.eye(2)]
+trivial_n = [0.2 * np.eye(2), 0.8 * np.eye(2)]
+trivial_intersection = top_spaces_intersect(top_eigenspace(trivial_n[1]),
+                                           top_eigenspace(trivial[0] + trivial_n[1]))
+mub = mj.projective([0, 0, 1]).effects
+mub_n = mj.projective([1, 0, 0]).effects
+mub_intersection = top_spaces_intersect(top_eigenspace(mub[0]),
+                                       top_eigenspace(mub[0] + mub_n[0]))
+r = np.array([1.0, 0.0])
+p_trivial = np.array([np.vdot(r, k @ r).real for k in trivial])
+q_trivial = np.array([np.vdot(r, k @ r).real for k in trivial_n])
+spectral_ok = (trivial_intersection and not mub_intersection
+               and np.allclose(mj.sort_desc(mj.direct_sum(p_trivial, q_trivial)),
+                               mj.omega_direct_sum_operators(trivial, trivial_n)))
+check("Cor. 4 and Prop. 6: binary POVMs in d = 2..6: ordered direct-sum vector; "
+      "top-eigenspace intersection criterion tested for trivial and MUB POVMs",
+      worst < 1e-10 and spectral_ok, f"max deviation {worst:.1e}")
 
 # --- 4. Non-attainability (Proposition 1) -----------------------------------
 M, N = pair(np.pi / 3)
@@ -394,8 +421,11 @@ for deg in (10, 30, 45, 60, 75, 85, 90):
         ok_valid &= mj.min_entropy_sum(M, N, alpha=a, num=2001)[0] >= rd - 1e-9
         ok_order &= rd >= mj.renyi_tensor_bound(c, a) - 1e-12
     for a in (1.5, 2.0, 5.0, 20.0, np.inf):
-        ok_valid &= (mj.min_entropy_sum(M, N, alpha=a, num=2001)[0]
-                     >= mj.renyi_tensor_bound(c, a) - 1e-9)
+        exact = mj.min_entropy_sum(M, N, alpha=a, num=2001)[0]
+        ok_valid &= exact >= mj.renyi_tensor_bound(c, a) - 1e-9
+        if np.isfinite(a):
+            induced = mj.renyi_direct_sum_induced_bound(mj.omega_direct_sum_projective(c), a)
+            ok_valid &= exact >= induced - 1e-9
     for q in (0.3, 0.5, 2.0, 3.0):
         ok_valid &= (mj.min_tsallis_sum(M, N, q, num=2001)[0]
                      >= mj.tsallis_direct_sum_bound(c, q) - 1e-9)
@@ -442,7 +472,11 @@ for _ in range(200):
         actual = mj.tsallis(p, gamma) + mj.tsallis(q, gamma)
         bound = (2 - np.sum(omega**gamma)) / (gamma - 1)
         ok &= bool(np.all(actual >= bound - 1e-12))
-check("Thm 4: Shannon and Tsallis bounds hold for random unsharp/biased POVMs", ok)
+    for alpha in (1.5, 2.5, 10.0):
+        actual = mj.renyi(p, alpha) + mj.renyi(q, alpha)
+        induced = mj.renyi_direct_sum_induced_bound(omega, alpha)
+        ok &= bool(np.all(actual >= induced - 1e-12))
+check("Thm 4: Shannon, Tsallis and induced Renyi bounds hold for random unsharp/biased POVMs", ok)
 
 eta = 0.7  # orthogonal axes, eta = zeta <= 1/sqrt(2): jointly measurable
 M, N = pair(np.pi / 2, eta)
@@ -652,11 +686,43 @@ L = np.cumsum(mj.sort_desc(mj.tensor(M.probs(STATES), N.probs(STATES))), axis=-1
 L_eig = np.cumsum(mj.sort_desc(mj.tensor(M.probs(M.axis), N.probs(M.axis))))
 r_bis = mj.unit(M.axis + N.axis)
 L_bis = np.cumsum(mj.sort_desc(mj.tensor(M.probs(r_bis), N.probs(r_bis))))
+w_an = mj.omega_tensor_unbiased_equal(0.5, 0.8)
 w1 = ((1 + 0.8 * np.sqrt(0.5)) / 2) ** 2  # AM-GM value of S_1
-ok = abs(L_bis[0] - w1) < 1e-12 and L[0] <= w1 + 1e-12 and L[2] > max(L_eig[2], L_bis[2]) + 1e-3
-check("Sec. VIII (i): unbiased POVMs with eta = zeta = 0.8, orthogonal axes: S_1 is the AM-GM value, "
-      "but S_3 is attained neither by an eigenstate nor by a bisector state", ok,
-      f"S_3 >= {L[2]:.4f}, eigenstate {L_eig[2]:.4f}, bisector {L_bis[2]:.4f}")
+ok = (abs(L_bis[0] - w1) < 1e-12 and L[0] <= w1 + 1e-12
+      and abs(L[2] - 0.955) < 3e-6 and abs(np.cumsum(w_an)[2] - 0.955) < 1e-12
+      and L[2] > max(L_eig[2], L_bis[2]) + 1e-3)
+worst, max_rise = 0.0, -np.inf
+rng_nt = np.random.default_rng(20261109)
+for theta in np.radians([0, 1, 20, 45, 60, 75, 89, 90]):
+    for eta in (0.0, 0.2, 0.5, 0.8, 1.0):
+        M, N = pair(theta, eta)
+        c = np.cos(theta / 2) ** 2
+        analytic = mj.omega_tensor_unbiased_equal(c, eta)
+        states = mj.great_circle(M, N, num=20001)
+        numeric = mj.lattice_supremum(mj.tensor(M.probs(states), N.probs(states)))
+        worst = max(worst, float(np.max(np.abs(analytic - numeric))))
+        max_rise = max(max_rise, float(np.max(np.diff(analytic))))
+for _ in range(30):
+    theta = np.arccos(rng_nt.uniform(0, 1))  # acute Bloch angle, as in the paper
+    eta = float(rng_nt.random())
+    M, N = pair(theta, eta)
+    c = np.cos(theta / 2) ** 2
+    analytic = mj.omega_tensor_unbiased_equal(c, eta)
+    states = mj.great_circle(M, N, num=4001)
+    numeric = mj.lattice_supremum(mj.tensor(M.probs(states), N.probs(states)))
+    worst = max(worst, float(np.max(np.abs(analytic - numeric))))
+    max_rise = max(max_rise, float(np.max(np.diff(analytic))))
+for eta in (0.1, 0.5, 0.8, 1.0):  # branch boundary eta = s
+    c = eta**2
+    ok &= np.allclose(mj.omega_tensor_unbiased_equal(c, eta),
+                      mj.omega_tensor_unbiased_equal(c, np.nextafter(eta, 2)))
+    ok &= np.allclose(mj.omega_tensor_unbiased_equal(c, eta),
+                      mj.omega_tensor_unbiased_equal(c, np.nextafter(eta, 0)))
+check("Prop. 5 and Sec. VIII (i): closed-form equal-sharpness tensor vector matches the numerical "
+      "supremum; S_3 = 0.955 at 90 deg, eta = 0.8 and exceeds the eigenstate/bisector values",
+      bool(ok) and worst < 3e-4 and max_rise <= 1e-12,
+      f"S_3 = {L[2]:.4f}, eigenstate {L_eig[2]:.4f}, bisector {L_bis[2]:.4f}; "
+      f"70 grid/random cases, max deviation {worst:.1e}, max adjacent rise {max_rise:.1e}")
 
 
 # --- 11. Imperfect detectors (Proposition 4, Fig. 6) --------------------------
@@ -775,9 +841,19 @@ ok &= abs(exact_click_bound(e_star) - 0.9525819632) < 1e-8
 ok &= (eta_shannon < e_star
        and mj.werner_conditional_entropy(1, 0.72) < exact_click_bound(0.72)
        and mj.werner_conditional_entropy(1, 0.72) > mj.click_mub_bound(0.72))
-check("Cor. 3 (steering): Werner formula and exact/majorization efficiency thresholds",
+for w in (0.6, 0.8, 1.0):
+    rho = w * bell + (1 - w) * I4 / 4
+    for e in (0.05, 0.2, 0.5, 0.9):
+        linear_sum = 0.0
+        for axis in (mj.SX, mj.SZ):
+            B = (e - 1) * I2 + e * axis
+            corr = np.trace(rho @ np.kron(axis, B)).real
+            marg = np.trace(rho @ np.kron(axis, I2)).real
+            linear_sum += (corr - (e - 1) * marg) / e
+        ok &= abs(linear_sum - 2 * w) < 1e-12
+check("Cor. 3 (steering): exact/majorization thresholds and calibrated linear benchmark",
       bool(ok), f"eta_S = {eta_shannon:.9f}, eta_maj = {e_star:.9f}; "
-      f"at e = 0.95, w_ideal = {w_ideal:.6f}, w_corrected = {w_corrected:.6f}")
+      f"linear Werner expression = 2w for every tested efficiency")
 
 # Random no-click assignment: both low- and high-efficiency branches over the full square
 def pbs_shannon_min(eh, ev, num=4001):
@@ -843,21 +919,28 @@ check("Sec. on Renyi family: H_alpha(sqrt c, 1 - sqrt c) is a valid bound for ev
       "failure orders at 5..89.9 deg: " + ", ".join(f"{f:.3f}" for f in fails))
 
 
-def alpha_eig(deg: float) -> float:
+def renyi_circle_value(theta: float, a: float, phi: np.ndarray) -> np.ndarray:
+    # Stable probabilities near eigenstates: use sin^2(phi/2), not 1-cos(phi).
+    p = np.stack([np.cos(phi / 2) ** 2, np.sin(phi / 2) ** 2], axis=-1)
+    q = np.stack([np.cos((theta - phi) / 2) ** 2, np.sin((theta - phi) / 2) ** 2], axis=-1)
+    return mj.renyi(p, a) + mj.renyi(q, a)
+
+
+ok = True
+for deg in (20, 60, 85):
     th = np.radians(deg)
-    lo, hi = 0.45, 1.6
-    for _ in range(30):
-        mid = (lo + hi) / 2
-        m, eig = renyi_circle_min(th, mid, 40001)
-        lo, hi = (mid, hi) if m >= eig - 1e-10 else (lo, mid)
-    return lo
-
-
-a0 = {d: alpha_eig(d) for d in (20, 60, 85)}
-ok = all(a > 0.5 for a in a0.values()) and abs(a0[60] - 0.56) < 0.01 and abs(a0[85] - 0.66) < 0.01
-check("Sec. on Renyi family: the eigenstates stay optimal up to an order alpha_0(c) > 1/2 "
-      "(about 0.52, 0.56, 0.66 at 20, 60, 85 deg)", bool(ok),
-      ", ".join(f"alpha_0({d}) = {a:.3f}" for d, a in a0.items()))
+    for a in (0.6, 0.75, 1.2):
+        eig = renyi_circle_value(th, a, np.array([0.0]))[0]
+        phi = np.logspace(-8, -2, 300)
+        ok &= bool(np.any(renyi_circle_value(th, a, phi) < eig - 1e-12))
+# A particularly small improvement at alpha=0.55, theta=60 degrees: the old grid
+# estimate missed it, whereas the stable parametrization resolves it.
+th = np.pi / 3
+eig = renyi_circle_value(th, 0.55, np.array([0.0]))[0]
+phi = np.logspace(-8, -2, 500)
+ok &= bool(np.any(renyi_circle_value(th, 0.55, phi) < eig - 1e-12))
+check("Sec. on Renyi family: eigenstates stop minimizing immediately above alpha=1/2; "
+      "small-rotation regression is resolved with stable probabilities", ok)
 
 # Tensor-product Shannon bound vs exact minimum, and the fixed-spectrum bound (review)
 best = min((float(mj.shannon(mj.omega_tensor_projective(np.cos(np.radians(d) / 2) ** 2)))
